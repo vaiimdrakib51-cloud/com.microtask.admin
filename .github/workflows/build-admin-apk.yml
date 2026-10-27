@@ -67,7 +67,7 @@ jobs:
           }
           EOF
 
-          # App build.gradle (Separate Package: com.microtask.admin)
+          # App build.gradle
           cat << 'EOF' > app/build.gradle
           plugins {
               id 'com.android.application'
@@ -81,8 +81,8 @@ jobs:
                   applicationId "com.microtask.admin"
                   minSdk 21
                   targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
+                  versionCode 2
+                  versionName "1.1"
               }
 
               buildTypes {
@@ -147,17 +147,26 @@ jobs:
           </manifest>
           EOF
 
-          # MainActivity.java (নতুন লাইভ লিংক ও অটো-সাউন্ড পারমিশন সহ)
+          # MainActivity.java (নেটিভ OneSignal পুশ ইঞ্জিন সহ)
           cat << 'EOF' > app/src/main/java/com/microtask/admin/MainActivity.java
           package com.microtask.admin;
 
           import android.annotation.SuppressLint;
           import android.os.Bundle;
+          import android.webkit.JavascriptInterface;
           import android.webkit.WebChromeClient;
           import android.webkit.WebSettings;
           import android.webkit.WebView;
           import android.webkit.WebViewClient;
+          import android.widget.Toast;
           import androidx.appcompat.app.AppCompatActivity;
+
+          import org.json.JSONArray;
+          import org.json.JSONObject;
+
+          import java.io.OutputStream;
+          import java.net.HttpURLConnection;
+          import java.net.URL;
 
           public class MainActivity extends AppCompatActivity {
               private WebView adminWebView;
@@ -178,15 +187,64 @@ jobs:
                   webSettings.setAllowContentAccess(true);
                   webSettings.setUseWideViewPort(true);
                   webSettings.setLoadWithOverviewMode(true);
-                  
-                  // ইউজার ক্লিক ছাড়া লাইভ অ্যালার্ট সাউন্ড বাজার পারমিশন
                   webSettings.setMediaPlaybackRequiresUserGesture(false);
 
                   adminWebView.setWebViewClient(new WebViewClient());
                   adminWebView.setWebChromeClient(new WebChromeClient());
 
-                  // আপনার com.microtask.admin রিপোজিটরির লাইভ লিংক
+                  // নেটিভ জাভা পুশ সেন্ডার ব্রিজ যুক্ত
+                  adminWebView.addJavascriptInterface(new AdminNativeBridge(), "AndroidAdmin");
+
                   adminWebView.loadUrl("https://vaiimdrakib51-cloud.github.io/com.microtask.admin/");
+              }
+
+              // নেটিভ অ্যান্ড্রয়েড কোড যা ব্রাউজার ব্লকিং ছাড়া ১০০% পুশ পাঠিয়ে দেবে
+              public class AdminNativeBridge {
+                  @JavascriptInterface
+                  public void sendOneSignalPush(final String title, final String message) {
+                      new Thread(new Runnable() {
+                          @Override
+                          public void run() {
+                              try {
+                                  URL url = new URL("https://api.onesignal.com/notifications");
+                                  HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                  conn.setRequestMethod("POST");
+                                  conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                                  conn.setRequestProperty("Authorization", "Key os_v2_app_5fg4kqt5c5g5hiqoygjfzttxjejto7phkd3ur4nk3b7tq6jdynadm353retltvppojul2gaarg3fxthhu4wkkbcmjx3w7v43zrpjw2y");
+                                  conn.setDoOutput(true);
+
+                                  JSONObject json = new JSONObject();
+                                  json.put("app_id", "e94dc542-7d17-4dd3-a20e-c1925cce7749");
+                                  
+                                  JSONArray segments = new JSONArray();
+                                  segments.put("Subscribed Users");
+                                  json.put("included_segments", segments);
+
+                                  JSONObject headings = new JSONObject();
+                                  headings.put("en", title);
+                                  json.put("headings", headings);
+
+                                  JSONObject contents = new JSONObject();
+                                  contents.put("en", message);
+                                  json.put("contents", contents);
+
+                                  json.put("priority", 10);
+
+                                  OutputStream os = conn.getOutputStream();
+                                  os.write(json.toString().getBytes("UTF-8"));
+                                  os.flush();
+                                  os.close();
+
+                                  int responseCode = conn.getResponseCode();
+                                  if (responseCode == 200 || responseCode == 201) {
+                                      runOnUiThread(() -> Toast.makeText(MainActivity.this, "সাউন্ড সহ পুশ নোটিফিকেশন সফলভাবে পাঠানো হয়েছে!", Toast.LENGTH_LONG).show());
+                                  }
+                              } catch (Exception e) {
+                                  e.printStackTrace();
+                              }
+                          }
+                      }).start();
+                  }
               }
 
               @Override
