@@ -1,0 +1,211 @@
+name: Build Admin APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: '8.5'
+
+      - name: Generate Admin Android App Project
+        run: |
+          mkdir -p app/src/main/java/com/microtask/admin
+          mkdir -p app/src/main/res/values
+          mkdir -p app/src/main/res/mipmap-xxhdpi
+
+          # App Icon
+          curl -sL "https://i.ibb.co.com/5W2f2xg4/pngtree-money-icon-dollar-coins-cash-payment-online-earning-png-image-7589413.png" -o app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+
+          # Gradle Properties
+          cat << 'EOF' > gradle.properties
+          android.useAndroidX=true
+          android.enableJetifier=true
+          org.gradle.jvmargs=-Xmx2048m
+          EOF
+
+          # Settings.gradle
+          cat << 'EOF' > settings.gradle
+          pluginManagement {
+              repositories {
+                  google()
+                  mavenCentral()
+                  gradlePluginPortal()
+              }
+          }
+          dependencyResolutionManagement {
+              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          rootProject.name = "MicroTaskAdmin"
+          include ':app'
+          EOF
+
+          # Root build.gradle
+          cat << 'EOF' > build.gradle
+          plugins {
+              id 'com.android.application' version '8.2.2' apply false
+          }
+          EOF
+
+          # App build.gradle (Package: com.microtask.admin)
+          cat << 'EOF' > app/build.gradle
+          plugins {
+              id 'com.android.application'
+          }
+
+          android {
+              namespace 'com.microtask.admin'
+              compileSdk 34
+
+              defaultConfig {
+                  applicationId "com.microtask.admin"
+                  minSdk 21
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+
+              buildTypes {
+                  release {
+                      minifyEnabled false
+                  }
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+          }
+
+          dependencies {
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+              implementation 'com.google.android.material:material:1.11.0'
+          }
+          EOF
+
+          # Strings.xml
+          cat << 'EOF' > app/src/main/res/values/strings.xml
+          <resources>
+              <string name="app_name">MicroTask Admin</string>
+          </resources>
+          EOF
+
+          # Themes.xml
+          cat << 'EOF' > app/src/main/res/values/themes.xml
+          <resources>
+              <style name="Theme.MicroTaskAdmin" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+                  <item name="android:statusBarColor">#070d1e</item>
+              </style>
+          </resources>
+          EOF
+
+          # AndroidManifest.xml
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+              <uses-permission android:name="android.permission.VIBRATE" />
+
+              <application
+                  android:allowBackup="true"
+                  android:icon="@mipmap/ic_launcher"
+                  android:label="@string/app_name"
+                  android:roundIcon="@mipmap/ic_launcher"
+                  android:supportsRtl="true"
+                  android:theme="@style/Theme.MicroTaskAdmin"
+                  android:usesCleartextTraffic="true">
+                  <activity
+                      android:name=".MainActivity"
+                      android:exported="true"
+                      android:configChanges="orientation|screenSize|keyboardHidden">
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+              </application>
+          </manifest>
+          EOF
+
+          # MainActivity.java (অ্যালার্ট সাউন্ড স্বয়ংক্রিয় প্লে করার পারমিশন সহ)
+          cat << 'EOF' > app/src/main/java/com/microtask/admin/MainActivity.java
+          package com.microtask.admin;
+
+          import android.annotation.SuppressLint;
+          import android.os.Bundle;
+          import android.webkit.WebChromeClient;
+          import android.webkit.WebSettings;
+          import android.webkit.WebView;
+          import android.webkit.WebViewClient;
+          import androidx.appcompat.app.AppCompatActivity;
+
+          public class MainActivity extends AppCompatActivity {
+              private WebView adminWebView;
+
+              @SuppressLint("SetJavaScriptEnabled")
+              @Override
+              protected void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+
+                  adminWebView = new WebView(this);
+                  setContentView(adminWebView);
+
+                  WebSettings webSettings = adminWebView.getSettings();
+                  webSettings.setJavaScriptEnabled(true);
+                  webSettings.setDomStorageEnabled(true);
+                  webSettings.setDatabaseEnabled(true);
+                  webSettings.setAllowFileAccess(true);
+                  webSettings.setAllowContentAccess(true);
+                  webSettings.setUseWideViewPort(true);
+                  webSettings.setLoadWithOverviewMode(true);
+                  
+                  // ইউজার টাচ ছাড়াই ব্যাকগ্রাউন্ড সাউন্ড বাজানোর বিশেষ পারমিশন
+                  webSettings.setMediaPlaybackRequiresUserGesture(false);
+
+                  adminWebView.setWebViewClient(new WebViewClient());
+                  adminWebView.setWebChromeClient(new WebChromeClient());
+
+                  // অ্যাডমিন পেজ লোড
+                  adminWebView.loadUrl("https://vaiimdrakib51-cloud.github.io/MiCro-Task/admin.html");
+              }
+
+              @Override
+              public void onBackPressed() {
+                  if (adminWebView.canGoBack()) {
+                      adminWebView.goBack();
+                  } else {
+                      super.onBackPressed();
+                  }
+              }
+          }
+          EOF
+
+      - name: Build Admin Debug APK
+        run: gradle assembleDebug --stacktrace
+
+      - name: Upload Admin APK File
+        uses: actions/upload-artifact@v4
+        with:
+          name: MicroTask-Admin-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
