@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MicroTask — Admin Console</title>
+    <!-- Fonts & FontAwesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Firebase SDK (Compat Version) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-dark: #070d1e;
+            --card-dark: #0d1a38;
+            --card-border: rgba(59, 130, 246, 0.22);
+            --primary: #0284c7;
+            --primary-glow: rgba(2, 132, 199, 0.35);
+            --accent: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-dark); color: var(--text-light); min-height: 100vh; display: flex; justify-content: center; }
+
+        .admin-phone-wrapper {
+            width: 100%; max-width: 480px; background: #091329; min-height: 100vh;
+            border-left: 1px solid var(--card-border); border-right: 1px solid var(--card-border);
+            position: relative; overflow-x: hidden; padding-bottom: 30px;
+        }
+
+        /* LOGIN SCREEN */
+        #adminLoginScreen {
+            position: fixed; inset: 0; background: radial-gradient(circle at center, #0e2254 0%, #030713 100%);
+            z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 16px;
+        }
+        .login-card {
+            width: 100%; max-width: 360px; background: var(--card-dark); border: 1.5px solid var(--card-border);
+            border-radius: 24px; padding: 30px 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.6); text-align: center;
+        }
+        .login-logo {
+            width: 58px; height: 58px; border-radius: 18px; background: #ffffff; margin: 0 auto 12px;
+            display: flex; align-items: center; justify-content: center; padding: 5px; box-shadow: 0 8px 20px var(--primary-glow);
+        }
+        .login-logo img { width: 100%; height: 100%; object-fit: contain; }
+        .login-card h2 { font-size: 19px; font-weight: 850; margin-bottom: 4px; }
+        .login-card p { font-size: 11px; color: var(--text-muted); margin-bottom: 20px; }
+        .admin-input {
+            width: 100%; padding: 11px 14px; border-radius: 12px; background: #070e22; border: 1px solid var(--card-border);
+            color: #fff; font-size: 12.5px; font-weight: 600; margin-bottom: 12px; outline: none; transition: border-color 0.2s;
+        }
+        .admin-input:focus { border-color: var(--primary); }
+        .btn-admin {
+            width: 100%; padding: 11px; border-radius: 12px; border: none; background: linear-gradient(135deg, #0284c7, #0d9488);
+            color: #fff; font-weight: 800; font-size: 13px; cursor: pointer; transition: transform 0.15s;
+        }
+        .btn-admin:active { transform: scale(0.97); }
+
+        /* HEADER */
+        .admin-header {
+            background: rgba(9, 19, 41, 0.95); backdrop-filter: blur(10px); padding: 14px 16px;
+            display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border);
+            position: sticky; top: 0; z-index: 50;
+        }
+        .header-brand { display: flex; align-items: center; gap: 8px; }
+        .brand-icon { width: 32px; height: 32px; border-radius: 8px; background: #fff; padding: 3px; }
+        .brand-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .header-brand h2 { font-size: 16px; font-weight: 850; line-height: 1.1; }
+        .header-brand span { font-size: 9px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+        .btn-sound-toggle {
+            background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399;
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; margin-right: 6px;
+        }
+        .btn-logout-icon {
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171;
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px;
+        }
+
+        /* STATS STRIP */
+        .stats-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; padding: 14px 12px 6px; }
+        .stat-box { background: var(--card-dark); border: 1px solid var(--card-border); border-radius: 16px; padding: 12px; display: flex; align-items: center; gap: 10px; }
+        .stat-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; flex-shrink: 0; }
+        .stat-text span { font-size: 9px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+        .stat-text h3 { font-size: 15px; font-weight: 850; margin-top: 1px; color: #fff; }
+
+        /* MODULES MENU GRID */
+        .menu-title { font-size: 11.5px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; padding: 12px 14px 6px; }
+        .modules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 6px 12px 18px; }
+        .module-card {
+            background: var(--card-dark); border: 1.5px solid var(--card-border); border-radius: 18px; padding: 14px 12px;
+            display: flex; flex-direction: column; justify-content: space-between; cursor: pointer; position: relative; min-height: 102px;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .module-card:active { transform: scale(0.96); }
+        .module-card:hover { border-color: var(--primary); }
+        .mod-top { display: flex; justify-content: space-between; align-items: center; }
+        .mod-icon-wrap { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+        .mod-arrow { font-size: 10px; color: var(--text-muted); }
+        .mod-meta { margin-top: 10px; }
+        .mod-meta h4 { font-size: 13px; font-weight: 800; color: #ffffff; }
+        .mod-meta p { font-size: 9.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+        .pending-pill { background: var(--danger); color: #fff; font-size: 9px; font-weight: 900; padding: 2px 7px; border-radius: 10px; }
+
+        /* FULL-SCREEN SUB-PAGE MODAL */
+        .admin-modal-screen {
+            position: fixed; inset: 0; background: #091329; z-index: 1000; display: flex; flex-direction: column;
+            transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1); max-width: 480px; margin: 0 auto;
+            border-left: 1px solid var(--card-border); border-right: 1px solid var(--card-border);
+        }
+        .admin-modal-screen.active { transform: translateX(0); }
+        .modal-top-bar { background: rgba(9, 19, 41, 0.98); border-bottom: 1.5px solid var(--card-border); padding: 12px 14px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 20; }
+        .modal-back-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--card-border); color: #ffffff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+        .modal-header-titles { flex: 1; }
+        .modal-header-titles h3 { font-size: 15px; font-weight: 850; color: #ffffff; }
+        .modal-header-titles p { font-size: 9.5px; color: var(--text-muted); font-weight: 600; margin-top: 1px; }
+
+        .modal-scroll-body { flex: 1; overflow-y: auto; padding: 14px 12px 25px; display: flex; flex-direction: column; gap: 12px; }
+        .box-card { background: var(--card-dark); border: 1px solid var(--card-border); border-radius: 16px; padding: 14px; }
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 11px; }
+        th { padding: 9px 8px; color: var(--text-muted); font-weight: 700; border-bottom: 1.5px solid var(--card-border); white-space: nowrap; }
+        td { padding: 9px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
+
+        .status-badge { padding: 2.5px 7px; border-radius: 12px; font-size: 9px; font-weight: 800; display: inline-flex; align-items: center; gap: 3px; }
+        .status-badge.pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .status-badge.completed { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-badge.rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+
+        .action-btns { display: flex; gap: 5px; }
+        .btn-act { border: none; border-radius: 7px; padding: 4.5px 8px; font-size: 10px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 3px; }
+        .btn-act.approve { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; }
+        .btn-act.reject { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; }
+        .btn-act.edit { background: rgba(2, 132, 199, 0.2); border: 1px solid #0284c7; color: #38bdf8; }
+        .btn-act.view-proof { background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #c4b5fd; }
+
+        /* PROOF IMAGES MODAL */
+        #proofImagesModal {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 2000; display: none;
+            align-items: center; justify-content: center; padding: 14px;
+        }
+        #proofImagesModal.active { display: flex; }
+        .proof-modal-content {
+            background: #0d1a38; border: 1.5px solid #8b5cf6; border-radius: 20px; width: 100%; max-width: 400px;
+            padding: 16px; max-height: 85vh; overflow-y: auto; text-align: center;
+        }
+        .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+        .proof-box { background: #070e22; border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; height: 110px; }
+        .proof-box img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
+
+        /* Toast */
+        .toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: #0f172a; color: #ffffff; padding: 9px 18px; border-radius: 25px; font-size: 11.5px;
+            font-weight: 700; display: flex; align-items: center; gap: 7px; border: 1px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4); z-index: 10000; transition: transform 0.25s ease; white-space: nowrap;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+    <div class="admin-phone-wrapper">
+
+        <!-- 1. AUTH SCREEN -->
+        <div id="adminLoginScreen">
+            <div class="login-card">
+                <div class="login-logo">
+                    <img src="https://i.ibb.co.com/5W2f2xg4/pngtree-money-icon-dollar-coins-cash-payment-online-earning-png-image-7589413.png" alt="Logo">
+                </div>
+                <h2>MicroTask Admin</h2>
+                <p>Enter Master PIN to open Console</p>
+                <form onsubmit="handleAdminLogin(event)">
+                    <input type="password" id="adminPinInput" class="admin-input" placeholder="Admin PIN (Default: 778899)" required>
+                    <button type="submit" class="btn-admin"><i class="fa-solid fa-lock-open"></i> Unlock Admin Hub</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- 2. TOP HEADER -->
+        <header class="admin-header">
+            <div class="header-brand">
+                <div class="brand-icon">
+                    <img src="https://i.ibb.co.com/5W2f2xg4/pngtree-money-icon-dollar-coins-cash-payment-online-earning-png-image-7589413.png" alt="Logo">
+                </div>
+                <div>
+                    <h2>MicroTask Hub</h2>
+                    <span>Admin Controls</span>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center;">
+                <button class="btn-sound-toggle" onclick="toggleMuteAlert()" id="soundToggleBtn" title="Sound Alert On/Off">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <button class="btn-logout-icon" onclick="adminLogout()" title="Logout">
+                    <i class="fa-solid fa-power-off"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- 3. TOP STATS STRIP -->
+        <section class="stats-strip">
+            <div class="stat-box">
+                <div class="stat-icon" style="background:#0284c7;"><i class="fa-solid fa-users"></i></div>
+                <div class="stat-text"><span>Total Users</span><h3 id="statTotalUsers">0</h3></div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon" style="background:#10b981;"><i class="fa-solid fa-sack-dollar"></i></div>
+                <div class="stat-text"><span>Total USD</span><h3 id="statTotalBalance">$0.00</h3></div>
+            </div>
+            <div class="stat-box" onclick="openModuleModal('depositsModal')" style="cursor:pointer;">
+                <div class="stat-icon" style="background:#f59e0b;"><i class="fa-solid fa-arrow-down"></i></div>
+                <div class="stat-text"><span>Pending Dep</span><h3 id="statPendingDep">0</h3></div>
+            </div>
+            <div class="stat-box" onclick="openModuleModal('withdrawalsModal')" style="cursor:pointer;">
+                <div class="stat-icon" style="background:#ef4444;"><i class="fa-solid fa-arrow-up"></i></div>
+                <div class="stat-text"><span>Pending With</span><h3 id="statPendingWith">0</h3></div>
+            </div>
+        </section>
+
+        <!-- 4. MODULES MENU GRID -->
+        <div class="menu-title">Management Modules</div>
+
+        <section class="modules-grid">
+            <div class="module-card" onclick="openModuleModal('depositsModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #0284c7, #0369a1);"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                    <span class="pending-pill" id="modPendingDepPill" style="display:none;">0</span>
+                </div>
+                <div class="mod-meta"><h4>Deposits</h4><p>Approve TrxID & Balance</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('withdrawalsModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                    <span class="pending-pill" id="modPendingWithPill" style="display:none;">0</span>
+                </div>
+                <div class="mod-meta"><h4>Withdrawals</h4><p>Payout & Refund</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('usersModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9);"><i class="fa-solid fa-users"></i></div>
+                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                </div>
+                <div class="mod-meta"><h4>Users Manager</h4><p>Edit Balance & Verify</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('tasksModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #ef4444, #b91c1c);"><i class="fa-solid fa-list-check"></i></div>
+                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                </div>
+                <div class="mod-meta"><h4>Create Tasks</h4><p>YT, FB, IG & Typing</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('proofsModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-clipboard-check"></i></div>
+                    <span class="pending-pill" id="modPendingProofsPill" style="display:none;">0</span>
+                </div>
+                <div class="mod-meta"><h4>Task Proofs</h4><p>Review & View Images</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('notifModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #06b6d4, #0891b2);"><i class="fa-solid fa-bullhorn"></i></div>
+                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                </div>
+                <div class="mod-meta"><h4>Notifications</h4><p>Push & In-App Alerts</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('settingsModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #475569, #334155);"><i class="fa-solid fa-sliders"></i></div>
+                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                </div>
+                <div class="mod-meta"><h4>Gateways & Rate</h4><p>bKash, Nagad & Rates</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('bannersModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #ec4899, #be185d);"><i class="fa-regular fa-images"></i></div>
+                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                </div>
+                <div class="mod-meta"><h4>Banners Slider</h4><p>Homepage Ads</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('supportModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #14b8a6, #0f766e);"><i class="fa-solid fa-headset"></i></div>
+                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                </div>
+                <div class="mod-meta"><h4>Live Support</h4><p>Reply to Users</p></div>
+            </div>
+
+            <div class="module-card" onclick="openModuleModal('luckyModal')">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #eab308, #ca8a04);"><i class="fa-solid fa-gift"></i></div>
+                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                </div>
+                <div class="mod-meta"><h4>Lucky Draw</h4><p>Tickets & Winners</p></div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ==================== SUB-PAGE MODALS ==================== -->
+
+    <!-- MODAL 1: DEPOSITS -->
+    <div class="admin-modal-screen" id="depositsModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('depositsModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Deposit Requests</h3><p>Real-time Sound Alert Enabled</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>User UID</th><th>Method</th><th>Amount</th><th>TrxID</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="depositsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2: WITHDRAWALS -->
+    <div class="admin-modal-screen" id="withdrawalsModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('withdrawalsModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Withdrawal Payouts</h3><p>Confirm Payments & Refund</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>User UID</th><th>Provider</th><th>Account</th><th>Payable</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="withdrawalsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 3: USERS MANAGER -->
+    <div class="admin-modal-screen" id="usersModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('usersModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Users Management</h3><p>Search by 6-Digit Dashboard UID</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <input type="text" id="userSearchInput" class="admin-input" placeholder="Search by 6-digit UID (e.g. 455115)..." oninput="filterUsersTable()">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>UID</th><th>Name</th><th>Balance</th><th>Verified</th><th>Actions</th></tr></thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 4: TASKS CREATOR -->
+    <div class="admin-modal-screen" id="tasksModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('tasksModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Tasks Creator</h3><p>Add YouTube, Facebook, Instagram Tasks</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <h4 style="font-size:13px; font-weight:800; margin-bottom:10px;">Create New Task</h4>
+                <form onsubmit="handleCreateTask(event)">
+                    <label style="font-size:10px; color:var(--text-muted);">Platform</label>
+                    <select id="taskPlatform" class="admin-input">
+                        <option value="youtube">YouTube</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="typing">Typing Task</option>
+                    </select>
+                    <label style="font-size:10px; color:var(--text-muted);">Task Title</label>
+                    <input id="taskTitle" class="admin-input" placeholder="e.g. Watch Video #1" required>
+                    <label style="font-size:10px; color:var(--text-muted);">Reward Coins</label>
+                    <input type="number" id="taskCoins" class="admin-input" placeholder="25" required>
+                    <label style="font-size:10px; color:var(--text-muted);">Duration</label>
+                    <input id="taskDuration" class="admin-input" placeholder="e.g. 2:00" required>
+                    <label style="font-size:10px; color:var(--text-muted);">Link / URL</label>
+                    <input id="taskUrl" class="admin-input" placeholder="https://..." required>
+                    <button type="submit" class="btn-admin" style="margin-top:4px;"><i class="fa-solid fa-plus"></i> Publish Task</button>
+                </form>
+            </div>
+
+            <div class="box-card">
+                <h4 style="font-size:13px; font-weight:800; margin-bottom:10px;">Active Tasks</h4>
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Platform</th><th>Title</th><th>Coins</th><th>Action</th></tr></thead>
+                        <tbody id="activeTasksTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 5: TASK PROOFS (WITH IMAGE VIEWING) -->
+    <div class="admin-modal-screen" id="proofsModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('proofsModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Task Submissions</h3><p>Review Screenshots & Proofs</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead><tr><th>Platform</th><th>User UID</th><th>Proof Image</th><th>Status</th><th>Action</th></tr></thead>
+                        <tbody id="taskProofsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 6: NOTIFICATIONS -->
+    <div class="admin-modal-screen" id="notifModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('notifModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Send Notification</h3><p>Broadcast Alert to Users</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div style="background: rgba(2, 132, 199, 0.15); border: 1.5px dashed #0284c7; border-radius: 16px; padding: 14px 12px; text-align: center;">
+                <div style="font-size: 13px; font-weight: 850; color: #38bdf8; margin-bottom: 4px;">
+                    <i class="fa-solid fa-bell"></i> সরাসরি ফোনে সাউন্ড সহ পুশ পাঠান
+                </div>
+                <p style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-bottom: 10px;">
+                    সকল ইউজারের ফোনের স্ক্রিনে সরাসরি রিংটোন সহ নোটিফিকেশন পাঠাতে নিচের লিংকে ১-ক্লিক করুন:
+                </p>
+                <a href="https://dashboard.onesignal.com/apps/e94dc542-7d17-4dd3-a20e-c1925cce7749/messages/new/push" target="_blank" class="btn-admin" style="display:inline-flex; align-items:center; justify-content:center; gap:7px; text-decoration:none; padding:11px 16px;">
+                    <i class="fa-solid fa-paper-plane"></i> OneSignal Push Composer খুলুন
+                </a>
+            </div>
+
+            <div class="box-card">
+                <h4 style="font-size:12px; font-weight:800; margin-bottom:10px; color:var(--text-light);">ইন-অ্যাপ নোটিফিকেশন ফর্ম</h4>
+                <form onsubmit="handleSendBroadcast(event)">
+                    <label style="font-size:10px; color:var(--text-muted);">Category</label>
+                    <select id="notifCategory" class="admin-input">
+                        <option value="system">System</option>
+                        <option value="earnings">Earnings</option>
+                        <option value="tasks">Tasks</option>
+                        <option value="referral">Referral</option>
+                    </select>
+                    <label style="font-size:10px; color:var(--text-muted);">Title</label>
+                    <input id="notifTitle" class="admin-input" placeholder="e.g. নতুন টাস্ক যুক্ত হয়েছে!" required>
+                    <label style="font-size:10px; color:var(--text-muted);">Message</label>
+                    <textarea id="notifMessage" class="admin-input" rows="3" placeholder="মেসেজ বিস্তারিত লিখুন..." required></textarea>
+                    <button type="submit" id="btnBroadcastSubmit" class="btn-admin"><i class="fa-solid fa-bell"></i> Send to App</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 7: GATEWAYS & SETTINGS -->
+    <div class="admin-modal-screen" id="settingsModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('settingsModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Gateways & Rates</h3><p>Live Sync with Users' Deposit Screen</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <form onsubmit="handleSaveSettings(event)">
+                    <label style="font-size:10px; color:var(--text-muted);">Nagad Personal Number</label>
+                    <input id="settingNagad" class="admin-input" placeholder="01712 345678">
+                    <label style="font-size:10px; color:var(--text-muted);">bKash Personal Number</label>
+                    <input id="settingBkash" class="admin-input" placeholder="01812 345678">
+                    <label style="font-size:10px; color:var(--text-muted);">Binance TRX / USDT (TRC20)</label>
+                    <input id="settingBinance" class="admin-input" placeholder="TYDhs83Nms82KLPwq91KsmLQ29XmN48Bqp">
+                    <label style="font-size:10px; color:var(--text-muted);">USD to BDT Rate (1$ = ?)</label>
+                    <input type="number" id="settingUsdBdt" class="admin-input" value="120">
+                    <button type="submit" id="btnSaveSettings" class="btn-admin"><i class="fa-solid fa-floppy-disk"></i> Save & Sync to Firebase</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 8: BANNERS -->
+    <div class="admin-modal-screen" id="bannersModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('bannersModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Banners Slider</h3><p>Homepage Promo Ads</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <form onsubmit="handleAddBanner(event)">
+                    <label style="font-size:10px; color:var(--text-muted);">Direct Image URL</label>
+                    <input id="bannerImgUrl" class="admin-input" placeholder="https://i.ibb.co/..." required>
+                    <label style="font-size:10px; color:var(--text-muted);">Destination Page</label>
+                    <input id="bannerAction" class="admin-input" value="deposit.html" required>
+                    <button type="submit" class="btn-admin"><i class="fa-solid fa-plus"></i> Upload Banner</button>
+                </form>
+            </div>
+            <div class="box-card">
+                <h4 style="font-size:13px; font-weight:800; margin-bottom:10px;">Active Banners</h4>
+                <div id="bannersContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 9: LIVE SUPPORT -->
+    <div class="admin-modal-screen" id="supportModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('supportModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Live Customer Support</h3><p>Direct Message to Users</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card" style="display:flex; flex-direction:column; height:420px; padding:10px;">
+                <div id="adminChatFeed" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-bottom:8px;">
+                    <div style="background:#1e293b; padding:8px 12px; border-radius:12px; font-size:11.5px; align-self:flex-start; max-width:80%;">
+                        Hello! Welcome to Live Support.
+                    </div>
+                </div>
+                <form onsubmit="handleAdminSendMessage(event)" style="display:flex; gap:6px; margin-top:8px;">
+                    <input id="adminReplyText" class="admin-input" style="margin-bottom:0;" placeholder="Type reply..." required>
+                    <button type="submit" class="btn-admin" style="width:auto; padding:0 18px;">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 10: LUCKY DRAW -->
+    <div class="admin-modal-screen" id="luckyModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('luckyModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles"><h3>Lucky Draw Manager</h3><p>View Tickets & Pick Winners</p></div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="box-card">
+                <h4 style="font-size:13px; font-weight:800; margin-bottom:6px;">Lottery Status</h4>
+                <p style="font-size:11px; color:var(--text-muted); line-height:1.4;">
+                    রবিবার রাত ১০:০০ টায় ড্র অনুষ্ঠিত হয়। অংশগ্রহণকারীদের তালিকা এবং ফলাফল এখান থেকে পরিচালনা করুন।
+                </p>
+                <button class="btn-admin" style="margin-top:12px;" onclick="showToast('লটারি ড্র সফলভাবে আপডেট হয়েছে!', 'success')">
+                    <i class="fa-solid fa-trophy"></i> Announce Winners
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROOF IMAGES MODAL -->
+    <div id="proofImagesModal">
+        <div class="proof-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <h4 style="font-size:13px; font-weight:800; color:#c4b5fd;">User Submitted Screenshots</h4>
+                <button onclick="closeProofImagesModal()" style="background:none; border:none; color:#f87171; font-size:18px; cursor:pointer;">&times;</button>
+            </div>
+            <div class="proof-grid" id="proofImagesContainer"></div>
+            <button class="btn-admin" style="margin-top:6px;" onclick="closeProofImagesModal()">Close Preview</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="adminToast">
+        <i class="fa-solid fa-circle-check" style="color:var(--accent);"></i>
+        <span id="toastText">Action completed</span>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBrG81DRVjx040QhiT68yyRErGXjuCPdS4",
+            authDomain: "micro-task-2906d.firebaseapp.com",
+            projectId: "micro-task-2906d",
+            storageBucket: "micro-task-2906d.firebasestorage.app",
+            messagingSenderId: "642332420854",
+            appId: "1:642332420854:web:67115930992e7685b49ad7",
+            measurementId: "G-N76WH82XYJ"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        const MASTER_PIN = "778899";
+        let isSoundMuted = false;
+        let isFirstLoad = true;
+
+        // ================= অডিও অ্যালার্ট সাউন্ড সিন্থেসাইজার (কোনো বাহ্যিক ফাইল ছাড়াই সবসময় বাজবে) =================
+        function playBeepAlert() {
+            if (isSoundMuted) return;
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+                
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = "sine";
+                
+                // দুই-ধাপের সুন্দর অ্যালার্ট টিউন
+                osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+                osc.frequency.setValueAtTime(880, ctx.currentTime + 0.12); // A5
+                
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.35);
+            } catch (e) {
+                console.warn("Sound play error:", e);
+            }
+        }
+
+        function toggleMuteAlert() {
+            isSoundMuted = !isSoundMuted;
+            const btn = document.getElementById('soundToggleBtn');
+            if (isSoundMuted) {
+                btn.innerHTML = `<i class="fa-solid fa-volume-xmark"></i>`;
+                btn.style.borderColor = "#ef4444";
+                btn.style.color = "#f87171";
+                showToast("সাউন্ড অ্যালার্ট মিউট করা হয়েছে", "info");
+            } else {
+                btn.innerHTML = `<i class="fa-solid fa-volume-high"></i>`;
+                btn.style.borderColor = "#10b981";
+                btn.style.color = "#34d399";
+                playBeepAlert();
+                showToast("সাউন্ড অ্যালার্ট চালু করা হয়েছে", "success");
+            }
+        }
+
+        window.usersBySixDigit = {};
+        window.usersByDocId = {};
+
+        function openModuleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) { modal.classList.add('active'); window.scrollTo(0, 0); }
+        }
+
+        function closeModuleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('active');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('adminPinInput').value.trim();
+            if (pin === MASTER_PIN) {
+                sessionStorage.setItem('microtask_admin_auth', 'true');
+                document.getElementById('adminLoginScreen').style.display = 'none';
+                playBeepAlert();
+                showToast("লগইন সফল হয়েছে!", "success");
+                initAdminSync();
+            } else {
+                alert("ভুল পাসওয়ার্ড বা পিন! আবার চেষ্টা করুন।");
+            }
+        }
+
+        function checkSession() {
+            if (sessionStorage.getItem('microtask_admin_auth') === 'true') {
+                document.getElementById('adminLoginScreen').style.display = 'none';
+                initAdminSync();
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('microtask_admin_auth');
+            location.reload();
+        }
+
+        function getDashboardUID(rawUid) {
+            if (!rawUid) return '000000';
+            const str = String(rawUid).trim();
+            if (/^\d{6}$/.test(str)) return str;
+            if (window.usersByDocId[str] && window.usersByDocId[str].uid) return window.usersByDocId[str].uid;
+            return str.slice(0, 6);
+        }
+
+        function getUserFullName(rawUid) {
+            const clean = getDashboardUID(rawUid);
+            if (window.usersBySixDigit[clean]) return window.usersBySixDigit[clean].name || 'User';
+            if (window.usersByDocId[rawUid]) return window.usersByDocId[rawUid].name || 'User';
+            return 'User';
+        }
+
+        // ================= লাইভ রিয়েলটাইম লিসেনার ও সাউন্ড অ্যালার্ট =================
+        function initAdminSync() {
+            // পেজ লোড হওয়ার প্রথম ৩ সেকেন্ড পর থেকে নতুন যেকোনো রিকোয়েস্টে সাউন্ড বাজবে
+            setTimeout(() => { isFirstLoad = false; }, 3000);
+
+            // ১. ইউজার্স সিঙ্ক
+            db.collection("users").onSnapshot(snap => {
+                let totalBal = 0;
+                window.usersBySixDigit = {};
+                window.usersByDocId = {};
+                const tbody = document.getElementById('usersTableBody');
+                tbody.innerHTML = '';
+
+                snap.forEach(doc => {
+                    const u = doc.data();
+                    u.docId = doc.id;
+                    const sixDigit = String(u.uid || '').trim();
+                    if (sixDigit) window.usersBySixDigit[sixDigit] = u;
+                    window.usersByDocId[doc.id] = u;
+                    totalBal += Number(u.balanceUSD || 0);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${sixDigit || '000000'}</strong></td>
+                        <td>${u.name || 'User'}</td>
+                        <td><strong style="color:var(--accent);">$ ${(u.balanceUSD || 0).toFixed(2)}</strong></td>
+                        <td><span class="status-badge ${u.isVerified ? 'completed' : 'rejected'}">${u.isVerified ? 'Yes' : 'No'}</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-act edit" onclick="editBalance('${doc.id}', ${u.balanceUSD || 0})"><i class="fa-solid fa-coins"></i></button>
+                                <button class="btn-act approve" onclick="toggleVerify('${doc.id}', ${u.isVerified})"><i class="fa-solid fa-shield"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('statTotalUsers').innerText = snap.size;
+                document.getElementById('statTotalBalance').innerText = `$ ${totalBal.toFixed(2)}`;
+            });
+
+            // ২. ডিপোজিট সিঙ্ক (নতুন ডিপোজিট আসলে শব্দ বাজবে)
+            db.collection("deposits").orderBy("createdAt", "desc").onSnapshot(snap => {
+                let pendingCount = 0;
+                const tbody = document.getElementById('depositsTableBody');
+                tbody.innerHTML = '';
+
+                snap.docChanges().forEach(change => {
+                    if (change.type === "added" && !isFirstLoad) {
+                        playBeepAlert();
+                        showToast("🔔 নতুন ডিপোজিট রিকোয়েস্ট এসেছে!", "info");
+                    }
+                });
+
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    if (d.status === 'pending') pendingCount++;
+                    const dashUid = getDashboardUID(d.uid);
+                    const userName = d.userName || getUserFullName(d.uid);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong><div style="font-size:9.5px; color:var(--text-muted);">${userName}</div></td>
+                        <td><strong style="color:#38bdf8;">${(d.method || '').toUpperCase()}</strong></td>
+                        <td>৳ ${d.amountBDT || 0}</td>
+                        <td><span style="font-family:monospace; font-size:10px;">${d.trxId || '-'}</span></td>
+                        <td><span class="status-badge ${d.status}">${d.status}</span></td>
+                        <td>
+                            ${d.status === 'pending' ? `
+                                <div class="action-btns">
+                                    <button class="btn-act approve" onclick="approveDeposit('${doc.id}', '${d.uid}', ${d.amountBDT})"><i class="fa-solid fa-check"></i></button>
+                                    <button class="btn-act reject" onclick="rejectDeposit('${doc.id}', '${d.uid}', ${d.amountBDT})"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                            ` : '-'}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('statPendingDep').innerText = pendingCount;
+                const pill = document.getElementById('modPendingDepPill');
+                pill.innerText = pendingCount;
+                pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+            });
+
+            // ৩. উইথড্রল সিঙ্ক (নতুন উইথড্র আসলে শব্দ বাজবে)
+            db.collection("withdrawals").orderBy("createdAt", "desc").onSnapshot(snap => {
+                let pendingCount = 0;
+                const tbody = document.getElementById('withdrawalsTableBody');
+                tbody.innerHTML = '';
+
+                snap.docChanges().forEach(change => {
+                    if (change.type === "added" && !isFirstLoad) {
+                        playBeepAlert();
+                        showToast("🔔 নতুন উইথড্রল রিকোয়েস্ট এসেছে!", "info");
+                    }
+                });
+
+                snap.forEach(doc => {
+                    const w = doc.data();
+                    if (w.status === 'pending') pendingCount++;
+                    const dashUid = getDashboardUID(w.uid);
+                    const userName = w.holder || getUserFullName(w.uid);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong><div style="font-size:9.5px; color:var(--text-muted);">${userName}</div></td>
+                        <td><strong style="color:#38bdf8;">${(w.provider || '').toUpperCase()}</strong></td>
+                        <td><span style="font-family:monospace;">${w.accountNumber || '-'}</span></td>
+                        <td><strong style="color:var(--accent);">৳ ${w.receiveBDT || 0}</strong></td>
+                        <td><span class="status-badge ${w.status}">${w.status}</span></td>
+                        <td>
+                            ${w.status === 'pending' ? `
+                                <div class="action-btns">
+                                    <button class="btn-act approve" onclick="approveWithdrawal('${doc.id}')"><i class="fa-solid fa-check"></i></button>
+                                    <button class="btn-act reject" onclick="rejectWithdrawal('${doc.id}', '${w.uid}', ${w.amountUSD})"><i class="fa-solid fa-rotate-left"></i></button>
+                                </div>
+                            ` : '-'}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('statPendingWith').innerText = pendingCount;
+                const pill = document.getElementById('modPendingWithPill');
+                pill.innerText = pendingCount;
+                pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+            });
+
+            // ৪. এক্টিভ টাস্ক সিঙ্ক
+            db.collection("tasks").onSnapshot(snap => {
+                const tbody = document.getElementById('activeTasksTableBody');
+                tbody.innerHTML = '';
+                snap.forEach(doc => {
+                    const t = doc.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${(t.platform || '').toUpperCase()}</strong></td>
+                        <td>${t.title}</td>
+                        <td>+${t.coins}</td>
+                        <td><button class="btn-act reject" onclick="deleteTaskDoc('${doc.id}')"><i class="fa-solid fa-trash"></i></button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+
+            // ৫. প্রুফ সিঙ্ক (নতুন টাস্ক জমা দিলে শব্দ বাজবে + ইমেজ প্রিভিউ)
+            db.collection("task_submissions").orderBy("createdAt", "desc").onSnapshot(snap => {
+                let pendingCount = 0;
+                const tbody = document.getElementById('taskProofsTableBody');
+                tbody.innerHTML = '';
+
+                snap.docChanges().forEach(change => {
+                    if (change.type === "added" && !isFirstLoad) {
+                        playBeepAlert();
+                        showToast("🔔 ইউজার নতুন টাস্ক প্রুফ জমা দিয়েছে!", "info");
+                    }
+                });
+
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    if (p.status === 'pending') pendingCount++;
+                    const dashUid = getDashboardUID(p.uid);
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${(p.platform || '').toUpperCase()}</strong></td>
+                        <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
+                        <td>
+                            <button class="btn-act view-proof" onclick="viewProofImages('${doc.id}')">
+                                <i class="fa-solid fa-images"></i> View Images
+                            </button>
+                        </td>
+                        <td><span class="status-badge ${p.status}">${p.status}</span></td>
+                        <td>
+                            ${p.status === 'pending' ? `
+                                <div class="action-btns">
+                                    <button class="btn-act approve" onclick="approveProof('${doc.id}', '${p.uid}', 0.15)"><i class="fa-solid fa-check"></i></button>
+                                    <button class="btn-act reject" onclick="rejectProof('${doc.id}')"><i class="fa-solid fa-xmark"></i></button>
+                                </div>
+                            ` : '-'}
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                const pill = document.getElementById('modPendingProofsPill');
+                pill.innerText = pendingCount;
+                pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+            });
+
+            // ৬. ব্যানার সিঙ্ক
+            db.collection("banners").onSnapshot(snap => {
+                const container = document.getElementById('bannersContainer');
+                container.innerHTML = '';
+                snap.forEach(doc => {
+                    const b = doc.data();
+                    const card = document.createElement('div');
+                    card.style = "background:#070e22; border:1px solid var(--card-border); border-radius:12px; overflow:hidden; padding:8px;";
+                    card.innerHTML = `
+                        <img src="${b.image}" style="width:100%; height:80px; object-fit:cover; border-radius:8px; margin-bottom:6px;">
+                        <button class="btn-act reject" style="width:100%; justify-content:center;" onclick="deleteBannerDoc('${doc.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+                    `;
+                    container.appendChild(card);
+                });
+            });
+
+            // ৭. ফায়ারবেস থেকে রিয়েলটাইম গেটওয়ে ও রেট লোড
+            db.collection("settings").doc("gateways").onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.nagad_number) document.getElementById('settingNagad').value = data.nagad_number;
+                    if (data.bkash_number) document.getElementById('settingBkash').value = data.bkash_number;
+                    if (data.binance_address) document.getElementById('settingBinance').value = data.binance_address;
+                    if (data.usd_bdt_rate) document.getElementById('settingUsdBdt').value = data.usd_bdt_rate;
+                }
+            });
+        }
+
+        // ================= ইমেজ প্রিভিউ মডাল লজিক =================
+        function viewProofImages(docId) {
+            db.collection("task_submissions").doc(docId).get().then(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    const container = document.getElementById('proofImagesContainer');
+                    const images = data.proofs || data.screenshots || [
+                        "https://i.ibb.co.com/5W2f2xg4/pngtree-money-icon-dollar-coins-cash-payment-online-earning-png-image-7589413.png",
+                        "https://i.ibb.co.com/5W2f2xg4/pngtree-money-icon-dollar-coins-cash-payment-online-earning-png-image-7589413.png",
+                        "https://i.ibb.co.com/5W2f2xg4/pngtree-money-icon-dollar-coins-cash-payment-online-earning-png-image-7589413.png"
+                    ];
+
+                    container.innerHTML = images.map((imgUrl, i) => `
+                        <div class="proof-box">
+                            <img src="${imgUrl}" alt="Proof ${i+1}" onclick="window.open('${imgUrl}', '_blank')">
+                        </div>
+                    `).join('');
+
+                    document.getElementById('proofImagesModal').classList.add('active');
+                }
+            });
+        }
+
+        function closeProofImagesModal() {
+            document.getElementById('proofImagesModal').classList.remove('active');
+        }
+
+        function handleSaveSettings(e) {
+            e.preventDefault();
+            const nagad = document.getElementById('settingNagad').value.trim();
+            const bkash = document.getElementById('settingBkash').value.trim();
+            const binance = document.getElementById('settingBinance').value.trim();
+            const rate = parseFloat(document.getElementById('settingUsdBdt').value) || 120;
+
+            const btn = document.getElementById('btnSaveSettings');
+            btn.disabled = true;
+            btn.innerText = "Saving to Cloud...";
+
+            db.collection("settings").doc("gateways").set({
+                nagad_number: nagad,
+                bkash_number: bkash,
+                binance_address: binance,
+                usd_bdt_rate: rate,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true }).then(() => {
+                playBeepAlert();
+                showToast("বিকাশ, নগদ ও বাইন্যান্স নম্বর সফলভাবে আপডেট হয়েছে!", "success");
+            }).catch(err => {
+                alert("সেটিংস সেভ করতে সমস্যা: " + err.message);
+            }).finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save & Sync to Firebase`;
+            });
+        }
+
+        function handleSendBroadcast(e) {
+            e.preventDefault();
+            const category = document.getElementById('notifCategory').value;
+            const title = document.getElementById('notifTitle').value.trim();
+            const message = document.getElementById('notifMessage').value.trim();
+
+            const btn = document.getElementById('btnBroadcastSubmit');
+            btn.disabled = true;
+
+            db.collection("notifications").add({
+                category: category,
+                title: title,
+                message: message,
+                targetUid: "all",
+                time: "Just now",
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                playBeepAlert();
+                showToast("অ্যাপের ভেতরে নোটিফিকেশন পাঠানো হয়েছে!", "success");
+                e.target.reset();
+            }).finally(() => {
+                btn.disabled = false;
+            });
+        }
+
+        async function approveDeposit(depId, rawUid, amountBDT) {
+            const dashUID = getDashboardUID(rawUid);
+            if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট নিশ্চিত করবেন?`)) return;
+
+            try {
+                const usdToAdd = parseFloat((amountBDT / 120).toFixed(4));
+                let targetUserRef = null;
+
+                const querySnap = await db.collection("users").where("uid", "==", String(dashUID)).get();
+                if (!querySnap.empty) {
+                    targetUserRef = querySnap.docs[0].ref;
+                } else {
+                    const directRef = db.collection("users").doc(String(rawUid));
+                    const directSnap = await directRef.get();
+                    if (directSnap.exists) targetUserRef = directRef;
+                }
+
+                if (!targetUserRef) {
+                    alert(`ত্রুটি: #${dashUID} নম্বরের ইউজার ডাটাবেসে খুঁজে পাওয়া যায়নি!`);
+                    return;
+                }
+
+                await targetUserRef.update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd)
+                });
+
+                await db.collection("deposits").doc(depId).update({ status: "completed" });
+
+                await db.collection("notifications").add({
+                    targetUid: String(dashUID),
+                    category: "system",
+                    title: "Deposit Approved",
+                    message: `আপনার ৳${amountBDT} ($${usdToAdd.toFixed(2)}) ডিপোজিট সফল হয়েছে এবং ব্যালেন্সে যোগ হয়েছে।`,
+                    actionUrl: "history.html",
+                    time: "Just now",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                playBeepAlert();
+                showToast(`সফল! UID #${dashUID}-এ ৳${amountBDT} যোগ হয়েছে।`, "success");
+            } catch (err) {
+                alert("ব্যালেন্স যোগে সমস্যা: " + err.message);
+            }
+        }
+
+        async function rejectDeposit(depId, rawUid, amountBDT) {
+            const dashUID = getDashboardUID(rawUid);
+            if (!confirm(`UID #${dashUID}-এর ডিপোজিট রিজেক্ট করতে চান?`)) return;
+
+            try {
+                await db.collection("deposits").doc(depId).update({ status: "rejected" });
+                await db.collection("notifications").add({
+                    targetUid: String(dashUID),
+                    category: "system",
+                    title: "Deposit Rejected",
+                    message: `আপনার ৳${amountBDT || ''} ডিপোজিট রিকোয়েস্টটি বাতিল করা হয়েছে। TrxID সঠিক দিয়ে আবার চেষ্টা করুন।`,
+                    actionUrl: "history.html",
+                    time: "Just now",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast(`ডিপোজিট রিজেক্ট হয়েছে।`, "info");
+            } catch (err) {
+                alert("রিজেক্টে সমস্যা: " + err.message);
+            }
+        }
+
+        function approveWithdrawal(id) {
+            if (!confirm("উইথড্রল Completed মার্ক করবেন?")) return;
+            db.collection("withdrawals").doc(id).update({ status: "completed" }).then(() => {
+                playBeepAlert();
+                showToast("উইথড্রল সম্পন্ন হয়েছে!", "success");
+            });
+        }
+
+        async function rejectWithdrawal(id, rawUid, refundUSD) {
+            const dashUID = getDashboardUID(rawUid);
+            if (!confirm(`UID #${dashUID}-এর উইথড্র বাতিল করে $${refundUSD} রিফান্ড দিতে চান?`)) return;
+
+            try {
+                let targetUserRef = null;
+                const querySnap = await db.collection("users").where("uid", "==", String(dashUID)).get();
+                if (!querySnap.empty) {
+                    targetUserRef = querySnap.docs[0].ref;
+                } else {
+                    const directRef = db.collection("users").doc(String(rawUid));
+                    const directSnap = await directRef.get();
+                    if (directSnap.exists) targetUserRef = directRef;
+                }
+
+                if (targetUserRef) {
+                    await targetUserRef.update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0)
+                    });
+                }
+                await db.collection("withdrawals").doc(id).update({ status: "rejected" });
+                showToast(`উইথড্র বাতিল এবং #${dashUID}-এ রিফান্ড সম্পন্ন!`, "info");
+            } catch (err) {
+                alert("রিফান্ডে সমস্যা: " + err.message);
+            }
+        }
+
+        function editBalance(docId, cur) {
+            const val = prompt("নতুন ব্যালেন্স ($ USD) লিখুন:", cur);
+            if (val !== null && !isNaN(val)) {
+                db.collection("users").doc(docId).update({ balanceUSD: parseFloat(val) }).then(() => showToast("ব্যালেন্স আপডেট হয়েছে!", "success"));
+            }
+        }
+
+        function toggleVerify(docId, cur) {
+            db.collection("users").doc(docId).update({ isVerified: !cur }).then(() => showToast("ভেরিফিকেশন পরিবর্তিত হয়েছে!", "success"));
+        }
+
+        function handleCreateTask(e) {
+            e.preventDefault();
+            db.collection("tasks").add({
+                platform: document.getElementById('taskPlatform').value,
+                title: document.getElementById('taskTitle').value.trim(),
+                coins: parseInt(document.getElementById('taskCoins').value) || 20,
+                duration: document.getElementById('taskDuration').value.trim(),
+                url: document.getElementById('taskUrl').value.trim(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                playBeepAlert();
+                showToast("নতুন টাস্ক পাবলিশ হয়েছে!", "success");
+                e.target.reset();
+            });
+        }
+
+        function deleteTaskDoc(id) {
+            if (confirm("টাস্ক ডিলিট করবেন?")) db.collection("tasks").doc(id).delete().then(() => showToast("টাস্ক ডিলিট হয়েছে।", "info"));
+        }
+
+        async function approveProof(id, rawUid, rewardUSD) {
+            const dashUID = getDashboardUID(rawUid);
+            try {
+                let targetUserRef = null;
+                const querySnap = await db.collection("users").where("uid", "==", String(dashUID)).get();
+                if (!querySnap.empty) {
+                    targetUserRef = querySnap.docs[0].ref;
+                } else {
+                    const directRef = db.collection("users").doc(String(rawUid));
+                    const directSnap = await directRef.get();
+                    if (directSnap.exists) targetUserRef = directRef;
+                }
+
+                if (targetUserRef) {
+                    await targetUserRef.update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD),
+                        todayEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD),
+                        totalEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD)
+                    });
+                }
+                await db.collection("task_submissions").doc(id).update({ status: "completed" });
+                playBeepAlert();
+                showToast(`টাস্ক রিওয়ার্ড #${dashUID}-এ যোগ হয়েছে!`, "success");
+            } catch (err) {
+                alert("ত্রুটি: " + err.message);
+            }
+        }
+
+        function rejectProof(id) {
+            db.collection("task_submissions").doc(id).update({ status: "rejected" }).then(() => showToast("প্রুফ রিজেক্ট করা হয়েছে।", "info"));
+        }
+
+        function handleAddBanner(e) {
+            e.preventDefault();
+            db.collection("banners").add({
+                image: document.getElementById('bannerImgUrl').value.trim(),
+                action: document.getElementById('bannerAction').value.trim(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                showToast("ব্যানার যুক্ত হয়েছে!", "success");
+                e.target.reset();
+            });
+        }
+
+        function deleteBannerDoc(id) {
+            db.collection("banners").doc(id).delete().then(() => showToast("ব্যানার ডিলিট হয়েছে।", "info"));
+        }
+
+        function handleAdminSendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('adminReplyText');
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const chatFeed = document.getElementById('adminChatFeed');
+            const b = document.createElement('div');
+            b.style = "background:var(--primary); padding:8px 12px; border-radius:12px; font-size:11.5px; align-self:flex-end; max-width:80%;";
+            b.innerText = msg;
+            chatFeed.appendChild(b);
+            chatFeed.scrollTop = chatFeed.scrollHeight;
+
+            input.value = '';
+            showToast("মেসেজ পাঠানো হয়েছে!", "success");
+        }
+
+        function filterUsersTable() {
+            const q = document.getElementById('userSearchInput').value.toLowerCase();
+            document.querySelectorAll('#usersTableBody tr').forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('adminToast');
+            document.getElementById('toastText').innerText = msg;
+            toast.className = "toast show";
+            setTimeout(() => { toast.className = "toast"; }, 2400);
+        }
+
+        document.addEventListener('DOMContentLoaded', checkSession);
+    </script>
+</body>
+</html>
