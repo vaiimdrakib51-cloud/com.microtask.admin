@@ -30,7 +30,7 @@ jobs:
           mkdir -p app/src/main/res/values
           mkdir -p app/src/main/res/mipmap-xxhdpi
 
-          # App Icon
+          # App Icon Download
           curl -sL "https://i.ibb.co.com/5W2f2xg4/pngtree-money-icon-dollar-coins-cash-payment-online-earning-png-image-7589413.png" -o app/src/main/res/mipmap-xxhdpi/ic_launcher.png
 
           # Gradle Properties
@@ -67,7 +67,7 @@ jobs:
           }
           EOF
 
-          # App build.gradle (Package: com.microtask.admin)
+          # App build.gradle (Separate Package: com.microtask.admin)
           cat << 'EOF' > app/build.gradle
           plugins {
               id 'com.android.application'
@@ -147,7 +147,7 @@ jobs:
           </manifest>
           EOF
 
-          # MainActivity.java (অ্যালার্ট সাউন্ড স্বয়ংক্রিয় প্লে করার পারমিশন সহ)
+          # MainActivity.java (নতুন লাইভ লিংক ও অটো-সাউন্ড পারমিশন সহ)
           cat << 'EOF' > app/src/main/java/com/microtask/admin/MainActivity.java
           package com.microtask.admin;
 
@@ -179,14 +179,14 @@ jobs:
                   webSettings.setUseWideViewPort(true);
                   webSettings.setLoadWithOverviewMode(true);
                   
-                  // ইউজার টাচ ছাড়াই ব্যাকগ্রাউন্ড সাউন্ড বাজানোর বিশেষ পারমিশন
+                  // ইউজার ক্লিক ছাড়া লাইভ অ্যালার্ট সাউন্ড বাজার পারমিশন
                   webSettings.setMediaPlaybackRequiresUserGesture(false);
 
                   adminWebView.setWebViewClient(new WebViewClient());
                   adminWebView.setWebChromeClient(new WebChromeClient());
 
-                  // অ্যাডমিন পেজ লোড
-                  adminWebView.loadUrl("https://vaiimdrakib51-cloud.github.io/MiCro-Task/admin.html");
+                  // আপনার com.microtask.admin রিপোজিটরির লাইভ লিংক
+                  adminWebView.loadUrl("https://vaiimdrakib51-cloud.github.io/com.microtask.admin/");
               }
 
               @Override
