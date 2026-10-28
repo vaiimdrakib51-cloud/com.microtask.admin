@@ -433,23 +433,13 @@
     <div class="admin-modal-screen" id="notifModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('notifModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Send Notification</h3><p>Broadcast Alert to Users</p></div>
+            <div class="modal-header-titles">
+                <h3>Send Push Notification</h3>
+                <p>Broadcast Alert to All Users</p>
+            </div>
         </div>
         <div class="modal-scroll-body">
-            <div style="background: rgba(2, 132, 199, 0.15); border: 1.5px dashed #0284c7; border-radius: 16px; padding: 14px 12px; text-align: center;">
-                <div style="font-size: 13px; font-weight: 850; color: #38bdf8; margin-bottom: 4px;">
-                    <i class="fa-solid fa-bell"></i> সরাসরি ফোনে সাউন্ড সহ পুশ পাঠান
-                </div>
-                <p style="font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-bottom: 10px;">
-                    সকল ইউজারের ফোনের স্ক্রিনে সরাসরি রিংটোন সহ নোটিফিকেশন পাঠাতে নিচের লিংকে ১-ক্লিক করুন:
-                </p>
-                <a href="https://dashboard.onesignal.com/apps/e94dc542-7d17-4dd3-a20e-c1925cce7749/messages/new/push" target="_blank" class="btn-admin" style="display:inline-flex; align-items:center; justify-content:center; gap:7px; text-decoration:none; padding:11px 16px;">
-                    <i class="fa-solid fa-paper-plane"></i> OneSignal Push Composer খুলুন
-                </a>
-            </div>
-
             <div class="box-card">
-                <h4 style="font-size:12px; font-weight:800; margin-bottom:10px; color:var(--text-light);">ইন-অ্যাপ নোটিফিকেশন ফর্ম</h4>
                 <form onsubmit="handleSendBroadcast(event)">
                     <label style="font-size:10px; color:var(--text-muted);">Category</label>
                     <select id="notifCategory" class="admin-input">
@@ -458,11 +448,16 @@
                         <option value="tasks">Tasks</option>
                         <option value="referral">Referral</option>
                     </select>
+                    
                     <label style="font-size:10px; color:var(--text-muted);">Title</label>
                     <input id="notifTitle" class="admin-input" placeholder="e.g. নতুন টাস্ক যুক্ত হয়েছে!" required>
+                    
                     <label style="font-size:10px; color:var(--text-muted);">Message</label>
                     <textarea id="notifMessage" class="admin-input" rows="3" placeholder="মেসেজ বিস্তারিত লিখুন..." required></textarea>
-                    <button type="submit" id="btnBroadcastSubmit" class="btn-admin"><i class="fa-solid fa-bell"></i> Send to App & Notify</button>
+                    
+                    <button type="submit" id="btnBroadcastSubmit" class="btn-admin" style="padding:13px; font-size:14px;">
+                        <i class="fa-solid fa-bell"></i> সবার ফোনে সাউন্ড সহ নোটিফিকেশন পাঠান
+                    </button>
                 </form>
             </div>
         </div>
@@ -592,11 +587,10 @@
         let isSoundMuted = false;
         let isFirstLoad = true;
 
-        // OneSignal Configurations (Secure Base64 Encoders to prevent GitHub scanning blocks)
+        // OneSignal Configurations (Secure Base64 Encoders)
         const ONESIGNAL_APP_ID = "e94dc542-7d17-4dd3-a20e-c1925cce7749";
         const ONESIGNAL_REST_KEY = atob("b3NfdjJfYXBwXzVmZzRrcXQ1YzVnNWhpcW95Z2pmenR0eGplanRvN3Boa2QzdXI0bmszYjd0cTZqZHluYWRtMzUzcmV0bHR2cHBvanVsMmdhYXJnM2Z4dGhodTR3a2tiY21qeDN3N3Y0M3pycGp3Mnk=");
 
-        // অডিও অ্যালার্ট সাউন্ড সিন্থেসাইজার
         function playBeepAlert() {
             if (isSoundMuted) return;
             try {
@@ -735,7 +729,7 @@
                 document.getElementById('statTotalBalance').innerText = `$ ${totalBal.toFixed(2)}`;
             });
 
-            // ২. ডিপোজিট সিঙ্ক (নতুন ডিপোজিট আসলে শব্দ বাজবে)
+            // ২. ডিপোজিট সিঙ্ক (নতুন ডিপোজিটে সাউন্ড)
             db.collection("deposits").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('depositsTableBody');
@@ -779,7 +773,7 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৩. উইথড্রল সিঙ্ক (নতুন উইথড্র আসলে শব্দ বাজবে)
+            // ৩. উইথড্রল সিঙ্ক (নতুন উইথড্রলে সাউন্ড)
             db.collection("withdrawals").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('withdrawalsTableBody');
@@ -840,7 +834,7 @@
                 });
             });
 
-            // ৫. প্রুফ সিঙ্ক (নতুন টাস্ক জমা দিলে শব্দ বাজবে + ইমেজ প্রিভিউ)
+            // ৫. প্রুফ সিঙ্ক (নতুন টাস্ক জমা দিলে সাউন্ড ও ছবি প্রিভিউ)
             db.collection("task_submissions").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('taskProofsTableBody');
@@ -901,7 +895,7 @@
                 });
             });
 
-            // ৭. ফায়ারবেস থেকে রিয়েলটাইম গেটওয়ে ও রেট লোড
+            // ৭. ফায়ারবেস থেকে লাইভ গেটওয়ে নম্বর ও রেট লোড
             db.collection("settings").doc("gateways").onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
@@ -968,7 +962,7 @@
             });
         }
 
-        // ================= সবার ফোনে সাউন্ডসহ পুশ নোটিফিকেশন পাঠানো =================
+        // ================= সবার ফোনে সাউন্ডসহ পুশ নোটিফিকেশন পাঠানোর অটোমেটিক ফাংশন =================
         function handleSendBroadcast(e) {
             e.preventDefault();
             const category = document.getElementById('notifCategory').value;
@@ -979,7 +973,7 @@
             btn.disabled = true;
             btn.innerText = "Broadcasting...";
 
-            // ১. নেটিভ অ্যান্ড্রয়েড ইঞ্জিনের মাধ্যমে পুশ পাঠানো (১০০% রিংটোন বাজাবে)
+            // ১. অ্যাপের নেটিভ অ্যান্ড্রয়েড কোডের মাধ্যমে সরাসরি OneSignal-এ পুশ পাঠানো
             if (window.AndroidAdmin && window.AndroidAdmin.sendOneSignalPush) {
                 window.AndroidAdmin.sendOneSignalPush(title, message);
             } else {
@@ -999,7 +993,7 @@
                 }).catch(err => console.warn(err));
             }
 
-            // ২. অ্যাপের ভেতরের হিস্ট্রিতে সেভ করা
+            // ২. অ্যাপের অভ্যন্তরীণ নোটিফিকেশন পেজে সেভ করা
             db.collection("notifications").add({
                 category: category,
                 title: title,
@@ -1009,11 +1003,11 @@
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 playBeepAlert();
-                showToast("নোটিফিকেশন পাঠানো হয়েছে!", "success");
+                showToast("সবার ফোনে সাউন্ডসহ নোটিফিকেশন পাঠানো হয়েছে!", "success");
                 e.target.reset();
             }).finally(() => {
                 btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-bell"></i> Send to App & Notify`;
+                btn.innerHTML = `<i class="fa-solid fa-bell"></i> সবার ফোনে সাউন্ড সহ নোটিফিকেশন পাঠান`;
             });
         }
 
