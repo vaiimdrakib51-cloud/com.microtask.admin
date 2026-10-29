@@ -132,7 +132,7 @@
 
         .status-badge { padding: 2.5px 7px; border-radius: 12px; font-size: 9px; font-weight: 800; display: inline-flex; align-items: center; gap: 3px; }
         .status-badge.pending { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-        .status-badge.completed { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .status-badge.completed, .status-badge.success { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
         .status-badge.rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
 
         .action-btns { display: flex; gap: 5px; }
@@ -142,7 +142,6 @@
         .btn-act.edit { background: rgba(2, 132, 199, 0.2); border: 1px solid #0284c7; color: #38bdf8; }
         .btn-act.view-proof { background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #c4b5fd; }
 
-        /* Checkbox styling */
         .checkbox-group { display: flex; gap: 12px; margin: 8px 0 12px; flex-wrap: wrap; }
         .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #cbd5e1; cursor: pointer; font-weight: 600; }
         .checkbox-label input { width: 15px; height: 15px; accent-color: var(--primary); }
@@ -251,7 +250,7 @@
                 <div class="mod-meta"><h4>Withdrawals</h4><p>Payout & Refund</p></div>
             </div>
 
-            <!-- নতুন বুস্ট রিকোয়েস্ট মডিউল -->
+            <!-- বুস্ট রিকোয়েস্ট মডিউল -->
             <div class="module-card" onclick="openModuleModal('boostModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-rocket"></i></div>
@@ -308,6 +307,15 @@
                 <div class="mod-meta"><h4>Banners Slider</h4><p>Gallery Upload Support</p></div>
             </div>
 
+            <!-- লাইভ সাপোর্ট মডিউল -->
+            <div class="module-card" onclick="openSupportChatModal()">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #14b8a6, #0f766e);"><i class="fa-solid fa-headset"></i></div>
+                    <span class="pending-pill" id="modPendingSupportPill" style="display:none;">0</span>
+                </div>
+                <div class="mod-meta"><h4>Live Support</h4><p>User Messages & Reply</p></div>
+            </div>
+
             <div class="module-card" onclick="openModuleModal('luckyModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #eab308, #ca8a04);"><i class="fa-solid fa-gift"></i></div>
@@ -357,7 +365,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: BOOST REQUESTS (NEW) -->
+    <!-- MODAL 3: BOOST REQUESTS -->
     <div class="admin-modal-screen" id="boostModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('boostModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -413,9 +421,8 @@
                     </select>
 
                     <label style="font-size:10px; color:var(--text-muted);">Task Title</label>
-                    <input id="taskTitle" class="admin-input" placeholder="e.g. Watch Video & Subscribe #1" required>
+                    <input id="taskTitle" class="admin-input" placeholder="e.g. Watch Video & Follow #1" required>
 
-                    <!-- অ্যাডমিন যে যে রুলস চাইবেন তার চেকবক্স -->
                     <label style="font-size:10px; color:var(--accent); font-weight:800;">ইউজার থেকে যা যা প্রুফ চান (Select Rules):</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label"><input type="checkbox" id="ruleLike" checked> Like Required</label>
@@ -487,7 +494,7 @@
                     </select>
                     
                     <label style="font-size:10px; color:var(--text-muted);">Title</label>
-                    <input id="notifTitle" class="admin-input" placeholder="e.g. নতুন টাস্ক যুক্ত হয়েছে!" required>
+                    <input id="notifTitle" class="admin-input" placeholder="e.g. নতুন আপডেট যুক্ত হয়েছে!" required>
                     
                     <label style="font-size:10px; color:var(--text-muted);">Message</label>
                     <textarea id="notifMessage" class="admin-input" rows="3" placeholder="মেসেজ বিস্তারিত লিখুন..." required></textarea>
@@ -551,7 +558,40 @@
         </div>
     </div>
 
-    <!-- MODAL 10: LUCKY DRAW CONTROLS -->
+    <!-- MODAL 10: LIVE CUSTOMER SUPPORT (ইউজারদের চ্যাট ও রিপ্লাই) -->
+    <div class="admin-modal-screen" id="supportModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('supportModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles">
+                <h3>Customer Support Inbox</h3>
+                <p id="chattingWithTitle">Select a user to chat</p>
+            </div>
+        </div>
+        <div class="modal-scroll-body" style="padding:10px;">
+            <!-- কনভার্সেশন ইউজার লিস্ট -->
+            <div class="box-card" style="padding:10px; margin-bottom:8px;">
+                <label style="font-size:10px; color:var(--accent); font-weight:800; display:block; margin-bottom:6px;">
+                    Users who sent messages:
+                </label>
+                <div id="supportUserTabs" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:4px;">
+                    <span style="font-size:11px; color:#94a3b8;">Loading user conversations...</span>
+                </div>
+            </div>
+
+            <!-- চ্যাট বক্স -->
+            <div class="box-card" style="display:flex; flex-direction:column; height:380px; padding:10px;">
+                <div id="adminChatFeed" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-bottom:8px;">
+                    <p style="font-size:11px; color:#94a3b8; text-align:center; padding-top:40px;">Select a user to view conversation</p>
+                </div>
+                <form onsubmit="handleAdminSendMessage(event)" style="display:flex; gap:6px; margin-top:8px;">
+                    <input id="adminReplyText" class="admin-input" style="margin-bottom:0;" placeholder="Type reply to user..." required>
+                    <button type="submit" class="btn-admin" style="width:auto; padding:0 18px;">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 11: LUCKY DRAW CONTROLS -->
     <div class="admin-modal-screen" id="luckyModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('luckyModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -618,6 +658,7 @@
         let isSoundMuted = false;
         let isFirstLoad = true;
         let selectedBannerBase64 = "";
+        let activeChatUserUid = null;
 
         const ONESIGNAL_APP_ID = "e94dc542-7d17-4dd3-a20e-c1925cce7749";
         const ONESIGNAL_REST_KEY = atob("b3NfdjJfYXBwXzVmZzRrcXQ1YzVnNWhpcW95Z2pmenR0eGplanRvN3Boa2QzdXI0bmszYjd0cTZqZHluYWRtMzUzcmV0bHR2cHBvanVsMmdhYXJnM2Z4dGhodTR3a2tiY21qeDN3N3Y0M3pycGp3Mnk=");
@@ -871,7 +912,7 @@
                     const t = doc.data();
                     let rulesText = [];
                     if (t.requiresLike !== false) rulesText.push("Like");
-                    if (t.requiresSubscribe === true) rulesText.push("Sub");
+                    if (t.requiresSubscribe === true) rulesText.push("Follow/Sub");
                     if (t.requiresComment === true) rulesText.push("Comment");
 
                     const tr = document.createElement('tr');
@@ -885,7 +926,7 @@
                 });
             });
 
-            // ৬. টাস্ক প্রুফ সিঙ্ক (প্রোফাইল লিংক ভেরিফিকেশন সহ)
+            // ৬. টাস্ক প্রুফ সিঙ্ক (আসল স্ক্রিনশট ও প্রোফাইল লিংক ভেরিফিকেশন সহ)
             db.collection("task_submissions").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('taskProofsTableBody');
@@ -901,10 +942,10 @@
                         <td><strong>${(p.platform || '').toUpperCase()}</strong></td>
                         <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
                         <td>
-                            ${p.profileUrl ? `<a href="${p.profileUrl}" target="_blank" style="color:#38bdf8; text-decoration:underline; font-size:10px;">View Profile</a>` : '<span style="color:gray;">N/A</span>'}
+                            ${p.profileUrl ? `<a href="${p.profileUrl}" target="_blank" style="color:#38bdf8; text-decoration:underline; font-size:10px;">Check Link</a>` : '<span style="color:gray;">N/A</span>'}
                         </td>
                         <td>
-                            <button class="btn-act view-proof" onclick="viewProofImages('${doc.id}')"><i class="fa-solid fa-images"></i> View</button>
+                            <button class="btn-act view-proof" onclick="viewProofImages('${doc.id}')"><i class="fa-solid fa-images"></i> View (${(p.proofs || []).length})</button>
                         </td>
                         <td><span class="status-badge ${p.status}">${p.status}</span></td>
                         <td>
@@ -938,6 +979,14 @@
                     `;
                     container.appendChild(card);
                 });
+            });
+
+            // ৮. কাস্টমার সাপোর্ট আনরেড ব্যাজ সিঙ্ক
+            db.collection("support_conversations").where("unreadByAdmin", "==", true).onSnapshot(snap => {
+                const pill = document.getElementById('modPendingSupportPill');
+                const count = snap.size;
+                pill.innerText = count;
+                pill.style.display = count > 0 ? 'inline-block' : 'none';
             });
 
             // গেটওয়ে লোড
@@ -997,7 +1046,7 @@
             if (confirm("ব্যানার ডিলিট করবেন?")) db.collection("banners").doc(id).delete().then(() => showToast("ব্যানার ডিলিট হয়েছে।", "info"));
         }
 
-        // ================= ডিপোজিট অ্যাপ্রুভ/রিজেক্ট (Earnings ক্যাটাগরিতে যাবে) =================
+        // ================= ডিপোজিট অ্যাপ্রুভ/রিজেক্ট (Earnings নোটিফিকেশন সহ) =================
         async function approveDeposit(depId, rawUid, amountBDT, method) {
             const dashUID = getDashboardUID(rawUid);
             if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট নিশ্চিত করবেন?`)) return;
@@ -1013,7 +1062,6 @@
 
                 await db.collection("deposits").doc(depId).update({ status: "success" });
 
-                // নোটিফিকেশনের Earnings ক্যাটাগরিতে সরাসরি পাঠানো
                 await db.collection("notifications").add({
                     targetUid: String(dashUID),
                     category: "earnings",
@@ -1053,7 +1101,7 @@
             }
         }
 
-        // ================= উইথড্রল অ্যাপ্রুভ/রিজেক্ট (Earnings ক্যাটাগরি) =================
+        // ================= উইথড্রল অ্যাপ্রুভ/রিজেক্ট (Earnings নোটিফিকেশন সহ) =================
         async function approveWithdrawal(id, rawUid, amountBDT, provider) {
             const dashUID = getDashboardUID(rawUid);
             if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} উইথড্রল সম্পন্ন হয়েছে?`)) return;
@@ -1108,11 +1156,9 @@
             if (!confirm(`UID #${userUID}-এর ${boostPkg} বুস্ট ক্যাম্পেইন অনুমোদন করবেন?`)) return;
 
             try {
-                // ১. বুস্ট মেয়াদ নির্ধারণ (প্যাকেজ অনুযায়ী ২ দিন থেকে ৭ দিন)
-                const boostDurationMs = 2 * 24 * 60 * 60 * 1000; // ২ দিন
+                const boostDurationMs = 2 * 24 * 60 * 60 * 1000;
                 const expiresAt = Date.now() + boostDurationMs;
 
-                // ২. পোস্টটিতে বুস্ট চালু করা
                 await db.collection("posts").doc(postId).update({
                     boostStatus: "active",
                     boostExpiresAt: expiresAt,
@@ -1121,10 +1167,8 @@
                     autoCommentsQueue: 8
                 });
 
-                // ৩. রিকোয়েস্ট সম্পন্ন মার্ক করা
                 await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
 
-                // ৪. ইউজারকে Earnings ক্যাটাগরিতে নোটিফিকেশন দেওয়া
                 await db.collection("notifications").add({
                     targetUid: String(userUID),
                     category: "earnings",
@@ -1173,6 +1217,7 @@
                 url: url,
                 requiresLike: reqLike,
                 requiresSubscribe: reqSubscribe,
+                requiresFollow: reqSubscribe,
                 requiresComment: reqComment,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
@@ -1188,7 +1233,7 @@
             if (confirm("টাস্ক ডিলিট করবেন?")) db.collection("tasks").doc(id).delete().then(() => showToast("টাস্ক ডিলিট হয়েছে।", "info"));
         }
 
-        // ================= টাস্ক প্রুফ অ্যাপ্রুভ (Earnings নোটিফিকেশন) =================
+        // ================= টাস্ক প্রুফ অ্যাপ্রুভ (Earnings নোটিফিকেশন সহ) =================
         async function approveProof(id, rawUid, rewardUSD, platform) {
             const dashUID = getDashboardUID(rawUid);
             try {
@@ -1223,6 +1268,7 @@
             db.collection("task_submissions").doc(id).update({ status: "rejected" }).then(() => showToast("প্রুফ রিজেক্ট করা হয়েছে।", "info"));
         }
 
+        // ================= আসল স্ক্রিনশট ছবি প্রিভিউ =================
         function viewProofImages(docId) {
             db.collection("task_submissions").doc(docId).get().then(doc => {
                 if (doc.exists) {
@@ -1243,6 +1289,108 @@
         }
 
         function closeProofImagesModal() { document.getElementById('proofImagesModal').classList.remove('active'); }
+
+        // ================= লাইভ সাপোর্ট চ্যাট ও রিপ্লাই সিস্টেম =================
+        function openSupportChatModal() {
+            openModuleModal('supportModal');
+            loadSupportConversations();
+        }
+
+        function loadSupportConversations() {
+            db.collection("support_conversations").orderBy("updatedAt", "desc").onSnapshot(snap => {
+                const tabsContainer = document.getElementById('supportUserTabs');
+                tabsContainer.innerHTML = '';
+
+                if (snap.empty) {
+                    tabsContainer.innerHTML = `<span style="font-size:11px; color:#94a3b8;">কোনো ইউজার এখনও মেসেজ পাঠায়নি</span>`;
+                    document.getElementById('adminChatFeed').innerHTML = `<p style="font-size:11px; color:#94a3b8; text-align:center; padding-top:40px;">No messages</p>`;
+                    return;
+                }
+
+                snap.forEach((doc, idx) => {
+                    const c = doc.data();
+                    const uid = c.userUid || doc.id;
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn-act';
+                    btn.style = `padding:6px 12px; border-radius:20px; font-size:11px; font-weight:800; white-space:nowrap; ${activeChatUserUid === uid ? 'background:var(--primary); color:#fff;' : 'background:rgba(255,255,255,0.08); color:#cbd5e1;'}`;
+                    btn.innerText = `#${uid} (${c.userName || 'User'})`;
+                    btn.onclick = () => selectChatUser(uid, c.userName || 'User');
+                    tabsContainer.appendChild(btn);
+
+                    if (idx === 0 && !activeChatUserUid) {
+                        selectChatUser(uid, c.userName || 'User');
+                    }
+                });
+            });
+        }
+
+        function selectChatUser(userUid, userName) {
+            activeChatUserUid = userUid;
+            document.getElementById('chattingWithTitle').innerText = `Chatting with: #${userUid} (${userName})`;
+            
+            db.collection("support_conversations").doc(userUid).update({ unreadByAdmin: false }).catch(() => {});
+            listenToActiveUserMessages(userUid);
+            loadSupportConversations();
+        }
+
+        function listenToActiveUserMessages(userUid) {
+            db.collection("support_messages").where("userUid", "==", userUid).orderBy("createdAt", "asc").onSnapshot(snap => {
+                const feed = document.getElementById('adminChatFeed');
+                feed.innerHTML = '';
+
+                if (snap.empty) {
+                    feed.innerHTML = `<p style="font-size:11px; color:#94a3b8; text-align:center; padding-top:40px;">No messages from this user</p>`;
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const m = doc.data();
+                    const isAdmin = m.sender === "admin";
+                    const b = document.createElement('div');
+                    b.style = `padding:8px 12px; border-radius:12px; font-size:11.5px; max-width:80%; line-height:1.35; ${isAdmin ? 'background:var(--primary); align-self:flex-end; color:#fff;' : 'background:#1e293b; align-self:flex-start; color:#f8fafc;'}`;
+                    b.innerHTML = `<strong>${isAdmin ? 'Admin' : m.userName || 'User'}:</strong> ${m.text || ''}`;
+                    feed.appendChild(b);
+                });
+
+                feed.scrollTop = feed.scrollHeight;
+            });
+        }
+
+        function handleAdminSendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('adminReplyText');
+            const msg = input.value.trim();
+            if (!msg || !activeChatUserUid) {
+                alert("অনুগ্রহ করে একটি ইউজার সিলেক্ট করুন এবং মেসেজ লিখুন!");
+                return;
+            }
+
+            db.collection("support_messages").add({
+                userUid: activeChatUserUid,
+                sender: "admin",
+                text: msg,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                db.collection("support_conversations").doc(activeChatUserUid).set({
+                    lastMessage: msg,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    unreadByAdmin: false
+                }, { merge: true });
+
+                db.collection("notifications").add({
+                    targetUid: activeChatUserUid,
+                    category: "support",
+                    title: "💬 কাস্টমার সাপোর্ট থেকে নতুন উত্তর",
+                    message: msg,
+                    actionUrl: "support.html",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                input.value = '';
+                showToast("রিপ্লাই পাঠানো হয়েছে!", "success");
+            });
+        }
 
         // ================= লাকি ড্র কন্ট্রোলস =================
         function toggleLotterySales(isOpen) {
