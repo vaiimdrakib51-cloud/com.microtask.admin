@@ -143,6 +143,22 @@
         .btn-act.payout { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; color: #facc15; }
         .btn-act.view-proof { background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #c4b5fd; }
 
+        /* আধুনিক গ্যালারি ফাইল পিকিং বক্স */
+        .gallery-upload-box {
+            border: 2px dashed #0284c7;
+            background: rgba(2, 132, 199, 0.08);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s ease;
+        }
+        .gallery-upload-box:active { transform: scale(0.98); background: rgba(2, 132, 199, 0.15); }
+        .gallery-upload-box i { font-size: 26px; color: #38bdf8; margin-bottom: 6px; display: block; }
+        .gallery-upload-box span { font-size: 12px; font-weight: 800; color: #fff; display: block; }
+        .gallery-upload-box small { font-size: 9.5px; color: var(--text-muted); display: block; margin-top: 2px; }
+
         .checkbox-group { display: flex; gap: 12px; margin: 8px 0 12px; flex-wrap: wrap; }
         .checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 11px; color: #cbd5e1; cursor: pointer; font-weight: 600; }
         .checkbox-label input { width: 15px; height: 15px; accent-color: var(--primary); }
@@ -294,12 +310,13 @@
                 <div class="mod-meta"><h4>Gateways & Rate</h4><p>bKash, Nagad & Rates</p></div>
             </div>
 
+            <!-- ব্যানার স্লাইডার মডিউল -->
             <div class="module-card" onclick="openModuleModal('bannersModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #ec4899, #be185d);"><i class="fa-regular fa-images"></i></div>
                     <i class="fa-solid fa-chevron-right mod-arrow"></i>
                 </div>
-                <div class="mod-meta"><h4>Banners Slider</h4><p>Gallery Upload Support</p></div>
+                <div class="mod-meta"><h4>Banners Slider</h4><p>Gallery Upload to Dashboard</p></div>
             </div>
 
             <div class="module-card" onclick="openSupportChatModal()">
@@ -359,14 +376,13 @@
         </div>
     </div>
 
-    <!-- MODAL 3: BOOST CAMPAIGNS (সম্পূর্ণ আপগ্রেডেড - টার্গেট ও ইনকাম ক্রেডিট সহ) -->
+    <!-- MODAL 3: BOOST CAMPAIGNS -->
     <div class="admin-modal-screen" id="boostModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('boostModal')"><i class="fa-solid fa-arrow-left"></i></button>
             <div class="modal-header-titles"><h3>Boost & Post Campaigns</h3><p>Approve Target, Settle Balance & Manage</p></div>
         </div>
         <div class="modal-scroll-body">
-            <!-- বুস্ট রিকোয়েস্ট তালিকা -->
             <div class="box-card">
                 <h4 style="font-size:13px; font-weight:800; margin-bottom:10px; color:#f59e0b;"><i class="fa-solid fa-rocket"></i> Pending Boost Requests</h4>
                 <div class="table-responsive">
@@ -377,7 +393,6 @@
                 </div>
             </div>
 
-            <!-- লাইভ পোস্ট মনিটরিং ও এডমিন ব্যালেন্স ক্রেডিট সেকশন -->
             <div class="box-card">
                 <h4 style="font-size:13px; font-weight:800; margin-bottom:6px; color:#38bdf8;"><i class="fa-solid fa-list-check"></i> Live Posts Manager</h4>
                 <p style="font-size:9.5px; color:var(--text-muted); margin-bottom:10px;">লাইক, কমেন্ট ও ভিউ দেখে পোস্টের ইনকাম ($) এড করুন এবং চাইলে পোস্ট ডিলিট করুন।</p>
@@ -538,24 +553,43 @@
         </div>
     </div>
 
-    <!-- MODAL 9: BANNERS -->
+    <!-- MODAL 9: BANNERS (গ্যালারি আপলোড সম্পূর্ণ ফিক্সড) -->
     <div class="admin-modal-screen" id="bannersModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('bannersModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Banners Slider</h3><p>Upload Images from Gallery</p></div>
+            <div class="modal-header-titles"><h3>Dashboard Banners Slider</h3><p>Upload Images from Gallery</p></div>
         </div>
         <div class="modal-scroll-body">
             <div class="box-card">
                 <form onsubmit="handleAddBanner(event)">
-                    <label style="font-size:10px; color:var(--accent); font-weight:800;">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</label>
-                    <input type="file" id="bannerFileInput" accept="image/*" class="admin-input" onchange="handleBannerFileSelect(event)">
+                    
+                    <!-- লুকানো ফাইল ইনপুট -->
+                    <input type="file" id="bannerFileInput" accept="image/*" style="display:none;" onchange="handleBannerFileSelect(event)">
+                    
+                    <!-- আধুনিক ক্লিকেবল গ্যালারি বক্স -->
+                    <div class="gallery-upload-box" onclick="document.getElementById('bannerFileInput').click()">
+                        <i class="fa-solid fa-images"></i>
+                        <span id="galleryBoxText">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</span>
+                        <small>ফোনের গ্যালারি থেকে যেকোনো ছবি বেছে নিন (Auto Compressed)</small>
+                    </div>
+
+                    <!-- ছবি প্রিভিউ বক্স -->
+                    <div id="bannerPreviewWrap" style="display:none; margin-bottom:10px; text-align:center;">
+                        <img id="bannerImgPreview" src="" style="width:100%; height:90px; object-fit:cover; border-radius:10px; border:1px solid #38bdf8;">
+                    </div>
+
                     <label style="font-size:10px; color:var(--text-muted);">অথবা Direct Image URL</label>
                     <input id="bannerImgUrl" class="admin-input" placeholder="https://i.ibb.co/...">
-                    <label style="font-size:10px; color:var(--text-muted);">Destination Page</label>
+
+                    <label style="font-size:10px; color:var(--text-muted);">ক্লিক করলে যে পেজে যাবে (Destination Page)</label>
                     <input id="bannerAction" class="admin-input" value="deposit.html" required>
-                    <button type="submit" id="btnUploadBanner" class="btn-admin"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Banner to Slider</button>
+
+                    <button type="submit" id="btnUploadBanner" class="btn-admin">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Banner to Slider
+                    </button>
                 </form>
             </div>
+
             <div class="box-card">
                 <h4 style="font-size:13px; font-weight:800; margin-bottom:10px;">Active Homepage Banners</h4>
                 <div id="bannersContainer" style="display:flex; flex-direction:column; gap:8px;"></div>
@@ -644,8 +678,12 @@
                     <label style="font-size:10px; color:var(--text-muted);">Worth / Value Text</label>
                     <input id="prizeValueInput" class="admin-input" placeholder="e.g. Worth ৳1,50,000" required>
 
-                    <label style="font-size:10px; color:var(--accent); font-weight:800;">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</label>
-                    <input type="file" id="prizeImgFileInput" accept="image/*" class="admin-input" onchange="handlePrizeImgSelect(event)">
+                    <input type="file" id="prizeImgFileInput" accept="image/*" style="display:none;" onchange="handlePrizeImgSelect(event)">
+                    <div class="gallery-upload-box" onclick="document.getElementById('prizeImgFileInput').click()">
+                        <i class="fa-solid fa-image"></i>
+                        <span id="prizeGalleryBoxText">গ্যালারি থেকে প্রাইজ ছবি দিন</span>
+                        <small>Tap to choose prize image from phone</small>
+                    </div>
 
                     <label style="font-size:10px; color:var(--text-muted);">অথবা Direct Image URL</label>
                     <input id="prizeImgUrlInput" class="admin-input" placeholder="https://...">
@@ -735,6 +773,7 @@
         let activeChatUserUid = null;
         let currentLoadedPrizes = [];
 
+        // অটো ইমেজ কম্প্রেসার ফাংশন
         function compressImage(file, maxWidth, maxHeight, quality, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -975,7 +1014,7 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক (ক্যাম্পেইন টার্গেট সহ)
+            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক
             db.collection("boost_requests").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingBoost = 0;
                 const tbody = document.getElementById('boostTableBody');
@@ -1009,7 +1048,7 @@
                 pill.style.display = pendingBoost > 0 ? 'inline-block' : 'none';
             });
 
-            // ৫. লাইভ পোস্ট ম্যানেজার (লাইক/ভিউ/কমেন্ট দেখা, ইনকাম ক্রেডিট ও ডিলিট করা)
+            // ৫. লাইভ পোস্ট ম্যানেজার
             db.collection("posts").orderBy("createdAt", "desc").onSnapshot(snap => {
                 const tbody = document.getElementById('adminPostsManagerTableBody');
                 tbody.innerHTML = '';
@@ -1099,17 +1138,26 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৭. ব্যানার স্লাইডার সিঙ্ক
+            // ৭. ড্যাশবোর্ড ব্যানার স্লাইডার লাইভ লোড
             db.collection("banners").onSnapshot(snap => {
                 const container = document.getElementById('bannersContainer');
                 container.innerHTML = '';
+
+                if (snap.empty) {
+                    container.innerHTML = `<p style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">কোনো হোম ব্যানার যুক্ত করা নেই</p>`;
+                    return;
+                }
+
                 snap.forEach(doc => {
                     const b = doc.data();
                     const card = document.createElement('div');
                     card.style = "background:#070e22; border:1px solid var(--card-border); border-radius:12px; overflow:hidden; padding:8px;";
                     card.innerHTML = `
-                        <img src="${b.image}" style="width:100%; height:80px; object-fit:cover; border-radius:8px; margin-bottom:6px;">
-                        <button class="btn-act reject" style="width:100%; justify-content:center;" onclick="deleteBannerDoc('${doc.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+                        <img src="${b.image}" style="width:100%; height:90px; object-fit:cover; border-radius:8px; margin-bottom:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-size:10px; color:#38bdf8;">Page: ${b.action || 'deposit.html'}</span>
+                            <button class="btn-act reject" onclick="deleteBannerDoc('${doc.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </div>
                     `;
                     container.appendChild(card);
                 });
@@ -1187,6 +1235,69 @@
             });
         }
 
+        // ================= ব্যানার আপলোড (গ্যালারি ১০০% ফিক্সড) =================
+        function handleBannerFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showToast("গ্যালারি থেকে ছবি প্রসেসিং হচ্ছে...", "info");
+            document.getElementById('galleryBoxText').innerText = "ছবি প্রসেস হচ্ছে...";
+
+            // ৭০০x৩৫০ সাইজে লাইটওয়েট কম্প্রেস (মাত্র ৫০-৮০ KB তে কনভার্ট হবে)
+            compressImage(file, 700, 350, 0.75, function(compressedBase64) {
+                selectedBannerBase64 = compressedBase64;
+                
+                // প্রিভিউ শো করা
+                document.getElementById('bannerImgPreview').src = compressedBase64;
+                document.getElementById('bannerPreviewWrap').style.display = 'block';
+                document.getElementById('galleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(compressedBase64.length / 1024) + " KB)";
+                document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
+                
+                playBeepAlert();
+                showToast("ছবি সফলভাবে প্রস্তুত হয়েছে!", "success");
+            });
+        }
+
+        function handleAddBanner(e) {
+            e.preventDefault();
+            const urlInput = document.getElementById('bannerImgUrl').value.trim();
+            const finalImage = selectedBannerBase64 || (urlInput.startsWith('http') ? urlInput : '');
+            const action = document.getElementById('bannerAction').value.trim() || 'deposit.html';
+
+            if (!finalImage || finalImage === "Image Ready from Gallery") {
+                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন অথবা বৈধ ছবির লিংক দিন!");
+                return;
+            }
+
+            const btn = document.getElementById('btnUploadBanner');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> আপলোড হচ্ছে...`;
+
+            db.collection("banners").add({
+                image: finalImage,
+                action: action,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                playBeepAlert();
+                showToast("হোম ব্যানার সফলভাবে আপলোড হয়েছে!", "success");
+                e.target.reset();
+                selectedBannerBase64 = "";
+                document.getElementById('bannerPreviewWrap').style.display = 'none';
+                document.getElementById('galleryBoxText').innerText = "১. গ্যালারি থেকে ছবি সিলেক্ট করুন";
+            }).catch(err => {
+                alert("ব্যানার আপলোড সমস্যা: " + err.message);
+            }).finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Upload Banner to Slider`;
+            });
+        }
+
+        function deleteBannerDoc(id) {
+            if (confirm("আপনি কি নিশ্চিত এই ব্যানারটি ডিলিট করতে চান?")) {
+                db.collection("banners").doc(id).delete().then(() => showToast("ব্যানার ডিলিট হয়েছে।", "info"));
+            }
+        }
+
         // ================= বুস্ট অনুমোদন (টার্গেট লাইক, ভিউ ও কমেন্ট সেটআপ) =================
         async function approveBoostCampaignWithTargets(reqId, postId, userUID, boostPkg) {
             const viewsInput = prompt(`UID #${userUID}-এর জন্য কতগুলো Views টার্গেট দিতে চান?`, "500");
@@ -1195,7 +1306,7 @@
             const likesInput = prompt(`কতগুলো Likes টার্গেট দিতে চান?`, "80");
             if (likesInput === null) return;
 
-            const commentsInput = prompt(`কতগুলো Comments (আন্তর্জাতিক ভাষা থেকে) দিতে চান?`, "10");
+            const commentsInput = prompt(`কতগুলো Comments দিতে চান?`, "10");
             if (commentsInput === null) return;
 
             const targetViews = parseInt(viewsInput) || 500;
@@ -1203,7 +1314,7 @@
             const targetComments = parseInt(commentsInput) || 10;
 
             try {
-                const boostDurationMs = 24 * 60 * 60 * 1000; // ২৪ ঘণ্টার ক্যাম্পেইন
+                const boostDurationMs = 24 * 60 * 60 * 1000;
                 const expiresAt = Date.now() + boostDurationMs;
 
                 await db.collection("posts").doc(postId).update({
@@ -1221,13 +1332,13 @@
                     category: "earnings",
                     platform: "boost",
                     title: "🚀 বুস্ট ক্যাম্পেইন চালু হয়েছে!",
-                    message: `আপনার পোস্টের ${boostPkg} বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে। ক্যাম্পেইন পর্যবেক্ষণ শেষে এডমিন ইনকাম যুক্ত করবেন।`,
+                    message: `আপনার পোস্টের ${boostPkg} বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে।`,
                     actionUrl: "boost.html",
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
                 playBeepAlert();
-                showToast("বুস্ট ক্যাম্পেইন টার্গেট সহ চালু হয়েছে!", "success");
+                showToast("বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে!", "success");
             } catch (e) {
                 alert("বুস্ট অনুমোদন ত্রুটি: " + e.message);
             }
@@ -1251,7 +1362,6 @@
             const payoutBDT = (payoutUSD * 120).toFixed(2);
 
             try {
-                // ১. ইউজারের মূল অ্যাকাউন্টে ডলার যোগ
                 const snap = await db.collection("users").where("uid", "==", String(userUID)).get();
                 if (!snap.empty) {
                     await snap.docs[0].ref.update({
@@ -1260,19 +1370,17 @@
                     });
                 }
 
-                // ২. পোস্টের ডকুমেন্টে পে-আউট অ্যামাউন্ট সেভ (যাতে পোস্টে সরাসরি $X.XX দেখা যায়)
                 await db.collection("posts").doc(postId).update({
                     payoutUSD: payoutUSD,
                     payoutBDT: Number(payoutBDT)
                 });
 
-                // ৩. ইউজারকে নোটিফিকেশন পাঠানো
                 await db.collection("notifications").add({
                     targetUid: String(userUID),
                     category: "earnings",
                     platform: "boost",
                     title: "🎉 পোস্ট থেকে ইনকাম জমা হয়েছে!",
-                    message: `আপনার বুস্ট করা পোস্ট থেকে $${payoutUSD.toFixed(2)} (৳${payoutBDT}) মেইন ব্যালেন্সে সফলভাবে যুক্ত করে দেওয়া হয়েছে!`,
+                    message: `আপনার বুস্ট করা পোস্ট থেকে $${payoutUSD.toFixed(2)} (৳${payoutBDT}) মেইন ব্যালেন্সে সফলভাবে যুক্ত হয়েছে!`,
                     actionUrl: "history.html",
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
@@ -1284,7 +1392,6 @@
             }
         }
 
-        // এডমিন থেকে পার্মানেন্ট পোস্ট ডিলিট
         function deletePostByAdmin(postId) {
             if (!confirm("আপনি কি নিশ্চিত এই পোস্টটি সম্পূর্ণ মুছে ফেলতে চান?")) return;
             db.collection("posts").doc(postId).delete().then(() => {
@@ -1323,7 +1430,8 @@
             showToast("ছবি প্রসেসিং হচ্ছে...", "info");
             compressImage(file, 600, 350, 0.75, function(compressedBase64) {
                 selectedPrizeImgBase64 = compressedBase64;
-                document.getElementById('prizeImgUrlInput').value = "Image Ready from Gallery (" + Math.round(compressedBase64.length / 1024) + " KB)";
+                document.getElementById('prizeGalleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(compressedBase64.length / 1024) + " KB)";
+                document.getElementById('prizeImgUrlInput').value = "Image Ready from Gallery";
                 showToast("ছবি প্রস্তুত হয়েছে!", "success");
             });
         }
@@ -1336,7 +1444,7 @@
             const urlInput = document.getElementById('prizeImgUrlInput').value.trim();
             const finalImage = selectedPrizeImgBase64 || (urlInput.startsWith('http') ? urlInput : '');
 
-            if (!finalImage) {
+            if (!finalImage || finalImage === "Image Ready from Gallery") {
                 alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন বা URL দিন!");
                 return;
             }
@@ -1359,6 +1467,7 @@
                 showToast(`Prize #${rank} ব্যানার সেভ হয়েছে!`, "success");
                 e.target.reset();
                 selectedPrizeImgBase64 = "";
+                document.getElementById('prizeGalleryBoxText').innerText = "গ্যালারি থেকে প্রাইজ ছবি দিন";
             }).catch(err => alert(err.message)).finally(() => {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Add / Update Prize Banner`;
@@ -1547,39 +1656,7 @@
             showToast("উইথড্র বাতিল ও রিফান্ড সম্পন্ন!", "info");
         }
 
-        // ================= ব্যানার, টাস্ক ও সেটিংস =================
-        function handleBannerFileSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            compressImage(file, 700, 350, 0.75, function(compressedBase64) {
-                selectedBannerBase64 = compressedBase64;
-                document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
-            });
-        }
-
-        function handleAddBanner(e) {
-            e.preventDefault();
-            const urlInput = document.getElementById('bannerImgUrl').value.trim();
-            const finalImage = selectedBannerBase64 || (urlInput.startsWith('http') ? urlInput : '');
-            const action = document.getElementById('bannerAction').value.trim() || 'deposit.html';
-
-            if (!finalImage) return alert("গ্যালারি থেকে ছবি সিলেক্ট করুন!");
-
-            db.collection("banners").add({
-                image: finalImage,
-                action: action,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                showToast("ব্যানার যুক্ত হয়েছে!", "success");
-                e.target.reset();
-                selectedBannerBase64 = "";
-            });
-        }
-
-        function deleteBannerDoc(id) {
-            if (confirm("ব্যানার ডিলিট করবেন?")) db.collection("banners").doc(id).delete();
-        }
-
+        // ================= টাস্ক ও সেটিংস =================
         function handleCreateTask(e) {
             e.preventDefault();
             db.collection("tasks").add({
