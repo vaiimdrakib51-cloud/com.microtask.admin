@@ -143,7 +143,7 @@
         .btn-act.payout { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; color: #facc15; }
         .btn-act.view-proof { background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #c4b5fd; }
 
-        /* আধুনিক গ্যালারি ফাইল পিকিং বক্স */
+        /* গ্যালারি ফাইল পিকিং বক্স */
         .gallery-upload-box {
             border: 2px dashed #0284c7;
             background: rgba(2, 132, 199, 0.08);
@@ -270,12 +270,13 @@
                 <div class="mod-meta"><h4>Boost Campaigns</h4><p>Approve, Payout & Stats</p></div>
             </div>
 
+            <!-- ইউজার ম্যানেজার (UID দিয়ে ব্যালেন্স অ্যাড / কর্তন) -->
             <div class="module-card" onclick="openModuleModal('usersModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9);"><i class="fa-solid fa-users"></i></div>
                     <i class="fa-solid fa-chevron-right mod-arrow"></i>
                 </div>
-                <div class="mod-meta"><h4>Users Manager</h4><p>Edit Balance & Verify</p></div>
+                <div class="mod-meta"><h4>Users Manager</h4><p>Add / Cut Balance by UID</p></div>
             </div>
 
             <div class="module-card" onclick="openModuleModal('tasksModal')">
@@ -310,7 +311,6 @@
                 <div class="mod-meta"><h4>Gateways & Rate</h4><p>bKash, Nagad & Rates</p></div>
             </div>
 
-            <!-- ব্যানার স্লাইডার মডিউল -->
             <div class="module-card" onclick="openModuleModal('bannersModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #ec4899, #be185d);"><i class="fa-regular fa-images"></i></div>
@@ -414,18 +414,53 @@
         </div>
     </div>
 
-    <!-- MODAL 4: USERS MANAGER -->
+    <!-- MODAL 4: USERS MANAGER (UID সার্চ ও ব্যালেন্স এড/কর্তন টুল সহ) -->
     <div class="admin-modal-screen" id="usersModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('usersModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Users Management</h3><p>Search by 6-Digit Dashboard UID</p></div>
+            <div class="modal-header-titles"><h3>Users Management</h3><p>Search by 6-Digit UID & Adjust Balance</p></div>
         </div>
         <div class="modal-scroll-body">
+
+            <!-- ১. কুইক UID ব্যালেন্স অ্যাড ও কর্তন টুল -->
+            <div class="box-card" style="border-color:rgba(56, 189, 248, 0.4);">
+                <h4 style="font-size:13px; font-weight:800; color:#38bdf8; margin-bottom:8px;">
+                    <i class="fa-solid fa-bolt"></i> UID দিয়ে সরাসরি ব্যালেন্স অ্যাড / কর্তন
+                </h4>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                    <div>
+                        <label style="font-size:10px; color:var(--text-muted);">ইউজার UID</label>
+                        <input type="text" id="quickUidInput" class="admin-input" style="margin-bottom:0;" placeholder="যেমন: 118603">
+                    </div>
+                    <div>
+                        <label style="font-size:10px; color:var(--text-muted);">অ্যামাউন্ট ($ USD)</label>
+                        <input type="number" step="0.01" id="quickAmountInput" class="admin-input" style="margin-bottom:0;" placeholder="যেমন: 1.00">
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    <button type="button" class="btn-act approve" style="flex:1; padding:10px; justify-content:center; font-size:11px;" onclick="handleQuickBalanceAction('add')">
+                        <i class="fa-solid fa-plus"></i> ব্যালেন্স যোগ করুন (+)
+                    </button>
+                    <button type="button" class="btn-act reject" style="flex:1; padding:10px; justify-content:center; font-size:11px;" onclick="handleQuickBalanceAction('deduct')">
+                        <i class="fa-solid fa-minus"></i> ব্যালেন্স কেটে নিন (-)
+                    </button>
+                </div>
+            </div>
+
+            <!-- ২. সার্চ ফিল্টার ও ইউজার টেবিল -->
             <div class="box-card">
-                <input type="text" id="userSearchInput" class="admin-input" placeholder="Search by 6-digit UID (e.g. 118603)..." oninput="filterUsersTable()">
+                <input type="text" id="userSearchInput" class="admin-input" placeholder="Search by 6-digit UID or Name..." oninput="filterUsersTable()">
                 <div class="table-responsive">
                     <table>
-                        <thead><tr><th>UID</th><th>Name</th><th>Balance</th><th>Verified</th><th>Actions</th></tr></thead>
+                        <thead>
+                            <tr>
+                                <th>UID</th>
+                                <th>Name</th>
+                                <th>Balance</th>
+                                <th>Verified</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
                         <tbody id="usersTableBody"></tbody>
                     </table>
                 </div>
@@ -553,7 +588,7 @@
         </div>
     </div>
 
-    <!-- MODAL 9: BANNERS (গ্যালারি আপলোড সম্পূর্ণ ফিক্সড) -->
+    <!-- MODAL 9: BANNERS -->
     <div class="admin-modal-screen" id="bannersModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('bannersModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -562,18 +597,14 @@
         <div class="modal-scroll-body">
             <div class="box-card">
                 <form onsubmit="handleAddBanner(event)">
-                    
-                    <!-- লুকানো ফাইল ইনপুট -->
                     <input type="file" id="bannerFileInput" accept="image/*" style="display:none;" onchange="handleBannerFileSelect(event)">
                     
-                    <!-- আধুনিক ক্লিকেবল গ্যালারি বক্স -->
                     <div class="gallery-upload-box" onclick="document.getElementById('bannerFileInput').click()">
                         <i class="fa-solid fa-images"></i>
                         <span id="galleryBoxText">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</span>
                         <small>ফোনের গ্যালারি থেকে যেকোনো ছবি বেছে নিন (Auto Compressed)</small>
                     </div>
 
-                    <!-- ছবি প্রিভিউ বক্স -->
                     <div id="bannerPreviewWrap" style="display:none; margin-bottom:10px; text-align:center;">
                         <img id="bannerImgPreview" src="" style="width:100%; height:90px; object-fit:cover; border-radius:10px; border:1px solid #38bdf8;">
                     </div>
@@ -773,7 +804,6 @@
         let activeChatUserUid = null;
         let currentLoadedPrizes = [];
 
-        // অটো ইমেজ কম্প্রেসার ফাংশন
         function compressImage(file, maxWidth, maxHeight, quality, callback) {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -893,7 +923,7 @@
         function initAdminSync() {
             setTimeout(() => { isFirstLoad = false; }, 3000);
 
-            // ১. ইউজার্স সিঙ্ক
+            // ১. ইউজার্স সিঙ্ক (টেবিল ও অবজেক্টে সেভ)
             db.collection("users").onSnapshot(snap => {
                 let totalBal = 0;
                 window.usersBySixDigit = {};
@@ -904,7 +934,7 @@
                 snap.forEach(doc => {
                     const u = doc.data();
                     const sixDigit = String(u.uid || '').trim();
-                    if (sixDigit) window.usersBySixDigit[sixDigit] = u;
+                    if (sixDigit) window.usersBySixDigit[sixDigit] = { docId: doc.id, ...u };
                     window.usersByDocId[doc.id] = u;
                     totalBal += Number(u.balanceUSD || 0);
 
@@ -916,8 +946,9 @@
                         <td><span class="status-badge ${u.isVerified ? 'completed' : 'rejected'}">${u.isVerified ? 'Yes' : 'No'}</span></td>
                         <td>
                             <div class="action-btns">
-                                <button class="btn-act edit" onclick="editBalance('${doc.id}', ${u.balanceUSD || 0})"><i class="fa-solid fa-coins"></i></button>
-                                <button class="btn-act approve" onclick="toggleVerify('${doc.id}', ${u.isVerified})"><i class="fa-solid fa-shield"></i></button>
+                                <button class="btn-act approve" onclick="addBalancePrompt('${doc.id}', '${sixDigit}', ${u.balanceUSD || 0})" title="ব্যালেন্স যোগ করুন"><i class="fa-solid fa-plus"></i> Add</button>
+                                <button class="btn-act reject" onclick="deductBalancePrompt('${doc.id}', '${sixDigit}', ${u.balanceUSD || 0})" title="ব্যালেন্স কেটে নিন"><i class="fa-solid fa-minus"></i> Cut</button>
+                                <button class="btn-act approve" onclick="toggleVerify('${doc.id}', ${u.isVerified})" title="ভেরিফিকেশন"><i class="fa-solid fa-shield"></i></button>
                             </div>
                         </td>
                     `;
@@ -1235,7 +1266,152 @@
             });
         }
 
-        // ================= ব্যানার আপলোড (গ্যালারি ১০০% ফিক্সড) =================
+        // ================= ইউজার ব্যালেন্স যোগ ও কর্তন মেথড =================
+
+        // ১. সরাসরি কুইক বক্স দিয়ে ব্যালেন্স অ্যাকশন
+        async function handleQuickBalanceAction(actionType) {
+            const uid = document.getElementById('quickUidInput').value.trim();
+            const amountInput = document.getElementById('quickAmountInput').value.trim();
+
+            if (!uid) {
+                alert("অনুগ্রহ করে ইউজারের ৬ ডিজিটের UID দিন!");
+                return;
+            }
+            if (!amountInput || isNaN(amountInput) || Number(amountInput) <= 0) {
+                alert("অনুগ্রহ করে সঠিক ডলার অ্যামাউন্ট লিখুন (যেমন: 1.00 বা 5.00)!");
+                return;
+            }
+
+            const amountUSD = parseFloat(Number(amountInput).toFixed(2));
+            const amountBDT = (amountUSD * 120).toFixed(2);
+
+            try {
+                // UID দিয়ে ইউজার খোঁজা
+                const snap = await db.collection("users").where("uid", "==", String(uid)).get();
+                if (snap.empty) {
+                    alert(`UID #${uid} বিশিষ্ট কোনো ইউজার খুঁজে পাওয়া যায়নি!`);
+                    return;
+                }
+
+                const userDoc = snap.docs[0];
+                const currentBal = Number(userDoc.data().balanceUSD || 0);
+
+                if (actionType === 'add') {
+                    if (!confirm(`UID #${uid}-এর অ্যাকাউন্টে $${amountUSD} (৳${amountBDT}) যোগ করতে চান?`)) return;
+
+                    await userDoc.ref.update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(amountUSD)
+                    });
+
+                    await db.collection("notifications").add({
+                        targetUid: String(uid),
+                        category: "earnings",
+                        title: "🎉 ব্যালেন্স যোগ করা হয়েছে!",
+                        message: `এডমিন আপনার অ্যাকাউন্টে $${amountUSD.toFixed(2)} (৳${amountBDT}) যোগ করেছেন।`,
+                        actionUrl: "history.html",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    playBeepAlert();
+                    showToast(`সফল! #${uid}-এ $${amountUSD} যোগ হয়েছে।`, "success");
+                } else if (actionType === 'deduct') {
+                    if (!confirm(`UID #${uid}-এর অ্যাকাউন্ট থেকে $${amountUSD} (৳${amountBDT}) কেটে নিতে চান?`)) return;
+
+                    const finalDeduct = Math.min(currentBal, amountUSD); // ব্যালেন্স মাইনাসে যেন না যায়
+                    await userDoc.ref.update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(-finalDeduct)
+                    });
+
+                    await db.collection("notifications").add({
+                        targetUid: String(uid),
+                        category: "system",
+                        title: "⚠️ ব্যালেন্স কর্তন",
+                        message: `এডমিন আপনার অ্যাকাউন্ট থেকে $${finalDeduct.toFixed(2)} (৳${(finalDeduct * 120).toFixed(2)}) কেটে নিয়েছেন।`,
+                        actionUrl: "history.html",
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    playBeepAlert();
+                    showToast(`সফল! #${uid} থেকে $${finalDeduct.toFixed(2)} কাটা হয়েছে।`, "info");
+                }
+
+                document.getElementById('quickAmountInput').value = '';
+            } catch (err) {
+                alert("ব্যালেন্স আপডেট সমস্যা: " + err.message);
+            }
+        }
+
+        // ২. টেবিলে [+ Add] বাটনে চাপলে ব্যালেন্স যোগ
+        async function addBalancePrompt(docId, uid, curBal) {
+            const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) যোগ করতে চান? (যেমন: 1.50):`);
+            if (!input || isNaN(input) || Number(input) <= 0) return;
+
+            const addUSD = parseFloat(Number(input).toFixed(2));
+            const addBDT = (addUSD * 120).toFixed(2);
+
+            try {
+                await db.collection("users").doc(docId).update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(addUSD)
+                });
+
+                await db.collection("notifications").add({
+                    targetUid: String(uid),
+                    category: "earnings",
+                    title: "🎉 ব্যালেন্স যোগ করা হয়েছে!",
+                    message: `এডমিন আপনার অ্যাকাউন্টে $${addUSD.toFixed(2)} (৳${addBDT}) যোগ করেছেন।`,
+                    actionUrl: "history.html",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                playBeepAlert();
+                showToast(`UID #${uid}-এ $${addUSD} যোগ হয়েছে!`, "success");
+            } catch (err) {
+                alert("ব্যালেন্স যোগ সমস্যা: " + err.message);
+            }
+        }
+
+        // ৩. টেবিলে [- Cut] বাটনে চাপলে ব্যালেন্স কর্তন
+        async function deductBalancePrompt(docId, uid, curBal) {
+            const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) কেটে নিতে চান? (যেমন: 0.50):`);
+            if (!input || isNaN(input) || Number(input) <= 0) return;
+
+            const cutUSD = parseFloat(Number(input).toFixed(2));
+            const actualCut = Math.min(Number(curBal), cutUSD);
+            const cutBDT = (actualCut * 120).toFixed(2);
+
+            try {
+                await db.collection("users").doc(docId).update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(-actualCut)
+                });
+
+                await db.collection("notifications").add({
+                    targetUid: String(uid),
+                    category: "system",
+                    title: "⚠️ ব্যালেন্স কর্তন",
+                    message: `এডমিন আপনার অ্যাকাউন্ট থেকে $${actualCut.toFixed(2)} (৳${cutBDT}) কেটে নিয়েছেন।`,
+                    actionUrl: "history.html",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                playBeepAlert();
+                showToast(`UID #${uid} থেকে $${actualCut.toFixed(2)} কাটা হয়েছে!`, "info");
+            } catch (err) {
+                alert("ব্যালেন্স কর্তন সমস্যা: " + err.message);
+            }
+        }
+
+        function toggleVerify(docId, curStatus) {
+            db.collection("users").doc(docId).update({ isVerified: !curStatus }).then(() => showToast("ভেরিফিকেশন স্ট্যাটাস আপডেট হয়েছে!"));
+        }
+
+        function filterUsersTable() {
+            const q = document.getElementById('userSearchInput').value.toLowerCase().trim();
+            document.querySelectorAll('#usersTableBody tr').forEach(r => {
+                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        // ================= ব্যানার আপলোড (গ্যালারি ফিক্সড) =================
         function handleBannerFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1243,18 +1419,14 @@
             showToast("গ্যালারি থেকে ছবি প্রসেসিং হচ্ছে...", "info");
             document.getElementById('galleryBoxText').innerText = "ছবি প্রসেস হচ্ছে...";
 
-            // ৭০০x৩৫০ সাইজে লাইটওয়েট কম্প্রেস (মাত্র ৫০-৮০ KB তে কনভার্ট হবে)
             compressImage(file, 700, 350, 0.75, function(compressedBase64) {
                 selectedBannerBase64 = compressedBase64;
-                
-                // প্রিভিউ শো করা
                 document.getElementById('bannerImgPreview').src = compressedBase64;
                 document.getElementById('bannerPreviewWrap').style.display = 'block';
                 document.getElementById('galleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(compressedBase64.length / 1024) + " KB)";
                 document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
-                
                 playBeepAlert();
-                showToast("ছবি সফলভাবে প্রস্তুত হয়েছে!", "success");
+                showToast("ছবি প্রস্তুত হয়েছে!", "success");
             });
         }
 
@@ -1265,7 +1437,7 @@
             const action = document.getElementById('bannerAction').value.trim() || 'deposit.html';
 
             if (!finalImage || finalImage === "Image Ready from Gallery") {
-                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন অথবা বৈধ ছবির লিংক দিন!");
+                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন বা লিংক দিন!");
                 return;
             }
 
@@ -1298,7 +1470,7 @@
             }
         }
 
-        // ================= বুস্ট অনুমোদন (টার্গেট লাইক, ভিউ ও কমেন্ট সেটআপ) =================
+        // ================= বুস্ট অনুমোদন =================
         async function approveBoostCampaignWithTargets(reqId, postId, userUID, boostPkg) {
             const viewsInput = prompt(`UID #${userUID}-এর জন্য কতগুলো Views টার্গেট দিতে চান?`, "500");
             if (viewsInput === null) return;
@@ -1353,7 +1525,6 @@
             showToast("বুস্ট রিকোয়েস্ট বাতিল করা হয়েছে।", "info");
         }
 
-        // ================= পোস্টে ব্যালেন্স/ইনকাম ক্রেডিট করা =================
         async function openPayoutPrompt(postId, userUID, likes, views, comments) {
             const usdInput = prompt(`UID #${userUID}-এর এই পোস্টে লাইক: ${likes}, ভিউ: ${views}, কমেন্ট: ${comments} হয়েছে।\n\nকত ডলার ($ USD) ইনকাম ক্রেডিট করতে চান? (যেমন: 1.50):`, "1.00");
             if (!usdInput || isNaN(usdInput) || Number(usdInput) <= 0) return;
@@ -1715,24 +1886,6 @@
                 playBeepAlert();
                 showToast("সেটিংস সফলভাবে সেভ হয়েছে!", "success");
             });
-        }
-
-        function filterUsersTable() {
-            const q = document.getElementById('userSearchInput').value.toLowerCase();
-            document.querySelectorAll('#usersTableBody tr').forEach(r => {
-                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
-            });
-        }
-
-        function editBalance(docId, curBal) {
-            const newBal = prompt("নতুন ব্যালেন্স ইনপুট দিন ($ USD):", curBal);
-            if (newBal !== null && !isNaN(newBal)) {
-                db.collection("users").doc(docId).update({ balanceUSD: Number(newBal) }).then(() => showToast("ব্যালেন্স আপডেট হয়েছে!"));
-            }
-        }
-
-        function toggleVerify(docId, curStatus) {
-            db.collection("users").doc(docId).update({ isVerified: !curStatus }).then(() => showToast("ভেরিফিকেশন আপডেট হয়েছে!"));
         }
 
         function showToast(msg, type = "success") {
