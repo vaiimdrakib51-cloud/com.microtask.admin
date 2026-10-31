@@ -147,15 +147,9 @@
         .checkbox-label input { width: 15px; height: 15px; accent-color: var(--primary); }
 
         /* PROOF IMAGES MODAL */
-        #proofImagesModal {
-            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 2000; display: none;
-            align-items: center; justify-content: center; padding: 14px;
-        }
+        #proofImagesModal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 14px; }
         #proofImagesModal.active { display: flex; }
-        .proof-modal-content {
-            background: #0d1a38; border: 1.5px solid #8b5cf6; border-radius: 20px; width: 100%; max-width: 400px;
-            padding: 16px; max-height: 85vh; overflow-y: auto; text-align: center;
-        }
+        .proof-modal-content { background: #0d1a38; border: 1.5px solid #8b5cf6; border-radius: 20px; width: 100%; max-width: 400px; padding: 16px; max-height: 85vh; overflow-y: auto; text-align: center; }
         .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; margin: 12px 0; }
         .proof-box { background: #070e22; border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; height: 110px; }
         .proof-box img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
@@ -250,7 +244,6 @@
                 <div class="mod-meta"><h4>Withdrawals</h4><p>Payout & Refund</p></div>
             </div>
 
-            <!-- বুস্ট রিকোয়েস্ট মডিউল -->
             <div class="module-card" onclick="openModuleModal('boostModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-rocket"></i></div>
@@ -307,7 +300,6 @@
                 <div class="mod-meta"><h4>Banners Slider</h4><p>Gallery Upload Support</p></div>
             </div>
 
-            <!-- লাইভ সাপোর্ট মডিউল -->
             <div class="module-card" onclick="openSupportChatModal()">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #14b8a6, #0f766e);"><i class="fa-solid fa-headset"></i></div>
@@ -316,12 +308,13 @@
                 <div class="mod-meta"><h4>Live Support</h4><p>User Messages & Reply</p></div>
             </div>
 
+            <!-- লাকি ড্র হাব -->
             <div class="module-card" onclick="openModuleModal('luckyModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #eab308, #ca8a04);"><i class="fa-solid fa-gift"></i></div>
-                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
+                    <span class="pending-pill" id="modPendingTicketsPill" style="display:none;">0</span>
                 </div>
-                <div class="mod-meta"><h4>Lucky Draw</h4><p>Sales On/Off & Draw Date</p></div>
+                <div class="mod-meta"><h4>Lucky Draw Hub</h4><p>Price, 5 Prizes & Live Stream</p></div>
             </div>
         </section>
 
@@ -402,7 +395,7 @@
         </div>
     </div>
 
-    <!-- MODAL 5: TASKS CREATOR (WITH DYNAMIC RULES) -->
+    <!-- MODAL 5: TASKS CREATOR -->
     <div class="admin-modal-screen" id="tasksModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('tasksModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -455,7 +448,7 @@
         </div>
     </div>
 
-    <!-- MODAL 6: TASK PROOFS (WITH PROFILE LINK & IMAGES) -->
+    <!-- MODAL 6: TASK PROOFS -->
     <div class="admin-modal-screen" id="proofsModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('proofsModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -477,10 +470,7 @@
     <div class="admin-modal-screen" id="notifModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('notifModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles">
-                <h3>Send Push Notification</h3>
-                <p>Broadcast Alert to All Users</p>
-            </div>
+            <div class="modal-header-titles"><h3>Send Push Notification</h3><p>Broadcast Alert to All Users</p></div>
         </div>
         <div class="modal-scroll-body">
             <div class="box-card">
@@ -492,16 +482,11 @@
                         <option value="referral">Referral</option>
                         <option value="support">Support</option>
                     </select>
-                    
                     <label style="font-size:10px; color:var(--text-muted);">Title</label>
                     <input id="notifTitle" class="admin-input" placeholder="e.g. নতুন আপডেট যুক্ত হয়েছে!" required>
-                    
                     <label style="font-size:10px; color:var(--text-muted);">Message</label>
                     <textarea id="notifMessage" class="admin-input" rows="3" placeholder="মেসেজ বিস্তারিত লিখুন..." required></textarea>
-                    
-                    <button type="submit" id="btnBroadcastSubmit" class="btn-admin" style="padding:13px; font-size:14px;">
-                        <i class="fa-solid fa-bell"></i> সবার ফোনে সাউন্ড সহ নোটিফিকেশন পাঠান
-                    </button>
+                    <button type="submit" class="btn-admin" style="padding:13px; font-size:14px;"><i class="fa-solid fa-bell"></i> Send Push Notification</button>
                 </form>
             </div>
         </div>
@@ -530,7 +515,7 @@
         </div>
     </div>
 
-    <!-- MODAL 9: BANNERS (গ্যালারি থেকে সরাসরি ছবি আপলোড) -->
+    <!-- MODAL 9: BANNERS -->
     <div class="admin-modal-screen" id="bannersModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('bannersModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -539,15 +524,12 @@
         <div class="modal-scroll-body">
             <div class="box-card">
                 <form onsubmit="handleAddBanner(event)">
-                    <label style="font-size:10px; color:var(--accent); font-weight:800;">১. গ্যালারি থেকে ছবি সিলেক্ট করুন (Gallery Image)</label>
+                    <label style="font-size:10px; color:var(--accent); font-weight:800;">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</label>
                     <input type="file" id="bannerFileInput" accept="image/*" class="admin-input" onchange="handleBannerFileSelect(event)">
-                    
                     <label style="font-size:10px; color:var(--text-muted);">অথবা Direct Image URL</label>
                     <input id="bannerImgUrl" class="admin-input" placeholder="https://i.ibb.co/...">
-
                     <label style="font-size:10px; color:var(--text-muted);">Destination Page</label>
                     <input id="bannerAction" class="admin-input" value="deposit.html" required>
-                    
                     <button type="submit" id="btnUploadBanner" class="btn-admin"><i class="fa-solid fa-cloud-arrow-up"></i> Upload Banner to Slider</button>
                 </form>
             </div>
@@ -558,7 +540,7 @@
         </div>
     </div>
 
-    <!-- MODAL 10: LIVE CUSTOMER SUPPORT (ইউজারদের চ্যাট ও রিপ্লাই) -->
+    <!-- MODAL 10: LIVE CUSTOMER SUPPORT -->
     <div class="admin-modal-screen" id="supportModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('supportModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -568,17 +550,13 @@
             </div>
         </div>
         <div class="modal-scroll-body" style="padding:10px;">
-            <!-- কনভার্সেশন ইউজার লিস্ট -->
             <div class="box-card" style="padding:10px; margin-bottom:8px;">
-                <label style="font-size:10px; color:var(--accent); font-weight:800; display:block; margin-bottom:6px;">
-                    Users who sent messages:
-                </label>
+                <label style="font-size:10px; color:var(--accent); font-weight:800; display:block; margin-bottom:6px;">Users who sent messages:</label>
                 <div id="supportUserTabs" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:4px;">
                     <span style="font-size:11px; color:#94a3b8;">Loading user conversations...</span>
                 </div>
             </div>
 
-            <!-- চ্যাট বক্স -->
             <div class="box-card" style="display:flex; flex-direction:column; height:380px; padding:10px;">
                 <div id="adminChatFeed" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px; padding-bottom:8px;">
                     <p style="font-size:11px; color:#94a3b8; text-align:center; padding-top:40px;">Select a user to view conversation</p>
@@ -591,32 +569,107 @@
         </div>
     </div>
 
-    <!-- MODAL 11: LUCKY DRAW CONTROLS -->
+    <!-- MODAL 11: LUCKY DRAW CONTROLS (সম্পূর্ণ আপগ্রেডেড ও অপ্টিমাইজড) -->
     <div class="admin-modal-screen" id="luckyModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('luckyModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Lucky Draw Controls</h3><p>Manage Ticket Sales & Schedule</p></div>
+            <div class="modal-header-titles"><h3>Lucky Draw Controls</h3><p>Price, 5 Prizes & Live Stream</p></div>
         </div>
         <div class="modal-scroll-body">
+            
+            <!-- ১. টিকিট সেলস স্ট্যাটাস এবং প্রাইস কন্ট্রোল -->
             <div class="box-card">
-                <h4 style="font-size:13px; font-weight:800; margin-bottom:8px;">Ticket Sales Status</h4>
-                <div style="display:flex; gap:10px; margin-bottom:14px;">
+                <h4 style="font-size:13px; font-weight:800; margin-bottom:10px; color:#facc15;"><i class="fa-solid fa-ticket"></i> Ticket Sales & Dynamic Price</h4>
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
                     <button type="button" class="btn-act approve" style="padding:10px; flex:1; justify-content:center;" onclick="toggleLotterySales(true)">
-                        <i class="fa-solid fa-lock-open"></i> টিকিট বিক্রি চালু করুন
+                        <i class="fa-solid fa-lock-open"></i> বিক্রি চালু করুন
                     </button>
                     <button type="button" class="btn-act reject" style="padding:10px; flex:1; justify-content:center;" onclick="toggleLotterySales(false)">
-                        <i class="fa-solid fa-lock"></i> টিকিট বিক্রি বন্ধ করুন
+                        <i class="fa-solid fa-lock"></i> বিক্রি বন্ধ করুন
                     </button>
                 </div>
 
-                <label style="font-size:10px; color:var(--text-muted);">Draw Schedule Text</label>
+                <label style="font-size:10px; color:var(--text-muted);">টিকিটের মূল্য (BDT / টাকায়)</label>
+                <input type="number" id="lotteryTicketPriceInput" class="admin-input" placeholder="e.g. 40" value="40">
+
+                <label style="font-size:10px; color:var(--text-muted);">🔴 লাইভ ড্র লিংক (YouTube / FB / Telegram Live URL)</label>
+                <input type="url" id="lotteryLiveUrlInput" class="admin-input" placeholder="https://youtube.com/live/..." value="">
+
+                <label style="font-size:10px; color:var(--text-muted);">Draw Schedule Text (লেখার জন্য)</label>
                 <input id="lotteryScheduleText" class="admin-input" placeholder="যেমন: ১৫ নভেম্বর, ২০২৬ রাত ১০:০০ টা">
 
-                <label style="font-size:10px; color:var(--text-muted);">Target Date & Time</label>
+                <label style="font-size:10px; color:var(--text-muted);">ড্রয়ের সুনির্দিষ্ট সময় (Target Date & Time for Countdown)</label>
                 <input type="datetime-local" id="lotteryTargetTime" class="admin-input">
 
-                <button class="btn-admin" onclick="saveLotterySettings()"><i class="fa-solid fa-floppy-disk"></i> Save Lottery Schedule</button>
+                <button class="btn-admin" onclick="saveLotterySettings()"><i class="fa-solid fa-floppy-disk"></i> Save Lottery Settings</button>
             </div>
+
+            <!-- ২. প্রাইজ ব্যানার আপলোড (গ্যালারি থেকে সর্বোচ্চ ৫টি ব্যানার অটো-কম্প্রেস সহ) -->
+            <div class="box-card">
+                <h4 style="font-size:13px; font-weight:800; margin-bottom:10px; color:#38bdf8;"><i class="fa-solid fa-images"></i> Prize Pool 5 Banners</h4>
+                <form onsubmit="handleUploadPrizeBanner(event)">
+                    <label style="font-size:10px; color:var(--text-muted);">Prize Rank (1 to 5)</label>
+                    <select id="prizeRankSelect" class="admin-input">
+                        <option value="1">1st Prize</option>
+                        <option value="2">2nd Prize</option>
+                        <option value="3">3rd Prize</option>
+                        <option value="4">4th Prize</option>
+                        <option value="5">5th Prize</option>
+                    </select>
+
+                    <label style="font-size:10px; color:var(--text-muted);">Prize Title</label>
+                    <input id="prizeTitleInput" class="admin-input" placeholder="e.g. iPhone 16 Pro Max" required>
+
+                    <label style="font-size:10px; color:var(--text-muted);">Worth / Value Text</label>
+                    <input id="prizeValueInput" class="admin-input" placeholder="e.g. Worth ৳1,50,000" required>
+
+                    <label style="font-size:10px; color:var(--accent); font-weight:800;">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</label>
+                    <input type="file" id="prizeImgFileInput" accept="image/*" class="admin-input" onchange="handlePrizeImgSelect(event)">
+
+                    <label style="font-size:10px; color:var(--text-muted);">অথবা Direct Image URL</label>
+                    <input id="prizeImgUrlInput" class="admin-input" placeholder="https://...">
+
+                    <button type="submit" id="btnSavePrizeBanner" class="btn-admin"><i class="fa-solid fa-cloud-arrow-up"></i> Add / Update Prize Banner</button>
+                </form>
+
+                <h5 style="font-size:11px; font-weight:800; margin-top:14px; margin-bottom:8px; color:#cbd5e1;">Current 5 Prize Banners:</h5>
+                <div id="adminPrizeList" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+
+            <!-- ৩. কে কে কত টাকার টিকিট কেটেছে (Live Ticket Sales Tracker) -->
+            <div class="box-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <h4 style="font-size:13px; font-weight:800; color:#10b981;"><i class="fa-solid fa-users-rectangle"></i> Sold Tickets List</h4>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+                    <div style="background:#070e22; padding:10px; border-radius:10px; text-align:center; border:1px solid var(--card-border);">
+                        <span style="font-size:9.5px; color:#94a3b8;">Total Tickets</span>
+                        <h4 id="statTotalTicketsCount" style="font-size:16px; color:#facc15;">0</h4>
+                    </div>
+                    <div style="background:#070e22; padding:10px; border-radius:10px; text-align:center; border:1px solid var(--card-border);">
+                        <span style="font-size:9.5px; color:#94a3b8;">Total Collection</span>
+                        <h4 id="statTotalTicketsMoney" style="font-size:16px; color:#34d399;">৳0</h4>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ticket #</th>
+                                <th>UID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Price</th>
+                                <th>Address</th>
+                            </tr>
+                        </thead>
+                        <tbody id="soldTicketsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -658,10 +711,43 @@
         let isSoundMuted = false;
         let isFirstLoad = true;
         let selectedBannerBase64 = "";
+        let selectedPrizeImgBase64 = "";
         let activeChatUserUid = null;
+        let currentLoadedPrizes = [];
 
-        const ONESIGNAL_APP_ID = "e94dc542-7d17-4dd3-a20e-c1925cce7749";
-        const ONESIGNAL_REST_KEY = atob("b3NfdjJfYXBwXzVmZzRrcXQ1YzVnNWhpcW95Z2pmenR0eGplanRvN3Boa2QzdXI0bmszYjd0cTZqZHluYWRtMzUzcmV0bHR2cHBvanVsMmdhYXJnM2Z4dGhodTR3a2tiY21qeDN3N3Y0M3pycGp3Mnk=");
+        // ছবি অটো-কম্প্রেস ফাংশন (ক্যানভাস ব্যবহার করে সাইজ কমিয়ে দেয়)
+        function compressImage(file, maxWidth, maxHeight, quality, callback) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function () {
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                    callback(dataUrl);
+                };
+            };
+        }
 
         function playBeepAlert() {
             if (isSoundMuted) return;
@@ -784,7 +870,7 @@
                 document.getElementById('statTotalBalance').innerText = `$ ${totalBal.toFixed(2)}`;
             });
 
-            // ২. ডিপোজিট সিঙ্ক (Earnings ক্যাটাগরিতে যাবে)
+            // ২. ডিপোজিট সিঙ্ক
             db.collection("deposits").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('depositsTableBody');
@@ -827,7 +913,7 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৩. উইথড্রল সিঙ্ক (Earnings ক্যাটাগরিতে যাবে)
+            // ৩. উইথড্রল সিঙ্ক
             db.collection("withdrawals").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('withdrawalsTableBody');
@@ -870,7 +956,7 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক (Boost Requests Module)
+            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক
             db.collection("boost_requests").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingBoost = 0;
                 const tbody = document.getElementById('boostTableBody');
@@ -926,7 +1012,7 @@
                 });
             });
 
-            // ৬. টাস্ক প্রুফ সিঙ্ক (আসল স্ক্রিনশট ও প্রোফাইল লিংক ভেরিফিকেশন সহ)
+            // ৬. টাস্ক প্রুফ সিঙ্ক
             db.collection("task_submissions").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('taskProofsTableBody');
@@ -941,12 +1027,8 @@
                     tr.innerHTML = `
                         <td><strong>${(p.platform || '').toUpperCase()}</strong></td>
                         <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
-                        <td>
-                            ${p.profileUrl ? `<a href="${p.profileUrl}" target="_blank" style="color:#38bdf8; text-decoration:underline; font-size:10px;">Check Link</a>` : '<span style="color:gray;">N/A</span>'}
-                        </td>
-                        <td>
-                            <button class="btn-act view-proof" onclick="viewProofImages('${doc.id}')"><i class="fa-solid fa-images"></i> View (${(p.proofs || []).length})</button>
-                        </td>
+                        <td>${p.profileUrl ? `<a href="${p.profileUrl}" target="_blank" style="color:#38bdf8; text-decoration:underline; font-size:10px;">Check Link</a>` : '<span style="color:gray;">N/A</span>'}</td>
+                        <td><button class="btn-act view-proof" onclick="viewProofImages('${doc.id}')"><i class="fa-solid fa-images"></i> View (${(p.proofs || []).length})</button></td>
                         <td><span class="status-badge ${p.status}">${p.status}</span></td>
                         <td>
                             ${p.status === 'pending' ? `
@@ -981,15 +1063,7 @@
                 });
             });
 
-            // ৮. কাস্টমার সাপোর্ট আনরেড ব্যাজ সিঙ্ক
-            db.collection("support_conversations").where("unreadByAdmin", "==", true).onSnapshot(snap => {
-                const pill = document.getElementById('modPendingSupportPill');
-                const count = snap.size;
-                pill.innerText = count;
-                pill.style.display = count > 0 ? 'inline-block' : 'none';
-            });
-
-            // গেটওয়ে লোড
+            // ৮. গেটওয়ে লোড
             db.collection("settings").doc("gateways").onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
@@ -999,28 +1073,198 @@
                     if (data.usd_bdt_rate) document.getElementById('settingUsdBdt').value = data.usd_bdt_rate;
                 }
             });
+
+            // ৯. লাকি ড্র সেটিংস ও প্রাইজ লোড
+            db.collection("settings").doc("lottery").onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.ticketPriceBDT) document.getElementById('lotteryTicketPriceInput').value = data.ticketPriceBDT;
+                    if (data.liveDrawUrl) document.getElementById('lotteryLiveUrlInput').value = data.liveDrawUrl;
+                    if (data.scheduleText) document.getElementById('lotteryScheduleText').value = data.scheduleText;
+                    
+                    if (data.targetTimestamp) {
+                        const date = new Date(Number(data.targetTimestamp));
+                        const localIso = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+                        document.getElementById('lotteryTargetTime').value = localIso;
+                    }
+
+                    if (data.prizes && Array.isArray(data.prizes)) {
+                        currentLoadedPrizes = data.prizes;
+                        renderAdminPrizeList(data.prizes);
+                    }
+                }
+            });
+
+            // ১০. কতজন ব্যক্তি টিকিট কেটেছে তা লাইভ লোড
+            db.collection("lottery_tickets").orderBy("createdAt", "desc").onSnapshot(snap => {
+                const tbody = document.getElementById('soldTicketsTableBody');
+                tbody.innerHTML = '';
+
+                let totalCount = snap.size;
+                let totalBDT = 0;
+
+                snap.forEach(doc => {
+                    const t = doc.data();
+                    const bdt = Number(t.priceBDT) || 40;
+                    totalBDT += bdt;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong style="color:#facc15; font-family:monospace;">#${t.ticketNumber}</strong></td>
+                        <td><span style="font-family:monospace; color:#38bdf8;">#${t.userUID || '-'}</span></td>
+                        <td>${t.name || 'User'}</td>
+                        <td><span style="font-family:monospace;">${t.phone || '-'}</span></td>
+                        <td><strong style="color:#34d399;">৳${bdt}</strong></td>
+                        <td><small style="color:#94a3b8;">${t.address || '-'}</small></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('statTotalTicketsCount').innerText = totalCount;
+                document.getElementById('statTotalTicketsMoney').innerText = `৳${totalBDT}`;
+                const pill = document.getElementById('modPendingTicketsPill');
+                pill.innerText = totalCount;
+                pill.style.display = totalCount > 0 ? 'inline-block' : 'none';
+            });
         }
 
-        // ================= গ্যালারি থেকে সরাসরি ব্যানার আপলোড =================
+        // ================= লাকি ড্র কন্ট্রোলস ও প্রাইস আপডেট =================
+        function toggleLotterySales(isOpen) {
+            db.collection("settings").doc("lottery").set({ ticketSalesOpen: isOpen }, { merge: true }).then(() => {
+                playBeepAlert();
+                showToast(isOpen ? "টিকিট বিক্রি চালু করা হয়েছে!" : "টিকিট বিক্রি বন্ধ করা হয়েছে!", "success");
+            });
+        }
+
+        function saveLotterySettings() {
+            const price = Number(document.getElementById('lotteryTicketPriceInput').value) || 40;
+            const liveUrl = document.getElementById('lotteryLiveUrlInput').value.trim();
+            const sched = document.getElementById('lotteryScheduleText').value.trim();
+            const timeVal = document.getElementById('lotteryTargetTime').value;
+
+            let payload = {
+                ticketPriceBDT: price,
+                liveDrawUrl: liveUrl
+            };
+
+            if (sched) payload.scheduleText = sched;
+            if (timeVal) payload.targetTimestamp = new Date(timeVal).getTime();
+
+            db.collection("settings").doc("lottery").set(payload, { merge: true }).then(() => {
+                playBeepAlert();
+                showToast("লাকি ড্র সেটিংস ও প্রাইস সফলভাবে সেভ হয়েছে!", "success");
+            });
+        }
+
+        // গ্যালারি থেকে প্রাইজ ছবি সিলেক্ট (অটো কম্প্রেস)
+        function handlePrizeImgSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showToast("ছবি প্রসেসিং হচ্ছে...", "info");
+            compressImage(file, 600, 350, 0.75, function(compressedBase64) {
+                selectedPrizeImgBase64 = compressedBase64;
+                document.getElementById('prizeImgUrlInput').value = "Image Ready from Gallery (" + Math.round(compressedBase64.length / 1024) + " KB)";
+                showToast("ছবি সফলভাবে প্রস্তুত হয়েছে!", "success");
+            });
+        }
+
+        function handleUploadPrizeBanner(e) {
+            e.preventDefault();
+            const rank = parseInt(document.getElementById('prizeRankSelect').value);
+            const title = document.getElementById('prizeTitleInput').value.trim();
+            const valueText = document.getElementById('prizeValueInput').value.trim();
+            const urlInput = document.getElementById('prizeImgUrlInput').value.trim();
+            const finalImage = selectedPrizeImgBase64 || (urlInput.startsWith('http') ? urlInput : '');
+
+            if (!finalImage) {
+                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন বা ছবির লিংক দিন!");
+                return;
+            }
+
+            const btn = document.getElementById('btnSavePrizeBanner');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Saving...`;
+
+            const newPrize = {
+                rank: rank,
+                title: title,
+                valueText: valueText,
+                image: finalImage
+            };
+
+            let updatedPrizes = Array.isArray(currentLoadedPrizes) ? [...currentLoadedPrizes] : [];
+            const existingIdx = updatedPrizes.findIndex(p => p.rank === rank);
+            if (existingIdx >= 0) {
+                updatedPrizes[existingIdx] = newPrize;
+            } else {
+                updatedPrizes.push(newPrize);
+            }
+            updatedPrizes.sort((a, b) => a.rank - b.rank);
+            updatedPrizes = updatedPrizes.slice(0, 5);
+
+            db.collection("settings").doc("lottery").set({
+                prizes: updatedPrizes
+            }, { merge: true }).then(() => {
+                playBeepAlert();
+                showToast(`Prize #${rank} ব্যানার সেভ হয়েছে!`, "success");
+                e.target.reset();
+                selectedPrizeImgBase64 = "";
+            }).catch(err => {
+                alert("আপলোড সমস্যা: " + err.message);
+            }).finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Add / Update Prize Banner`;
+            });
+        }
+
+        function renderAdminPrizeList(prizes) {
+            const container = document.getElementById('adminPrizeList');
+            container.innerHTML = '';
+
+            prizes.forEach(p => {
+                const item = document.createElement('div');
+                item.style = "display:flex; align-items:center; justify-content:space-between; background:#070e22; border:1px solid var(--card-border); border-radius:10px; padding:6px 10px;";
+                item.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <img src="${p.image}" style="width:40px; height:40px; border-radius:6px; object-fit:cover;">
+                        <div>
+                            <strong style="font-size:11.5px; color:#facc15;">Rank #${p.rank}: ${p.title}</strong>
+                            <div style="font-size:10px; color:#38bdf8;">${p.valueText}</div>
+                        </div>
+                    </div>
+                    <button class="btn-act reject" onclick="deletePrizeRank(${p.rank})"><i class="fa-solid fa-trash"></i></button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function deletePrizeRank(rank) {
+            if (!confirm(`Rank #${rank} প্রাইজ ব্যানার মুছে ফেলতে চান?`)) return;
+            const updated = currentLoadedPrizes.filter(p => p.rank !== rank);
+            db.collection("settings").doc("lottery").set({ prizes: updated }, { merge: true }).then(() => {
+                showToast(`Prize #${rank} মুছে ফেলা হয়েছে।`, "info");
+            });
+        }
+
+        // ================= হোম ব্যানার আপলোড =================
         function handleBannerFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                selectedBannerBase64 = evt.target.result;
-                document.getElementById('bannerImgUrl').value = "Image Selected from Gallery";
-            };
-            reader.readAsDataURL(file);
+            compressImage(file, 700, 350, 0.75, function(compressedBase64) {
+                selectedBannerBase64 = compressedBase64;
+                document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
+            });
         }
 
         function handleAddBanner(e) {
             e.preventDefault();
             const urlInput = document.getElementById('bannerImgUrl').value.trim();
-            const finalImage = selectedBannerBase64 || urlInput;
+            const finalImage = selectedBannerBase64 || (urlInput.startsWith('http') ? urlInput : '');
             const action = document.getElementById('bannerAction').value.trim() || 'deposit.html';
 
-            if (!finalImage || finalImage === "Image Selected from Gallery") {
-                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন অথবা URL দিন!");
+            if (!finalImage) {
+                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি দিন অথবা URL দিন!");
                 return;
             }
 
@@ -1033,7 +1277,7 @@
                 action: action,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                showToast("ব্যানার সফলভাবে হোমপেজে যুক্ত হয়েছে!", "success");
+                showToast("ব্যানার যুক্ত হয়েছে!", "success");
                 e.target.reset();
                 selectedBannerBase64 = "";
             }).finally(() => {
@@ -1046,7 +1290,7 @@
             if (confirm("ব্যানার ডিলিট করবেন?")) db.collection("banners").doc(id).delete().then(() => showToast("ব্যানার ডিলিট হয়েছে।", "info"));
         }
 
-        // ================= ডিপোজিট অ্যাপ্রুভ/রিজেক্ট (Earnings নোটিফিকেশন সহ) =================
+        // ================= ডিপোজিট অনুমোদন =================
         async function approveDeposit(depId, rawUid, amountBDT, method) {
             const dashUID = getDashboardUID(rawUid);
             if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট নিশ্চিত করবেন?`)) return;
@@ -1059,143 +1303,59 @@
                         balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd)
                     });
                 }
-
                 await db.collection("deposits").doc(depId).update({ status: "success" });
-
-                await db.collection("notifications").add({
-                    targetUid: String(dashUID),
-                    category: "earnings",
-                    method: method || "nagad",
-                    title: `🎉 ${(method || 'Online').toUpperCase()} ডিপোজিট সফল হয়েছে!`,
-                    message: `আপনার ৳${amountBDT} ($${usdToAdd.toFixed(2)}) ডিপোজিট অনুমোদিত হয়েছে এবং মেইন ব্যালেন্সে যোগ হয়েছে।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
                 playBeepAlert();
-                showToast(`সফল! #${dashUID}-এ ৳${amountBDT} যোগ হয়েছে।`, "success");
-            } catch (err) {
-                alert("ডিপোজিট অ্যাপ্রুভ ত্রুটি: " + err.message);
-            }
+                showToast(`৳${amountBDT} যোগ হয়েছে #${dashUID}-এ!`, "success");
+            } catch (err) { alert(err.message); }
         }
 
         async function rejectDeposit(depId, rawUid, amountBDT, method) {
-            const dashUID = getDashboardUID(rawUid);
-            if (!confirm(`UID #${dashUID}-এর ডিপোজিট রিজেক্ট করতে চান?`)) return;
-
-            try {
-                await db.collection("deposits").doc(depId).update({ status: "rejected" });
-
-                await db.collection("notifications").add({
-                    targetUid: String(dashUID),
-                    category: "earnings",
-                    method: method || "nagad",
-                    title: `❌ ${(method || 'Online').toUpperCase()} ডিপোজিট বাতিল`,
-                    message: `আপনার ৳${amountBDT || ''} ডিপোজিট রিকোয়েস্টটি বাতিল করা হয়েছে। TrxID সঠিক দিয়ে আবার চেষ্টা করুন।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                showToast(`ডিপোজিট রিজেক্ট হয়েছে।`, "info");
-            } catch (err) {
-                alert("রিজেক্ট ত্রুটি: " + err.message);
-            }
+            if (!confirm("ডিপোজিট বাতিল করবেন?")) return;
+            await db.collection("deposits").doc(depId).update({ status: "rejected" });
+            showToast("ডিপোজিট রিজেক্ট হয়েছে।", "info");
         }
 
-        // ================= উইথড্রল অ্যাপ্রুভ/রিজেক্ট (Earnings নোটিফিকেশন সহ) =================
+        // ================= উইথড্রল অনুমোদন =================
         async function approveWithdrawal(id, rawUid, amountBDT, provider) {
-            const dashUID = getDashboardUID(rawUid);
-            if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} উইথড্রল সম্পন্ন হয়েছে?`)) return;
-
+            if (!confirm("উইথড্র সম্পন্ন হয়েছে?")) return;
             await db.collection("withdrawals").doc(id).update({ status: "success" });
-
-            await db.collection("notifications").add({
-                targetUid: String(dashUID),
-                category: "earnings",
-                method: provider || "nagad",
-                title: `✅ ${(provider || 'Wallet').toUpperCase()} উইথড্র সফল হয়েছে!`,
-                message: `আপনার ৳${amountBDT} উইথড্রল রিকোয়েস্ট সম্পন্ন হয়েছে এবং একাউন্টে পাঠিয়ে দেওয়া হয়েছে।`,
-                actionUrl: "history.html",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            });
-
             playBeepAlert();
             showToast("উইথড্রল সম্পন্ন হয়েছে!", "success");
         }
 
         async function rejectWithdrawal(id, rawUid, refundUSD, amountBDT, provider) {
             const dashUID = getDashboardUID(rawUid);
-            if (!confirm(`UID #${dashUID}-এর উইথড্র বাতিল করে রিফান্ড দিতে চান?`)) return;
+            if (!confirm(`UID #${dashUID}-এ $${refundUSD} রিফান্ড দিবেন?`)) return;
 
-            try {
-                const snap = await db.collection("users").where("uid", "==", String(dashUID)).get();
-                if (!snap.empty) {
-                    await snap.docs[0].ref.update({
-                        balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0)
-                    });
-                }
-                await db.collection("withdrawals").doc(id).update({ status: "rejected" });
-
-                await db.collection("notifications").add({
-                    targetUid: String(dashUID),
-                    category: "earnings",
-                    method: provider || "nagad",
-                    title: `❌ ${(provider || 'Wallet').toUpperCase()} উইথড্র বাতিল ও রিফান্ড`,
-                    message: `আপনার ৳${amountBDT} উইথড্র বাতিল করা হয়েছে এবং $${Number(refundUSD).toFixed(2)} মেইন ব্যালেন্সে ফেরত দেওয়া হয়েছে।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            const snap = await db.collection("users").where("uid", "==", String(dashUID)).get();
+            if (!snap.empty) {
+                await snap.docs[0].ref.update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0)
                 });
-
-                showToast(`উইথড্র বাতিল এবং #${dashUID}-এ রিফান্ড সম্পন্ন!`, "info");
-            } catch (err) {
-                alert("রিফান্ড সমস্যা: " + err.message);
             }
+            await db.collection("withdrawals").doc(id).update({ status: "rejected" });
+            showToast("উইথড্র বাতিল ও রিফান্ড সম্পন্ন!", "info");
         }
 
-        // ================= বুস্ট ক্যাম্পেইন অনুমোদন (Approve Boost) =================
+        // ================= বুস্ট অনুমোদন =================
         async function approveBoostCampaign(reqId, postId, userUID, boostPkg) {
-            if (!confirm(`UID #${userUID}-এর ${boostPkg} বুস্ট ক্যাম্পেইন অনুমোদন করবেন?`)) return;
-
-            try {
-                const boostDurationMs = 2 * 24 * 60 * 60 * 1000;
-                const expiresAt = Date.now() + boostDurationMs;
-
-                await db.collection("posts").doc(postId).update({
-                    boostStatus: "active",
-                    boostExpiresAt: expiresAt,
-                    autoLikesQueue: 50,
-                    autoViewsQueue: 400,
-                    autoCommentsQueue: 8
-                });
-
-                await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
-
-                await db.collection("notifications").add({
-                    targetUid: String(userUID),
-                    category: "earnings",
-                    platform: "boost",
-                    title: "🚀 বুস্ট ক্যাম্পেইন চালু হয়েছে!",
-                    message: `আপনার পোস্টের ${boostPkg} বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে। ক্যাম্পেইন শেষে সম্পূর্ণ ইনকাম মেইন ব্যালেন্সে জমা হবে!`,
-                    actionUrl: "boost.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                playBeepAlert();
-                showToast("বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে!", "success");
-            } catch (e) {
-                alert("বুস্ট অনুমোদন ত্রুটি: " + e.message);
-            }
+            if (!confirm(`বুস্ট ক্যাম্পেইন অনুমোদন করবেন?`)) return;
+            await db.collection("posts").doc(postId).update({
+                boostStatus: "active",
+                boostExpiresAt: Date.now() + (2 * 24 * 60 * 60 * 1000)
+            });
+            await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
+            playBeepAlert();
+            showToast("বুস্ট ক্যাম্পেইন সফল হয়েছে!", "success");
         }
 
-        async function rejectBoostCampaign(reqId, postId, userUID) {
-            if (!confirm(`বুস্ট ক্যাম্পেইন বাতিল করতে চান?`)) return;
+        async function rejectBoostCampaign(reqId, postId) {
+            if (!confirm("বুস্ট বাতিল করবেন?")) return;
             await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
-            if (postId) {
-                await db.collection("posts").doc(postId).update({ boostStatus: "none" }).catch(() => {});
-            }
-            showToast("বুস্ট রিকোয়েস্ট বাতিল করা হয়েছে।", "info");
+            showToast("বুস্ট বাতিল করা হয়েছে।", "info");
         }
 
-        // ================= ডায়নামিক রুলস সহ টাস্ক তৈরি =================
+        // ================= টাস্ক ক্রিয়েটর =================
         function handleCreateTask(e) {
             e.preventDefault();
             const platform = document.getElementById('taskPlatform').value;
@@ -1204,213 +1364,64 @@
             const duration = document.getElementById('taskDuration').value.trim();
             const url = document.getElementById('taskUrl').value.trim();
 
-            const reqLike = document.getElementById('ruleLike').checked;
-            const reqSubscribe = document.getElementById('ruleSubscribe').checked;
-            const reqComment = document.getElementById('ruleComment').checked;
-
             db.collection("tasks").add({
-                platform: platform,
-                title: title,
-                rewardUSD: coins,
-                coins: Math.round(coins * 100),
-                duration: duration,
-                url: url,
-                requiresLike: reqLike,
-                requiresSubscribe: reqSubscribe,
-                requiresFollow: reqSubscribe,
-                requiresComment: reqComment,
+                platform, title, rewardUSD: coins, duration, url,
+                requiresLike: document.getElementById('ruleLike').checked,
+                requiresSubscribe: document.getElementById('ruleSubscribe').checked,
+                requiresComment: document.getElementById('ruleComment').checked,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
                 playBeepAlert();
-                showToast("নতুন টাস্ক ডায়নামিক রুলস সহ পাবলিশ হয়েছে!", "success");
+                showToast("টাস্ক তৈরি হয়েছে!", "success");
                 e.target.reset();
-                document.getElementById('ruleLike').checked = true;
-                document.getElementById('ruleSubscribe').checked = true;
             });
         }
 
         function deleteTaskDoc(id) {
-            if (confirm("টাস্ক ডিলিট করবেন?")) db.collection("tasks").doc(id).delete().then(() => showToast("টাস্ক ডিলিট হয়েছে।", "info"));
+            if (confirm("টাস্ক মুছবেন?")) db.collection("tasks").doc(id).delete();
         }
 
-        // ================= টাস্ক প্রুফ অ্যাপ্রুভ (Earnings নোটিফিকেশন সহ) =================
-        async function approveProof(id, rawUid, rewardUSD, platform) {
-            const dashUID = getDashboardUID(rawUid);
-            try {
-                const snap = await db.collection("users").where("uid", "==", String(dashUID)).get();
-                if (!snap.empty) {
-                    await snap.docs[0].ref.update({
-                        balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD),
-                        todayEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD),
-                        totalEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD)
-                    });
-                }
-                await db.collection("task_submissions").doc(id).update({ status: "completed" });
-
-                await db.collection("notifications").add({
-                    targetUid: String(dashUID),
-                    category: "earnings",
-                    platform: platform || "youtube",
-                    title: `🎉 ${(platform || 'Task').toUpperCase()} রিওয়ার্ড জমা হয়েছে!`,
-                    message: `আপনার ভিডিও টাস্ক অ্যাপ্রুভ হয়েছে এবং $${rewardUSD.toFixed(2)} (৳${(rewardUSD * 120).toFixed(2)}) মেইন ব্যালেন্সে যোগ হয়েছে।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                playBeepAlert();
-                showToast(`টাস্ক রিওয়ার্ড #${dashUID}-এ যোগ হয়েছে!`, "success");
-            } catch (err) {
-                alert("ত্রুটি: " + err.message);
-            }
-        }
-
-        function rejectProof(id) {
-            db.collection("task_submissions").doc(id).update({ status: "rejected" }).then(() => showToast("প্রুফ রিজেক্ট করা হয়েছে।", "info"));
-        }
-
-        // ================= আসল স্ক্রিনশট ছবি প্রিভিউ =================
+        // ================= প্রুফ ভিউ ও অনুমোদন =================
         function viewProofImages(docId) {
             db.collection("task_submissions").doc(docId).get().then(doc => {
                 if (doc.exists) {
-                    const data = doc.data();
+                    const images = doc.data().proofs || [];
                     const container = document.getElementById('proofImagesContainer');
-                    const images = data.proofs || data.screenshots || [];
-                    
-                    if (images.length === 0) {
-                        container.innerHTML = `<p style="grid-column:1/-1; font-size:11px; color:#94a3b8;">কোনো ছবি জমা দেওয়া হয়নি</p>`;
-                    } else {
-                        container.innerHTML = images.map((imgUrl, i) => `
-                            <div class="proof-box"><img src="${imgUrl}" alt="Proof ${i+1}" onclick="window.open('${imgUrl}', '_blank')"></div>
-                        `).join('');
-                    }
+                    container.innerHTML = images.map((img, i) => `<div class="proof-box"><img src="${img}" onclick="window.open('${img}', '_blank')"></div>`).join('');
                     document.getElementById('proofImagesModal').classList.add('active');
                 }
             });
         }
-
         function closeProofImagesModal() { document.getElementById('proofImagesModal').classList.remove('active'); }
 
-        // ================= লাইভ সাপোর্ট চ্যাট ও রিপ্লাই সিস্টেম =================
-        function openSupportChatModal() {
-            openModuleModal('supportModal');
-            loadSupportConversations();
-        }
-
-        function loadSupportConversations() {
-            db.collection("support_conversations").orderBy("updatedAt", "desc").onSnapshot(snap => {
-                const tabsContainer = document.getElementById('supportUserTabs');
-                tabsContainer.innerHTML = '';
-
-                if (snap.empty) {
-                    tabsContainer.innerHTML = `<span style="font-size:11px; color:#94a3b8;">কোনো ইউজার এখনও মেসেজ পাঠায়নি</span>`;
-                    document.getElementById('adminChatFeed').innerHTML = `<p style="font-size:11px; color:#94a3b8; text-align:center; padding-top:40px;">No messages</p>`;
-                    return;
-                }
-
-                snap.forEach((doc, idx) => {
-                    const c = doc.data();
-                    const uid = c.userUid || doc.id;
-                    const btn = document.createElement('button');
-                    btn.type = 'button';
-                    btn.className = 'btn-act';
-                    btn.style = `padding:6px 12px; border-radius:20px; font-size:11px; font-weight:800; white-space:nowrap; ${activeChatUserUid === uid ? 'background:var(--primary); color:#fff;' : 'background:rgba(255,255,255,0.08); color:#cbd5e1;'}`;
-                    btn.innerText = `#${uid} (${c.userName || 'User'})`;
-                    btn.onclick = () => selectChatUser(uid, c.userName || 'User');
-                    tabsContainer.appendChild(btn);
-
-                    if (idx === 0 && !activeChatUserUid) {
-                        selectChatUser(uid, c.userName || 'User');
-                    }
+        async function approveProof(id, rawUid, rewardUSD, platform) {
+            const dashUID = getDashboardUID(rawUid);
+            const snap = await db.collection("users").where("uid", "==", String(dashUID)).get();
+            if (!snap.empty) {
+                await snap.docs[0].ref.update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD)
                 });
-            });
-        }
-
-        function selectChatUser(userUid, userName) {
-            activeChatUserUid = userUid;
-            document.getElementById('chattingWithTitle').innerText = `Chatting with: #${userUid} (${userName})`;
-            
-            db.collection("support_conversations").doc(userUid).update({ unreadByAdmin: false }).catch(() => {});
-            listenToActiveUserMessages(userUid);
-            loadSupportConversations();
-        }
-
-        function listenToActiveUserMessages(userUid) {
-            db.collection("support_messages").where("userUid", "==", userUid).orderBy("createdAt", "asc").onSnapshot(snap => {
-                const feed = document.getElementById('adminChatFeed');
-                feed.innerHTML = '';
-
-                if (snap.empty) {
-                    feed.innerHTML = `<p style="font-size:11px; color:#94a3b8; text-align:center; padding-top:40px;">No messages from this user</p>`;
-                    return;
-                }
-
-                snap.forEach(doc => {
-                    const m = doc.data();
-                    const isAdmin = m.sender === "admin";
-                    const b = document.createElement('div');
-                    b.style = `padding:8px 12px; border-radius:12px; font-size:11.5px; max-width:80%; line-height:1.35; ${isAdmin ? 'background:var(--primary); align-self:flex-end; color:#fff;' : 'background:#1e293b; align-self:flex-start; color:#f8fafc;'}`;
-                    b.innerHTML = `<strong>${isAdmin ? 'Admin' : m.userName || 'User'}:</strong> ${m.text || ''}`;
-                    feed.appendChild(b);
-                });
-
-                feed.scrollTop = feed.scrollHeight;
-            });
-        }
-
-        function handleAdminSendMessage(e) {
-            e.preventDefault();
-            const input = document.getElementById('adminReplyText');
-            const msg = input.value.trim();
-            if (!msg || !activeChatUserUid) {
-                alert("অনুগ্রহ করে একটি ইউজার সিলেক্ট করুন এবং মেসেজ লিখুন!");
-                return;
             }
-
-            db.collection("support_messages").add({
-                userUid: activeChatUserUid,
-                sender: "admin",
-                text: msg,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                db.collection("support_conversations").doc(activeChatUserUid).set({
-                    lastMessage: msg,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    unreadByAdmin: false
-                }, { merge: true });
-
-                db.collection("notifications").add({
-                    targetUid: activeChatUserUid,
-                    category: "support",
-                    title: "💬 কাস্টমার সাপোর্ট থেকে নতুন উত্তর",
-                    message: msg,
-                    actionUrl: "support.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                input.value = '';
-                showToast("রিপ্লাই পাঠানো হয়েছে!", "success");
-            });
+            await db.collection("task_submissions").doc(id).update({ status: "completed" });
+            playBeepAlert();
+            showToast("প্রুফ অ্যাপ্রুভ হয়েছে!", "success");
         }
 
-        // ================= লাকি ড্র কন্ট্রোলস =================
-        function toggleLotterySales(isOpen) {
-            db.collection("settings").doc("lottery").set({ ticketSalesOpen: isOpen }, { merge: true }).then(() => {
-                playBeepAlert();
-                showToast(isOpen ? "টিকিট বিক্রি চালু করা হয়েছে!" : "টিকিট বিক্রি বন্ধ করা হয়েছে!", "success");
-            });
+        function rejectProof(id) {
+            db.collection("task_submissions").doc(id).update({ status: "rejected" });
         }
 
-        function saveLotterySettings() {
-            const sched = document.getElementById('lotteryScheduleText').value.trim();
-            const timeVal = document.getElementById('lotteryTargetTime').value;
-
-            let payload = {};
-            if (sched) payload.scheduleText = sched;
-            if (timeVal) payload.targetTimestamp = new Date(timeVal).getTime();
-
-            db.collection("settings").doc("lottery").set(payload, { merge: true }).then(() => {
+        // ================= সেটিংস সেভ =================
+        function handleSaveSettings(e) {
+            e.preventDefault();
+            db.collection("settings").doc("gateways").set({
+                nagad_number: document.getElementById('settingNagad').value.trim(),
+                bkash_number: document.getElementById('settingBkash').value.trim(),
+                binance_address: document.getElementById('settingBinance').value.trim(),
+                usd_bdt_rate: Number(document.getElementById('settingUsdBdt').value) || 120
+            }, { merge: true }).then(() => {
                 playBeepAlert();
-                showToast("লাকি ড্র শিডিউল সফলভাবে সেভ হয়েছে!", "success");
+                showToast("গেটওয়ে ও রেট সফলভাবে সেভ হয়েছে!", "success");
             });
         }
 
