@@ -143,7 +143,6 @@
         .btn-act.payout { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; color: #facc15; }
         .btn-act.view-proof { background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #c4b5fd; }
 
-        /* গ্যালারি ফাইল পিকিং বক্স */
         .gallery-upload-box {
             border: 2px dashed #0284c7;
             background: rgba(2, 132, 199, 0.08);
@@ -267,10 +266,10 @@
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-rocket"></i></div>
                     <span class="pending-pill" id="modPendingBoostPill" style="display:none;">0</span>
                 </div>
-                <div class="mod-meta"><h4>Boost Campaigns</h4><p>Approve, Payout & Stats</p></div>
+                <div class="mod-meta"><h4>Boost Campaigns</h4><p>Approve, Payout & Refund</p></div>
             </div>
 
-            <!-- ইউজার ম্যানেজার (UID দিয়ে ব্যালেন্স অ্যাড / কর্তন) -->
+            <!-- ইউজার ম্যানেজার -->
             <div class="module-card" onclick="openModuleModal('usersModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9);"><i class="fa-solid fa-users"></i></div>
@@ -376,11 +375,11 @@
         </div>
     </div>
 
-    <!-- MODAL 3: BOOST CAMPAIGNS -->
+    <!-- MODAL 3: BOOST CAMPAIGNS (রিফান্ড সিস্টেম সহ) -->
     <div class="admin-modal-screen" id="boostModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('boostModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Boost & Post Campaigns</h3><p>Approve Target, Settle Balance & Manage</p></div>
+            <div class="modal-header-titles"><h3>Boost & Post Campaigns</h3><p>Approve Target, Settle Balance & Refund</p></div>
         </div>
         <div class="modal-scroll-body">
             <div class="box-card">
@@ -414,15 +413,13 @@
         </div>
     </div>
 
-    <!-- MODAL 4: USERS MANAGER (UID সার্চ ও ব্যালেন্স এড/কর্তন টুল সহ) -->
+    <!-- MODAL 4: USERS MANAGER -->
     <div class="admin-modal-screen" id="usersModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('usersModal')"><i class="fa-solid fa-arrow-left"></i></button>
             <div class="modal-header-titles"><h3>Users Management</h3><p>Search by 6-Digit UID & Adjust Balance</p></div>
         </div>
         <div class="modal-scroll-body">
-
-            <!-- ১. কুইক UID ব্যালেন্স অ্যাড ও কর্তন টুল -->
             <div class="box-card" style="border-color:rgba(56, 189, 248, 0.4);">
                 <h4 style="font-size:13px; font-weight:800; color:#38bdf8; margin-bottom:8px;">
                     <i class="fa-solid fa-bolt"></i> UID দিয়ে সরাসরি ব্যালেন্স অ্যাড / কর্তন
@@ -447,7 +444,6 @@
                 </div>
             </div>
 
-            <!-- ২. সার্চ ফিল্টার ও ইউজার টেবিল -->
             <div class="box-card">
                 <input type="text" id="userSearchInput" class="admin-input" placeholder="Search by 6-digit UID or Name..." oninput="filterUsersTable()">
                 <div class="table-responsive">
@@ -664,7 +660,6 @@
             <div class="modal-header-titles"><h3>Lucky Draw Controls</h3><p>Price, 5 Prizes & Live Stream</p></div>
         </div>
         <div class="modal-scroll-body">
-            
             <div class="box-card">
                 <h4 style="font-size:13px; font-weight:800; margin-bottom:10px; color:#facc15;"><i class="fa-solid fa-ticket"></i> Ticket Sales & Dynamic Price</h4>
                 <div style="display:flex; gap:10px; margin-bottom:12px;">
@@ -758,7 +753,6 @@
                     </table>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -923,7 +917,7 @@
         function initAdminSync() {
             setTimeout(() => { isFirstLoad = false; }, 3000);
 
-            // ১. ইউজার্স সিঙ্ক (টেবিল ও অবজেক্টে সেভ)
+            // ১. ইউজার্স সিঙ্ক
             db.collection("users").onSnapshot(snap => {
                 let totalBal = 0;
                 window.usersBySixDigit = {};
@@ -1045,7 +1039,7 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক
+            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক (রিফান্ড বাটন সহ)
             db.collection("boost_requests").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingBoost = 0;
                 const tbody = document.getElementById('boostTableBody');
@@ -1055,18 +1049,20 @@
                     const b = doc.data();
                     if (b.status === 'pending') pendingBoost++;
                     const dashUid = getDashboardUID(b.uid || b.userId);
+                    const amtUSD = Number(b.amountUSD || (Number(b.amountBDT || 100) / 120)).toFixed(4);
+                    const amtBDT = Number(b.amountBDT || Math.round(amtUSD * 120));
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
-                        <td><strong style="color:#f59e0b;">${b.boostPackage || b.amountBDT + ' Tk'}</strong></td>
+                        <td><strong style="color:#f59e0b;">${b.boostPackage || amtBDT + ' Tk'}</strong></td>
                         <td><div style="max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${b.content || 'Post'}</div></td>
                         <td><span class="status-badge ${b.status}">${b.status}</span></td>
                         <td>
                             ${b.status === 'pending' ? `
                                 <div class="action-btns">
-                                    <button class="btn-act approve" onclick="approveBoostCampaignWithTargets('${doc.id}', '${b.postId}', '${dashUid}', '${b.boostPackage}')"><i class="fa-solid fa-check"></i> Approve</button>
-                                    <button class="btn-act reject" onclick="rejectBoostCampaign('${doc.id}', '${b.postId}', '${dashUid}')"><i class="fa-solid fa-xmark"></i></button>
+                                    <button class="btn-act approve" onclick="approveBoostCampaignWithTargets('${doc.id}', '${b.postId}', '${dashUid}', '${b.boostPackage || amtBDT + ' Tk'}')"><i class="fa-solid fa-check"></i> Approve</button>
+                                    <button class="btn-act reject" onclick="rejectBoostCampaign('${doc.id}', '${b.postId}', '${dashUid}', ${amtUSD}, ${amtBDT})"><i class="fa-solid fa-xmark"></i> Reject & Refund</button>
                                 </div>
                             ` : '-'}
                         </td>
@@ -1169,16 +1165,14 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৭. ড্যাশবোর্ড ব্যানার স্লাইডার লাইভ লোড
+            // ৭. ব্যানার স্লাইডার
             db.collection("banners").onSnapshot(snap => {
                 const container = document.getElementById('bannersContainer');
                 container.innerHTML = '';
-
                 if (snap.empty) {
                     container.innerHTML = `<p style="font-size:11px; color:#94a3b8; text-align:center; padding:10px;">কোনো হোম ব্যানার যুক্ত করা নেই</p>`;
                     return;
                 }
-
                 snap.forEach(doc => {
                     const b = doc.data();
                     const card = document.createElement('div');
@@ -1194,7 +1188,7 @@
                 });
             });
 
-            // ৮. কাস্টমার সাপোর্ট আনরেড ব্যাজ সিঙ্ক
+            // ৮. কাস্টমার সাপোর্ট
             db.collection("support_conversations").where("unreadByAdmin", "==", true).onSnapshot(snap => {
                 const pill = document.getElementById('modPendingSupportPill');
                 const count = snap.size;
@@ -1213,20 +1207,18 @@
                 }
             });
 
-            // ১০. লাকি ড্র সেটিংস ও প্রাইজ লোড
+            // ১০. লাকি ড্র
             db.collection("settings").doc("lottery").onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
                     if (data.ticketPriceBDT) document.getElementById('lotteryTicketPriceInput').value = data.ticketPriceBDT;
                     if (data.liveDrawUrl) document.getElementById('lotteryLiveUrlInput').value = data.liveDrawUrl;
                     if (data.scheduleText) document.getElementById('lotteryScheduleText').value = data.scheduleText;
-                    
                     if (data.targetTimestamp) {
                         const date = new Date(Number(data.targetTimestamp));
                         const localIso = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
                         document.getElementById('lotteryTargetTime').value = localIso;
                     }
-
                     if (data.prizes && Array.isArray(data.prizes)) {
                         currentLoadedPrizes = data.prizes;
                         renderAdminPrizeList(data.prizes);
@@ -1234,7 +1226,7 @@
                 }
             });
 
-            // ১১. সোল্ড টিকিটস লাইভ সিঙ্ক
+            // ১১. সোল্ড টিকিটস
             db.collection("lottery_tickets").orderBy("createdAt", "desc").onSnapshot(snap => {
                 const tbody = document.getElementById('soldTicketsTableBody');
                 tbody.innerHTML = '';
@@ -1266,32 +1258,67 @@
             });
         }
 
-        // ================= ইউজার ব্যালেন্স যোগ ও কর্তন মেথড =================
+        // ================= বুস্ট রিজেক্ট এবং ব্যালেন্স রিফান্ড (১০০% ফিক্সড) =================
+        async function rejectBoostCampaign(reqId, postId, userUID, refundUSD, amountBDT) {
+            const refundAmountUSD = parseFloat(Number(refundUSD || 0).toFixed(4));
+            const refundAmountBDT = Number(amountBDT || Math.round(refundAmountUSD * 120));
 
-        // ১. সরাসরি কুইক বক্স দিয়ে ব্যালেন্স অ্যাকশন
+            if (!confirm(`UID #${userUID}-এর বুস্ট রিকোয়েস্ট বাতিল করে ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) মেইন ব্যালেন্সে রিফান্ড দিতে চান?`)) return;
+
+            try {
+                // ১. ইউজারকে মেইন ব্যালেন্সে টাকা ফেরত দেওয়া
+                const snap = await db.collection("users").where("uid", "==", String(userUID)).get();
+                if (!snap.empty) {
+                    await snap.docs[0].ref.update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD)
+                    });
+                } else {
+                    // Fallback using direct doc ID if matched
+                    await db.collection("users").doc(userUID).update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD)
+                    }).catch(() => {});
+                }
+
+                // ২. বুস্ট রিকোয়েস্ট স্ট্যাটাস rejected করা
+                await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
+
+                // ৩. পোস্টের বুস্ট স্ট্যাটাস রিসেট করা
+                if (postId) {
+                    await db.collection("posts").doc(postId).update({ boostStatus: "none" }).catch(() => {});
+                }
+
+                // ৪. ইউজারকে সরাসরি নোটিফিকেশন পাঠানো
+                await db.collection("notifications").add({
+                    targetUid: String(userUID),
+                    category: "earnings",
+                    platform: "boost",
+                    title: "❌ বুস্ট বাতিল ও সম্পূর্ণ রিফান্ড",
+                    message: `আপনার পোস্টের বুস্ট বাতিল করা হয়েছে এবং ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) আপনার মেইন ব্যালেন্সে ফেরত দেওয়া হয়েছে।`,
+                    actionUrl: "history.html",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                playBeepAlert();
+                showToast(`বুস্ট বাতিল এবং #${userUID}-এ ৳${refundAmountBDT} রিফান্ড সম্পন্ন!`, "info");
+            } catch (err) {
+                alert("বুস্ট রিফান্ডে সমস্যা: " + err.message);
+            }
+        }
+
+        // ================= ইউজার ব্যালেন্স যোগ ও কর্তন মেথড =================
         async function handleQuickBalanceAction(actionType) {
             const uid = document.getElementById('quickUidInput').value.trim();
             const amountInput = document.getElementById('quickAmountInput').value.trim();
 
-            if (!uid) {
-                alert("অনুগ্রহ করে ইউজারের ৬ ডিজিটের UID দিন!");
-                return;
-            }
-            if (!amountInput || isNaN(amountInput) || Number(amountInput) <= 0) {
-                alert("অনুগ্রহ করে সঠিক ডলার অ্যামাউন্ট লিখুন (যেমন: 1.00 বা 5.00)!");
-                return;
-            }
+            if (!uid) return alert("ইউজারের ৬ ডিজিটের UID দিন!");
+            if (!amountInput || isNaN(amountInput) || Number(amountInput) <= 0) return alert("সঠিক ডলার অ্যামাউন্ট লিখুন!");
 
             const amountUSD = parseFloat(Number(amountInput).toFixed(2));
             const amountBDT = (amountUSD * 120).toFixed(2);
 
             try {
-                // UID দিয়ে ইউজার খোঁজা
                 const snap = await db.collection("users").where("uid", "==", String(uid)).get();
-                if (snap.empty) {
-                    alert(`UID #${uid} বিশিষ্ট কোনো ইউজার খুঁজে পাওয়া যায়নি!`);
-                    return;
-                }
+                if (snap.empty) return alert(`UID #${uid} বিশিষ্ট কোনো ইউজার খুঁজে পাওয়া যায়নি!`);
 
                 const userDoc = snap.docs[0];
                 const currentBal = Number(userDoc.data().balanceUSD || 0);
@@ -1317,7 +1344,7 @@
                 } else if (actionType === 'deduct') {
                     if (!confirm(`UID #${uid}-এর অ্যাকাউন্ট থেকে $${amountUSD} (৳${amountBDT}) কেটে নিতে চান?`)) return;
 
-                    const finalDeduct = Math.min(currentBal, amountUSD); // ব্যালেন্স মাইনাসে যেন না যায়
+                    const finalDeduct = Math.min(currentBal, amountUSD);
                     await userDoc.ref.update({
                         balanceUSD: firebase.firestore.FieldValue.increment(-finalDeduct)
                     });
@@ -1341,7 +1368,6 @@
             }
         }
 
-        // ২. টেবিলে [+ Add] বাটনে চাপলে ব্যালেন্স যোগ
         async function addBalancePrompt(docId, uid, curBal) {
             const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) যোগ করতে চান? (যেমন: 1.50):`);
             if (!input || isNaN(input) || Number(input) <= 0) return;
@@ -1370,7 +1396,6 @@
             }
         }
 
-        // ৩. টেবিলে [- Cut] বাটনে চাপলে ব্যালেন্স কর্তন
         async function deductBalancePrompt(docId, uid, curBal) {
             const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) কেটে নিতে চান? (যেমন: 0.50):`);
             if (!input || isNaN(input) || Number(input) <= 0) return;
@@ -1409,65 +1434,6 @@
             document.querySelectorAll('#usersTableBody tr').forEach(r => {
                 r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
             });
-        }
-
-        // ================= ব্যানার আপলোড (গ্যালারি ফিক্সড) =================
-        function handleBannerFileSelect(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            showToast("গ্যালারি থেকে ছবি প্রসেসিং হচ্ছে...", "info");
-            document.getElementById('galleryBoxText').innerText = "ছবি প্রসেস হচ্ছে...";
-
-            compressImage(file, 700, 350, 0.75, function(compressedBase64) {
-                selectedBannerBase64 = compressedBase64;
-                document.getElementById('bannerImgPreview').src = compressedBase64;
-                document.getElementById('bannerPreviewWrap').style.display = 'block';
-                document.getElementById('galleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(compressedBase64.length / 1024) + " KB)";
-                document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
-                playBeepAlert();
-                showToast("ছবি প্রস্তুত হয়েছে!", "success");
-            });
-        }
-
-        function handleAddBanner(e) {
-            e.preventDefault();
-            const urlInput = document.getElementById('bannerImgUrl').value.trim();
-            const finalImage = selectedBannerBase64 || (urlInput.startsWith('http') ? urlInput : '');
-            const action = document.getElementById('bannerAction').value.trim() || 'deposit.html';
-
-            if (!finalImage || finalImage === "Image Ready from Gallery") {
-                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন বা লিংক দিন!");
-                return;
-            }
-
-            const btn = document.getElementById('btnUploadBanner');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> আপলোড হচ্ছে...`;
-
-            db.collection("banners").add({
-                image: finalImage,
-                action: action,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                playBeepAlert();
-                showToast("হোম ব্যানার সফলভাবে আপলোড হয়েছে!", "success");
-                e.target.reset();
-                selectedBannerBase64 = "";
-                document.getElementById('bannerPreviewWrap').style.display = 'none';
-                document.getElementById('galleryBoxText').innerText = "১. গ্যালারি থেকে ছবি সিলেক্ট করুন";
-            }).catch(err => {
-                alert("ব্যানার আপলোড সমস্যা: " + err.message);
-            }).finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Upload Banner to Slider`;
-            });
-        }
-
-        function deleteBannerDoc(id) {
-            if (confirm("আপনি কি নিশ্চিত এই ব্যানারটি ডিলিট করতে চান?")) {
-                db.collection("banners").doc(id).delete().then(() => showToast("ব্যানার ডিলিট হয়েছে।", "info"));
-            }
         }
 
         // ================= বুস্ট অনুমোদন =================
@@ -1516,15 +1482,6 @@
             }
         }
 
-        async function rejectBoostCampaign(reqId, postId, userUID) {
-            if (!confirm(`বুস্ট ক্যাম্পেইন বাতিল করতে চান?`)) return;
-            await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
-            if (postId) {
-                await db.collection("posts").doc(postId).update({ boostStatus: "none" }).catch(() => {});
-            }
-            showToast("বুস্ট রিকোয়েস্ট বাতিল করা হয়েছে।", "info");
-        }
-
         async function openPayoutPrompt(postId, userUID, likes, views, comments) {
             const usdInput = prompt(`UID #${userUID}-এর এই পোস্টে লাইক: ${likes}, ভিউ: ${views}, কমেন্ট: ${comments} হয়েছে।\n\nকত ডলার ($ USD) ইনকাম ক্রেডিট করতে চান? (যেমন: 1.50):`, "1.00");
             if (!usdInput || isNaN(usdInput) || Number(usdInput) <= 0) return;
@@ -1570,7 +1527,61 @@
             }).catch(e => alert(e.message));
         }
 
-        // ================= লাকি ড্র কন্ট্রোলস ও প্রাইজ ব্যানার =================
+        // ================= ব্যানার আপলোড =================
+        function handleBannerFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showToast("গ্যালারি থেকে ছবি প্রসেসিং হচ্ছে...", "info");
+            document.getElementById('galleryBoxText').innerText = "ছবি প্রসেস হচ্ছে...";
+
+            compressImage(file, 700, 350, 0.75, function(compressedBase64) {
+                selectedBannerBase64 = compressedBase64;
+                document.getElementById('bannerImgPreview').src = compressedBase64;
+                document.getElementById('bannerPreviewWrap').style.display = 'block';
+                document.getElementById('galleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(compressedBase64.length / 1024) + " KB)";
+                document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
+                playBeepAlert();
+                showToast("ছবি প্রস্তুত হয়েছে!", "success");
+            });
+        }
+
+        function handleAddBanner(e) {
+            e.preventDefault();
+            const urlInput = document.getElementById('bannerImgUrl').value.trim();
+            const finalImage = selectedBannerBase64 || (urlInput.startsWith('http') ? urlInput : '');
+            const action = document.getElementById('bannerAction').value.trim() || 'deposit.html';
+
+            if (!finalImage || finalImage === "Image Ready from Gallery") return alert("ছবি সিলেক্ট করুন বা লিংক দিন!");
+
+            const btn = document.getElementById('btnUploadBanner');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> আপলোড হচ্ছে...`;
+
+            db.collection("banners").add({
+                image: finalImage,
+                action: action,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => {
+                playBeepAlert();
+                showToast("হোম ব্যানার আপলোড হয়েছে!", "success");
+                e.target.reset();
+                selectedBannerBase64 = "";
+                document.getElementById('bannerPreviewWrap').style.display = 'none';
+                document.getElementById('galleryBoxText').innerText = "১. গ্যালারি থেকে ছবি সিলেক্ট করুন";
+            }).catch(err => alert(err.message)).finally(() => {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Upload Banner to Slider`;
+            });
+        }
+
+        function deleteBannerDoc(id) {
+            if (confirm("ব্যানারটি ডিলিট করতে চান?")) {
+                db.collection("banners").doc(id).delete().then(() => showToast("ব্যানার ডিলিট হয়েছে।", "info"));
+            }
+        }
+
+        // ================= লাকি ড্র =================
         function toggleLotterySales(isOpen) {
             db.collection("settings").doc("lottery").set({ ticketSalesOpen: isOpen }, { merge: true }).then(() => {
                 playBeepAlert();
@@ -1615,10 +1626,7 @@
             const urlInput = document.getElementById('prizeImgUrlInput').value.trim();
             const finalImage = selectedPrizeImgBase64 || (urlInput.startsWith('http') ? urlInput : '');
 
-            if (!finalImage || finalImage === "Image Ready from Gallery") {
-                alert("অনুগ্রহ করে গ্যালারি থেকে ছবি সিলেক্ট করুন বা URL দিন!");
-                return;
-            }
+            if (!finalImage || finalImage === "Image Ready from Gallery") return alert("ছবি সিলেক্ট করুন বা URL দিন!");
 
             const btn = document.getElementById('btnSavePrizeBanner');
             btn.disabled = true;
