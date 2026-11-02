@@ -76,8 +76,8 @@ jobs:
                   applicationId "com.microtask.admin"
                   minSdk 21
                   targetSdk 34
-                  versionCode 3
-                  versionName "1.2"
+                  versionCode 4
+                  versionName "1.3"
               }
 
               buildTypes {
@@ -117,6 +117,8 @@ jobs:
               <uses-permission android:name="android.permission.INTERNET" />
               <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
               <uses-permission android:name="android.permission.VIBRATE" />
+              <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+              <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
               <application
                   android:allowBackup="true"
@@ -143,8 +145,11 @@ jobs:
           package com.microtask.admin;
 
           import android.annotation.SuppressLint;
+          import android.content.Intent;
+          import android.net.Uri;
           import android.os.Bundle;
           import android.webkit.JavascriptInterface;
+          import android.webkit.ValueCallback;
           import android.webkit.WebChromeClient;
           import android.webkit.WebSettings;
           import android.webkit.WebView;
@@ -161,6 +166,8 @@ jobs:
 
           public class MainActivity extends AppCompatActivity {
               private WebView adminWebView;
+              private ValueCallback<Uri[]> mUploadMessage;
+              private static final int FILECHOOSER_RESULTCODE = 1001;
 
               @SuppressLint("SetJavaScriptEnabled")
               @Override
@@ -181,12 +188,56 @@ jobs:
                   webSettings.setMediaPlaybackRequiresUserGesture(false);
 
                   adminWebView.setWebViewClient(new WebViewClient());
-                  adminWebView.setWebChromeClient(new WebChromeClient());
+                  
+                  // গ্যালারি থেকে ছবি আপলোড সক্রিয় করার হ্যান্ডলার
+                  adminWebView.setWebChromeClient(new WebChromeClient() {
+                      @Override
+                      public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                          if (mUploadMessage != null) {
+                              mUploadMessage.onReceiveValue(null);
+                              mUploadMessage = null;
+                          }
+                          mUploadMessage = filePathCallback;
+
+                          Intent intent = null;
+                          if (fileChooserParams != null) {
+                              try {
+                                  intent = fileChooserParams.createIntent();
+                              } catch (Exception ignored) {}
+                          }
+                          if (intent == null) {
+                              intent = new Intent(Intent.ACTION_GET_CONTENT);
+                              intent.addCategory(Intent.CATEGORY_OPENABLE);
+                              intent.setType("image/*");
+                          }
+                          try {
+                              startActivityForResult(Intent.createChooser(intent, "গ্যালারি থেকে ছবি সিলেক্ট করুন"), FILECHOOSER_RESULTCODE);
+                          } catch (Exception e) {
+                              if (mUploadMessage != null) {
+                                  mUploadMessage.onReceiveValue(null);
+                                  mUploadMessage = null;
+                              }
+                              Toast.makeText(MainActivity.this, "গ্যালারি খুলতে সমস্যা হচ্ছে", Toast.LENGTH_SHORT).show();
+                              return false;
+                          }
+                          return true;
+                      }
+                  });
 
                   // অ্যাপের নিজস্ব পুশ ইঞ্জিন যুক্ত করা হলো
                   adminWebView.addJavascriptInterface(new AdminNativeBridge(), "AndroidAdmin");
 
                   adminWebView.loadUrl("https://vaiimdrakib51-cloud.github.io/com.microtask.admin/");
+              }
+
+              @Override
+              protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+                  super.onActivityResult(requestCode, resultCode, data);
+                  if (requestCode == FILECHOOSER_RESULTCODE) {
+                      if (mUploadMessage == null) return;
+                      mUploadMessage.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+                      mUploadMessage = null;
+                  }
               }
 
               public class AdminNativeBridge {
@@ -201,7 +252,7 @@ jobs:
                                   conn.setRequestMethod("POST");
                                   conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                                   
-                                  // এনকোডেড পাসওয়ার্ড (ব্রাউজার বা গিটহাব ব্লক করতে পারবে না)
+                                  // এনকোডেড পাসওয়ার্ড
                                   String keyEncoded = "b3NfdjJfYXBwXzVmZzRrcXQ1YzVnNWhpcW95Z2pmenR0eGplanRvN3Boa2QzdXI0bmszYjd0cTZqZHluYWRtMzUzcmV0bHR2cHBvanVsMmdhYXJnM2Z4dGhodTR3a2tiY21qeDN3N3Y0M3pycGp3Mnk=";
                                   String apiKey = new String(android.util.Base64.decode(keyEncoded, android.util.Base64.DEFAULT)).trim();
                                   conn.setRequestProperty("Authorization", "Key " + apiKey);
@@ -247,7 +298,7 @@ jobs:
 
               @Override
               public void onBackPressed() {
-                  if (adminWebView.canGoBack()) {
+                  if (adminWebView != null && adminWebView.canGoBack()) {
                       adminWebView.goBack();
                   } else {
                       super.onBackPressed();
