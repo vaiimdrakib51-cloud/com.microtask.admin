@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -170,6 +171,18 @@
         .proof-box { background: #070e22; border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; height: 110px; }
         .proof-box img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
 
+        /* CUSTOM BOOST APPROVAL POPUP MODAL */
+        #boostApprovalModal {
+            position: fixed; inset: 0; background: rgba(0, 0, 0, 0.82); z-index: 3000; display: none;
+            align-items: center; justify-content: center; padding: 16px; backdrop-filter: blur(5px);
+        }
+        #boostApprovalModal.active { display: flex; }
+        .boost-approval-card {
+            background: #0d1a38; border: 1.5px solid var(--warning); border-radius: 22px; width: 100%; max-width: 380px;
+            padding: 20px 18px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); animation: zoomIn 0.22s ease-out;
+        }
+        @keyframes zoomIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
         /* Toast */
         .toast {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
@@ -193,7 +206,8 @@
                 <h2>MicroTask Admin</h2>
                 <p>Enter Master PIN to open Console</p>
                 <form onsubmit="handleAdminLogin(event)">
-                    <input type="password" id="adminPinInput" class="admin-input" placeholder="Admin PIN (Default: 778899)" required>
+                    <!-- পাসওয়ার্ড ফিল্ডের প্লেসহোল্ডার পরিষ্কার করা হয়েছে -->
+                    <input type="password" id="adminPinInput" class="admin-input" placeholder="Enter Admin PIN" autocomplete="off" required>
                     <button type="submit" class="btn-admin"><i class="fa-solid fa-lock-open"></i> Unlock Admin Hub</button>
                 </form>
             </div>
@@ -266,7 +280,7 @@
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-rocket"></i></div>
                     <span class="pending-pill" id="modPendingBoostPill" style="display:none;">0</span>
                 </div>
-                <div class="mod-meta"><h4>Boost Campaigns</h4><p>Approve, Payout & Refund</p></div>
+                <div class="mod-meta"><h4>Boost Campaigns</h4><p>Approve Target, Payout & Refund</p></div>
             </div>
 
             <!-- ইউজার ম্যানেজার -->
@@ -375,7 +389,7 @@
         </div>
     </div>
 
-    <!-- MODAL 3: BOOST CAMPAIGNS (রিফান্ড সিস্টেম সহ) -->
+    <!-- MODAL 3: BOOST CAMPAIGNS -->
     <div class="admin-modal-screen" id="boostModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('boostModal')"><i class="fa-solid fa-arrow-left"></i></button>
@@ -768,6 +782,64 @@
         </div>
     </div>
 
+    <!-- CUSTOM BOOST APPROVAL POPUP MODAL -->
+    <div id="boostApprovalModal">
+        <div class="boost-approval-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="font-size:14.5px; font-weight:850; color:#f59e0b;"><i class="fa-solid fa-rocket"></i> Boost Campaign Setup</h3>
+                <button onclick="closeBoostApprovalModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">&times;</button>
+            </div>
+            
+            <p id="boostModalTargetUid" style="font-size:11px; color:#38bdf8; font-weight:800; margin-bottom:10px; font-family:monospace;">UID: #000000</p>
+            
+            <form onsubmit="handleConfirmBoostApproval(event)">
+                <input type="hidden" id="bApproveReqId">
+                <input type="hidden" id="bApprovePostId">
+                <input type="hidden" id="bApproveUserUid">
+                <input type="hidden" id="bApproveBoostPkg">
+
+                <label style="font-size:10px; color:var(--text-muted);">ক্যাম্পেইনের সময়কাল (Select Campaign Duration)</label>
+                <select id="bApproveDurationSelect" class="admin-input" onchange="toggleCustomDurationInput(this.value)">
+                    <option value="10">১০ ঘণ্টা (10 Hours)</option>
+                    <option value="12">১২ ঘণ্টা (12 Hours)</option>
+                    <option value="24" selected>১ দিন (24 Hours)</option>
+                    <option value="48">২ দিন (48 Hours)</option>
+                    <option value="72">৩ দিন (3 Days)</option>
+                    <option value="120">৫ দিন (5 Days)</option>
+                    <option value="144">৬ দিন (6 Days)</option>
+                    <option value="168">৭ দিন (7 Days)</option>
+                    <option value="custom">কাস্টম ঘণ্টা (Custom Hours)</option>
+                </select>
+
+                <div id="customDurationBox" style="display:none;">
+                    <label style="font-size:10px; color:#f59e0b;">কাস্টম ঘণ্টা লিখুন (e.g. 15 or 36)</label>
+                    <input type="number" id="bApproveCustomHours" class="admin-input" placeholder="ঘণ্টা লিখুন">
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                    <div>
+                        <label style="font-size:10px; color:var(--text-muted);">👁️ Views Target</label>
+                        <input type="number" id="bApproveViewsInput" class="admin-input" placeholder="e.g. 500" value="500" required>
+                    </div>
+                    <div>
+                        <label style="font-size:10px; color:var(--text-muted);">👍 Likes Target</label>
+                        <input type="number" id="bApproveLikesInput" class="admin-input" placeholder="e.g. 80" value="80" required>
+                    </div>
+                </div>
+
+                <label style="font-size:10px; color:var(--text-muted);">💬 Comments Target (Multilingual Profiles)</label>
+                <input type="number" id="bApproveCommentsInput" class="admin-input" placeholder="e.g. 15" value="15" required>
+
+                <div style="display:flex; gap:8px; margin-top:6px;">
+                    <button type="button" class="btn-act reject" style="flex:1; padding:11px; justify-content:center;" onclick="closeBoostApprovalModal()">বাতিল</button>
+                    <button type="submit" id="btnConfirmBoostStart" class="btn-act approve" style="flex:2; padding:11px; justify-content:center; font-size:12px;">
+                        <i class="fa-solid fa-play"></i> Start Campaign
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="adminToast">
         <i class="fa-solid fa-circle-check" style="color:var(--accent);"></i>
@@ -790,7 +862,9 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // অ্যাডমিন পিন (আপনার সুবিধামত পরিবর্তন করতে পারেন)
         const MASTER_PIN = "778899";
+        
         let isSoundMuted = false;
         let isFirstLoad = true;
         let selectedBannerBase64 = "";
@@ -1039,7 +1113,7 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক (রিফান্ড বাটন সহ)
+            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক
             db.collection("boost_requests").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingBoost = 0;
                 const tbody = document.getElementById('boostTableBody');
@@ -1061,8 +1135,12 @@
                         <td>
                             ${b.status === 'pending' ? `
                                 <div class="action-btns">
-                                    <button class="btn-act approve" onclick="approveBoostCampaignWithTargets('${doc.id}', '${b.postId}', '${dashUid}', '${b.boostPackage || amtBDT + ' Tk'}')"><i class="fa-solid fa-check"></i> Approve</button>
-                                    <button class="btn-act reject" onclick="rejectBoostCampaign('${doc.id}', '${b.postId}', '${dashUid}', ${amtUSD}, ${amtBDT})"><i class="fa-solid fa-xmark"></i> Reject & Refund</button>
+                                    <button class="btn-act approve" onclick="openBoostApprovalModal('${doc.id}', '${b.postId}', '${dashUid}', '${b.boostPackage || amtBDT + ' Tk'}')">
+                                        <i class="fa-solid fa-sliders"></i> Approve
+                                    </button>
+                                    <button class="btn-act reject" onclick="rejectBoostCampaign('${doc.id}', '${b.postId}', '${dashUid}', ${amtUSD}, ${amtBDT})">
+                                        <i class="fa-solid fa-xmark"></i> Reject
+                                    </button>
                                 </div>
                             ` : '-'}
                         </td>
@@ -1258,7 +1336,100 @@
             });
         }
 
-        // ================= বুস্ট রিজেক্ট এবং ব্যালেন্স রিফান্ড (১০০% ফিক্সড) =================
+        // ================= বুস্ট অনুমোদন পপআপ মডাল লজিক =================
+        function openBoostApprovalModal(reqId, postId, userUID, boostPkg) {
+            document.getElementById('bApproveReqId').value = reqId;
+            document.getElementById('bApprovePostId').value = postId;
+            document.getElementById('bApproveUserUid').value = userUID;
+            document.getElementById('bApproveBoostPkg').value = boostPkg;
+            
+            document.getElementById('boostModalTargetUid').innerText = `Approve For: #${userUID} (${boostPkg})`;
+
+            document.getElementById('bApproveDurationSelect').value = "24";
+            document.getElementById('customDurationBox').style.display = 'none';
+            document.getElementById('bApproveViewsInput').value = "500";
+            document.getElementById('bApproveLikesInput').value = "80";
+            document.getElementById('bApproveCommentsInput').value = "15";
+
+            document.getElementById('boostApprovalModal').classList.add('active');
+        }
+
+        function closeBoostApprovalModal() {
+            document.getElementById('boostApprovalModal').classList.remove('active');
+        }
+
+        function toggleCustomDurationInput(val) {
+            document.getElementById('customDurationBox').style.display = (val === 'custom') ? 'block' : 'none';
+        }
+
+        async function handleConfirmBoostApproval(e) {
+            e.preventDefault();
+
+            const reqId = document.getElementById('bApproveReqId').value;
+            const postId = document.getElementById('bApprovePostId').value;
+            const userUID = document.getElementById('bApproveUserUid').value;
+            const boostPkg = document.getElementById('bApproveBoostPkg').value;
+
+            const durationSelect = document.getElementById('bApproveDurationSelect').value;
+            let durationHours = 24;
+
+            if (durationSelect === 'custom') {
+                const customH = parseFloat(document.getElementById('bApproveCustomHours').value);
+                durationHours = (customH && customH > 0) ? customH : 24;
+            } else {
+                durationHours = parseFloat(durationSelect) || 24;
+            }
+
+            const targetViews = parseInt(document.getElementById('bApproveViewsInput').value) || 500;
+            const targetLikes = parseInt(document.getElementById('bApproveLikesInput').value) || 80;
+            const targetComments = parseInt(document.getElementById('bApproveCommentsInput').value) || 15;
+
+            const btn = document.getElementById('btnConfirmBoostStart');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Starting...`;
+
+            try {
+                const now = Date.now();
+                const boostDurationMs = durationHours * 60 * 60 * 1000;
+                const expiresAt = now + boostDurationMs;
+
+                await db.collection("posts").doc(postId).update({
+                    boostStatus: "active",
+                    boostStartedAt: now,
+                    boostExpiresAt: expiresAt,
+                    boostDurationMs: boostDurationMs,
+                    initialViewsTarget: targetViews,
+                    initialLikesTarget: targetLikes,
+                    initialCommentsTarget: targetComments,
+                    autoViewsQueue: targetViews,
+                    autoLikesQueue: targetLikes,
+                    autoCommentsQueue: targetComments
+                });
+
+                await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
+
+                await db.collection("notifications").add({
+                    targetUid: String(userUID),
+                    category: "earnings",
+                    platform: "boost",
+                    title: "🚀 বুস্ট ক্যাম্পেইন চালু হয়েছে!",
+                    message: `আপনার পোস্টের ${boostPkg} বুস্ট সফলভাবে ${durationHours} ঘণ্টার জন্য চালু করা হয়েছে।`,
+                    actionUrl: "boost.html",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                closeBoostApprovalModal();
+                playBeepAlert();
+                showToast(`বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে (${durationHours} ঘণ্টা)!`, "success");
+            } catch (err) {
+                alert("বুস্ট অনুমোদন ত্রুটি: " + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-play"></i> Start Campaign`;
+            }
+        }
+
+        // ================= বুস্ট রিজেক্ট এবং ব্যালেন্স রিফান্ড =================
         async function rejectBoostCampaign(reqId, postId, userUID, refundUSD, amountBDT) {
             const refundAmountUSD = parseFloat(Number(refundUSD || 0).toFixed(4));
             const refundAmountBDT = Number(amountBDT || Math.round(refundAmountUSD * 120));
@@ -1266,28 +1437,23 @@
             if (!confirm(`UID #${userUID}-এর বুস্ট রিকোয়েস্ট বাতিল করে ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) মেইন ব্যালেন্সে রিফান্ড দিতে চান?`)) return;
 
             try {
-                // ১. ইউজারকে মেইন ব্যালেন্সে টাকা ফেরত দেওয়া
                 const snap = await db.collection("users").where("uid", "==", String(userUID)).get();
                 if (!snap.empty) {
                     await snap.docs[0].ref.update({
                         balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD)
                     });
                 } else {
-                    // Fallback using direct doc ID if matched
                     await db.collection("users").doc(userUID).update({
                         balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD)
                     }).catch(() => {});
                 }
 
-                // ২. বুস্ট রিকোয়েস্ট স্ট্যাটাস rejected করা
                 await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
 
-                // ৩. পোস্টের বুস্ট স্ট্যাটাস রিসেট করা
                 if (postId) {
                     await db.collection("posts").doc(postId).update({ boostStatus: "none" }).catch(() => {});
                 }
 
-                // ৪. ইউজারকে সরাসরি নোটিফিকেশন পাঠানো
                 await db.collection("notifications").add({
                     targetUid: String(userUID),
                     category: "earnings",
@@ -1305,7 +1471,7 @@
             }
         }
 
-        // ================= ইউজার ব্যালেন্স যোগ ও কর্তন মেথড =================
+        // ================= ইউজার ব্যালেন্স যোগ ও কর্তন =================
         async function handleQuickBalanceAction(actionType) {
             const uid = document.getElementById('quickUidInput').value.trim();
             const amountInput = document.getElementById('quickAmountInput').value.trim();
@@ -1436,52 +1602,7 @@
             });
         }
 
-        // ================= বুস্ট অনুমোদন =================
-        async function approveBoostCampaignWithTargets(reqId, postId, userUID, boostPkg) {
-            const viewsInput = prompt(`UID #${userUID}-এর জন্য কতগুলো Views টার্গেট দিতে চান?`, "500");
-            if (viewsInput === null) return;
-
-            const likesInput = prompt(`কতগুলো Likes টার্গেট দিতে চান?`, "80");
-            if (likesInput === null) return;
-
-            const commentsInput = prompt(`কতগুলো Comments দিতে চান?`, "10");
-            if (commentsInput === null) return;
-
-            const targetViews = parseInt(viewsInput) || 500;
-            const targetLikes = parseInt(likesInput) || 80;
-            const targetComments = parseInt(commentsInput) || 10;
-
-            try {
-                const boostDurationMs = 24 * 60 * 60 * 1000;
-                const expiresAt = Date.now() + boostDurationMs;
-
-                await db.collection("posts").doc(postId).update({
-                    boostStatus: "active",
-                    boostExpiresAt: expiresAt,
-                    autoViewsQueue: targetViews,
-                    autoLikesQueue: targetLikes,
-                    autoCommentsQueue: targetComments
-                });
-
-                await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
-
-                await db.collection("notifications").add({
-                    targetUid: String(userUID),
-                    category: "earnings",
-                    platform: "boost",
-                    title: "🚀 বুস্ট ক্যাম্পেইন চালু হয়েছে!",
-                    message: `আপনার পোস্টের ${boostPkg} বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে।`,
-                    actionUrl: "boost.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                playBeepAlert();
-                showToast("বুস্ট ক্যাম্পেইন সফলভাবে চালু হয়েছে!", "success");
-            } catch (e) {
-                alert("বুস্ট অনুমোদন ত্রুটি: " + e.message);
-            }
-        }
-
+        // ================= পোস্ট ইনকাম পে-আউট ও ডিলিট =================
         async function openPayoutPrompt(postId, userUID, likes, views, comments) {
             const usdInput = prompt(`UID #${userUID}-এর এই পোস্টে লাইক: ${likes}, ভিউ: ${views}, কমেন্ট: ${comments} হয়েছে।\n\nকত ডলার ($ USD) ইনকাম ক্রেডিট করতে চান? (যেমন: 1.50):`, "1.00");
             if (!usdInput || isNaN(usdInput) || Number(usdInput) <= 0) return;
@@ -1906,4 +2027,4 @@
         document.addEventListener('DOMContentLoaded', checkSession);
     </script>
 </body>
-</html>
+</html
