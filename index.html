@@ -77,9 +77,16 @@
         .brand-icon img { width: 100%; height: 100%; object-fit: contain; }
         .header-brand h2 { font-size: 16px; font-weight: 850; line-height: 1.1; }
         .header-brand span { font-size: 9px; color: var(--accent); font-weight: 700; text-transform: uppercase; }
+        
+        .header-actions { display: flex; align-items: center; gap: 6px; }
+        .btn-tg-test {
+            background: rgba(14, 165, 233, 0.2); border: 1px solid #0ea5e9; color: #38bdf8;
+            padding: 5px 9px; border-radius: 10px; font-size: 10px; font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; gap: 4px;
+        }
         .btn-sound-toggle {
             background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399;
-            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; margin-right: 6px;
+            width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px;
         }
         .btn-logout-icon {
             background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171;
@@ -145,14 +152,8 @@
         .btn-act.view-proof { background: rgba(139, 92, 246, 0.2); border: 1px solid #8b5cf6; color: #c4b5fd; }
 
         .gallery-upload-box {
-            border: 2px dashed #0284c7;
-            background: rgba(2, 132, 199, 0.08);
-            border-radius: 14px;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            margin-bottom: 12px;
-            transition: all 0.2s ease;
+            border: 2px dashed #0284c7; background: rgba(2, 132, 199, 0.08); border-radius: 14px;
+            padding: 16px; text-align: center; cursor: pointer; margin-bottom: 12px; transition: all 0.2s ease;
         }
         .gallery-upload-box:active { transform: scale(0.98); background: rgba(2, 132, 199, 0.15); }
         .gallery-upload-box i { font-size: 26px; color: #38bdf8; margin-bottom: 6px; display: block; }
@@ -206,7 +207,6 @@
                 <h2>MicroTask Admin</h2>
                 <p>Enter Master PIN to open Console</p>
                 <form onsubmit="handleAdminLogin(event)">
-                    <!-- পাসওয়ার্ড ফিল্ডের প্লেসহোল্ডার পরিষ্কার করা হয়েছে -->
                     <input type="password" id="adminPinInput" class="admin-input" placeholder="Enter Admin PIN" autocomplete="off" required>
                     <button type="submit" class="btn-admin"><i class="fa-solid fa-lock-open"></i> Unlock Admin Hub</button>
                 </form>
@@ -224,7 +224,11 @@
                     <span>Admin Controls</span>
                 </div>
             </div>
-            <div style="display:flex; align-items:center;">
+            <div class="header-actions">
+                <!-- টেলিগ্রাম টেস্ট বোতাম -->
+                <button class="btn-tg-test" onclick="testTelegramConnection()" title="Test Telegram Bot">
+                    <i class="fa-brands fa-telegram"></i> Test
+                </button>
                 <button class="btn-sound-toggle" onclick="toggleMuteAlert()" id="soundToggleBtn" title="Sound Alert On/Off">
                     <i class="fa-solid fa-volume-high"></i>
                 </button>
@@ -274,7 +278,6 @@
                 <div class="mod-meta"><h4>Withdrawals</h4><p>Payout & Refund</p></div>
             </div>
 
-            <!-- বুস্ট রিকোয়েস্ট ও পোস্ট ক্যাম্পেইন কন্ট্রোল -->
             <div class="module-card" onclick="openModuleModal('boostModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-rocket"></i></div>
@@ -283,7 +286,6 @@
                 <div class="mod-meta"><h4>Boost Campaigns</h4><p>Approve Target, Payout & Refund</p></div>
             </div>
 
-            <!-- ইউজার ম্যানেজার -->
             <div class="module-card" onclick="openModuleModal('usersModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9);"><i class="fa-solid fa-users"></i></div>
@@ -357,7 +359,7 @@
     <div class="admin-modal-screen" id="depositsModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('depositsModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Deposit Requests</h3><p>Real-time Sound Alert Enabled</p></div>
+            <div class="modal-header-titles"><h3>Deposit Requests</h3><p>Real-time Sound & Telegram Sync</p></div>
         </div>
         <div class="modal-scroll-body">
             <div class="box-card">
@@ -375,7 +377,7 @@
     <div class="admin-modal-screen" id="withdrawalsModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('withdrawalsModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Withdrawal Payouts</h3><p>Confirm Payments & Refund</p></div>
+            <div class="modal-header-titles"><h3>Withdrawal Payouts</h3><p>Confirm Payments & Telegram Sync</p></div>
         </div>
         <div class="modal-scroll-body">
             <div class="box-card">
@@ -862,11 +864,84 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // অ্যাডমিন পিন (আপনার সুবিধামত পরিবর্তন করতে পারেন)
         const MASTER_PIN = "778899";
+
+        // ================= আপনার টেলিগ্রাম বট ও চ্যানেল =================
+        const TELEGRAM_BOT_TOKEN = "9166237872:AAEnqeRwrUYAoKzCL_yTBZJqqYx-J_Q-bKo";
+        const TELEGRAM_CHAT_ID = "@MicroTaskupdate";
+        const ADMIN_BASE_URL = "https://vaiimdrakib51-cloud.github.io/com.microtask.admin/";
+
+        // ইতোপূর্বে পাঠানো মেসেজের ডুপ্লিকেট রোধ করার ট্র্যাকার
+        const sentTelegramAlerts = new Set();
+
+        // টেলিগ্রামে মেসেজ ও বাটন পাঠানোর নির্ভুল ফাংশন (এরর ক্যাচসহ)
+        function sendTelegramNotification(textMessage, actionButtons = null) {
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+                let payload = {
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: textMessage,
+                    parse_mode: "HTML"
+                };
+                if (actionButtons && Array.isArray(actionButtons)) {
+                    payload.reply_markup = { inline_keyboard: actionButtons };
+                }
+
+                fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.ok) {
+                        console.error("Telegram API Error:", data);
+                        alert("⚠️ টেলিগ্রাম এরর: " + data.description + "\n\nদয়া করে নিশ্চিত করুন বটকে @MicroTaskupdate চ্যানেলে অ্যাডমিন বানানো হয়েছে।");
+                    } else {
+                        console.log("Telegram alert sent successfully!");
+                    }
+                })
+                .catch(err => {
+                    console.error("Telegram Network Error:", err);
+                });
+            } catch (e) {
+                console.error("Telegram Exception:", e);
+            }
+        }
+
+        // ================= টেলিগ্রাম সংযোগ পরীক্ষা করার টেস্ট ফাংশন =================
+        function testTelegramConnection() {
+            showToast("টেলিগ্রাম টেস্ট মেসেজ পাঠানো হচ্ছে...", "info");
+            const testMsg = `🔔 <b>MicroTask Admin টেস্ট মেসেজ!</b>\n\n` +
+                            `✅ আপনার বট ও চ্যানেল সঠিকভাবে কানেক্ট হয়েছে।\n` +
+                            `⏰ সময়: ${new Date().toLocaleTimeString('bn-BD')}`;
+            
+            const testBtn = [[{ text: "⚡ ওপেন এডমিন কনসোল", url: ADMIN_BASE_URL }]];
+
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: testMsg,
+                    parse_mode: "HTML",
+                    reply_markup: { inline_keyboard: testBtn }
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.ok) {
+                    alert("🎉 অভিনন্দন! আপনার @MicroTaskupdate চ্যানেলে টেস্ট মেসেজ সফলভাবে চলে গেছে!");
+                    showToast("টেলিগ্রাম টেস্ট সফল হয়েছে!", "success");
+                } else {
+                    alert("❌ টেলিগ্রাম মেসেজ পাঠাতে ব্যর্থ হয়েছে!\n\nকারণ: " + data.description + "\n\nসমাধান: আপনার চ্যানেলে গিয়ে বটটিকে Administrator হিসেবে অ্যাড করুন।");
+                }
+            })
+            .catch(err => alert("ইন্টারনেট এরর: " + err.message));
+        }
         
         let isSoundMuted = false;
-        let isFirstLoad = true;
         let selectedBannerBase64 = "";
         let selectedPrizeImgBase64 = "";
         let activeChatUserUid = null;
@@ -953,6 +1028,25 @@
             if (modal) modal.classList.remove('active');
         }
 
+        // ================= টেলিগ্রাম বাটন থেকে সরাসরি সেকশন ওপেন =================
+        function checkUrlDeepLink() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const action = urlParams.get('action');
+            if (!action) return;
+
+            if (action === 'deposits') openModuleModal('depositsModal');
+            else if (action === 'withdrawals') openModuleModal('withdrawalsModal');
+            else if (action === 'boost') openModuleModal('boostModal');
+            else if (action === 'proofs') openModuleModal('proofsModal');
+            else if (action === 'support') {
+                openSupportChatModal();
+                const targetUid = urlParams.get('uid');
+                if (targetUid) {
+                    setTimeout(() => selectChatUser(targetUid, 'User'), 600);
+                }
+            }
+        }
+
         function handleAdminLogin(e) {
             e.preventDefault();
             const pin = document.getElementById('adminPinInput').value.trim();
@@ -962,6 +1056,7 @@
                 playBeepAlert();
                 showToast("লগইন সফল হয়েছে!", "success");
                 initAdminSync();
+                setTimeout(checkUrlDeepLink, 300);
             } else {
                 alert("ভুল পিন! আবার চেষ্টা করুন।");
             }
@@ -971,6 +1066,7 @@
             if (sessionStorage.getItem('microtask_admin_auth') === 'true') {
                 document.getElementById('adminLoginScreen').style.display = 'none';
                 initAdminSync();
+                setTimeout(checkUrlDeepLink, 500);
             }
         }
 
@@ -987,9 +1083,8 @@
             return str.slice(0, 6);
         }
 
-        // ================= লাইভ ফায়ারবেস লিসেনার =================
+        // ================= ফায়ারবেস লাইভ লিসেনার ও টেলিগ্রাম অ্যালার্ট =================
         function initAdminSync() {
-            setTimeout(() => { isFirstLoad = false; }, 3000);
 
             // ১. ইউজার্স সিঙ্ক
             db.collection("users").onSnapshot(snap => {
@@ -1027,23 +1122,32 @@
                 document.getElementById('statTotalBalance').innerText = `$ ${totalBal.toFixed(2)}`;
             });
 
-            // ২. ডিপোজিট সিঙ্ক
+            // ২. ডিপোজিট সিঙ্ক (নতুন রিকোয়েস্ট এলেই টেলিগ্রামে অ্যালার্ট)
             db.collection("deposits").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('depositsTableBody');
                 tbody.innerHTML = '';
 
-                snap.docChanges().forEach(change => {
-                    if (change.type === "added" && !isFirstLoad) {
-                        playBeepAlert();
-                        showToast("🔔 নতুন ডিপোজিট রিকোয়েস্ট এসেছে!", "info");
-                    }
-                });
-
                 snap.forEach(doc => {
                     const d = doc.data();
                     if (d.status === 'pending') pendingCount++;
                     const dashUid = getDashboardUID(d.uid);
+
+                    // যদি স্ট্যাটাস pending হয় এবং আগে টেলিগ্রামে পাঠানো না হয়ে থাকে
+                    if (d.status === 'pending' && !sentTelegramAlerts.has(doc.id)) {
+                        sentTelegramAlerts.add(doc.id);
+                        playBeepAlert();
+
+                        const msg = `💰 <b>নতুন ডিপোজিট রিকোয়েস্ট এসেছে!</b>\n\n` +
+                                    `👤 <b>UID:</b> <code>#${dashUid}</code>\n` +
+                                    `💳 <b>Method:</b> ${(d.method || '').toUpperCase()}\n` +
+                                    `💵 <b>Amount:</b> ৳${d.amountBDT || 0}\n` +
+                                    `🆔 <b>TrxID:</b> <code>${d.trxId || '-'}</code>\n` +
+                                    `⏱ <b>Status:</b> Pending Approval`;
+
+                        const buttons = [[{ text: "⚡ ডিপোজিট চেক ও অ্যাপ্রুভ করুন", url: `${ADMIN_BASE_URL}?action=deposits` }]];
+                        sendTelegramNotification(msg, buttons);
+                    }
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -1070,23 +1174,31 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৩. উইথড্রল সিঙ্ক
+            // ৩. উইথড্রল সিঙ্ক (নতুন রিকোয়েস্ট এলেই টেলিগ্রামে অ্যালার্ট)
             db.collection("withdrawals").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingCount = 0;
                 const tbody = document.getElementById('withdrawalsTableBody');
                 tbody.innerHTML = '';
 
-                snap.docChanges().forEach(change => {
-                    if (change.type === "added" && !isFirstLoad) {
-                        playBeepAlert();
-                        showToast("🔔 নতুন উইথড্রল রিকোয়েস্ট এসেছে!", "info");
-                    }
-                });
-
                 snap.forEach(doc => {
                     const w = doc.data();
                     if (w.status === 'pending') pendingCount++;
                     const dashUid = getDashboardUID(w.uid);
+
+                    if (w.status === 'pending' && !sentTelegramAlerts.has(doc.id)) {
+                        sentTelegramAlerts.add(doc.id);
+                        playBeepAlert();
+
+                        const msg = `💸 <b>নতুন উইথড্রল রিকোয়েস্ট এসেছে!</b>\n\n` +
+                                    `👤 <b>UID:</b> <code>#${dashUid}</code>\n` +
+                                    `🏦 <b>পেমেন্ট মাধ্যম:</b> ${(w.provider || '').toUpperCase()}\n` +
+                                    `📱 <b>অ্যাকাউন্ট নং:</b> <code>${w.accountNumber || '-'}</code>\n` +
+                                    `💰 <b>টাকার পরিমাণ:</b> ৳${w.receiveBDT || 0}\n` +
+                                    `⏱ <b>Status:</b> Pending Approval`;
+
+                        const buttons = [[{ text: "💸 উইথড্রল চেক ও পেইড করুন", url: `${ADMIN_BASE_URL}?action=withdrawals` }]];
+                        sendTelegramNotification(msg, buttons);
+                    }
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -1113,7 +1225,7 @@
                 pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
             });
 
-            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক
+            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক ও অ্যালার্ট
             db.collection("boost_requests").orderBy("createdAt", "desc").onSnapshot(snap => {
                 let pendingBoost = 0;
                 const tbody = document.getElementById('boostTableBody');
@@ -1125,6 +1237,18 @@
                     const dashUid = getDashboardUID(b.uid || b.userId);
                     const amtUSD = Number(b.amountUSD || (Number(b.amountBDT || 100) / 120)).toFixed(4);
                     const amtBDT = Number(b.amountBDT || Math.round(amtUSD * 120));
+
+                    if (b.status === 'pending' && !sentTelegramAlerts.has(doc.id)) {
+                        sentTelegramAlerts.add(doc.id);
+                        const msg = `🚀 <b>নতুন পোস্ট বুস্ট রিকোয়েস্ট!</b>\n\n` +
+                                    `👤 <b>UID:</b> <code>#${dashUid}</code>\n` +
+                                    `📦 <b>প্যাকেজ:</b> ${b.boostPackage || amtBDT + ' Tk'}\n` +
+                                    `📝 <b>পোস্ট:</b> <i>"${(b.content || '').substring(0, 50)}..."</i>\n` +
+                                    `⏱ ডেট ও টার্গেট সেট করে চালু করুন।`;
+
+                        const buttons = [[{ text: "🚀 বুস্ট সেটআপ ও অ্যাপ্রুভ করুন", url: `${ADMIN_BASE_URL}?action=boost` }]];
+                        sendTelegramNotification(msg, buttons);
+                    }
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -1187,7 +1311,7 @@
                 });
             });
 
-            // ৬. টাস্ক ও প্রুফ সিঙ্ক
+            // ৬. টাস্ক ও টাস্ক প্রুফ সিঙ্ক + অ্যালার্ট
             db.collection("tasks").onSnapshot(snap => {
                 const tbody = document.getElementById('activeTasksTableBody');
                 tbody.innerHTML = '';
@@ -1218,6 +1342,18 @@
                     const p = doc.data();
                     if (p.status === 'pending') pendingCount++;
                     const dashUid = getDashboardUID(p.uid);
+
+                    if (p.status === 'pending' && !sentTelegramAlerts.has(doc.id)) {
+                        sentTelegramAlerts.add(doc.id);
+                        const msg = `📋 <b>নতুন টাস্ক প্রুফ জমা পড়েছে!</b>\n\n` +
+                                    `👤 <b>UID:</b> <code>#${dashUid}</code>\n` +
+                                    `🌐 <b>Platform:</b> ${(p.platform || '').toUpperCase()}\n` +
+                                    `🖼 <b>স্ক্রিনশট:</b> ${(p.proofs || []).length} টি\n` +
+                                    `⏱ প্রুফ যাচাই করে কয়েন দিন।`;
+
+                        const buttons = [[{ text: "📋 প্রুফ ও স্ক্রিনশট দেখুন", url: `${ADMIN_BASE_URL}?action=proofs` }]];
+                        sendTelegramNotification(msg, buttons);
+                    }
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -1266,12 +1402,30 @@
                 });
             });
 
-            // ৮. কাস্টমার সাপোর্ট
+            // ৮. কাস্টমার সাপোর্ট ও মেসেজ অ্যালার্ট
             db.collection("support_conversations").where("unreadByAdmin", "==", true).onSnapshot(snap => {
                 const pill = document.getElementById('modPendingSupportPill');
                 const count = snap.size;
                 pill.innerText = count;
                 pill.style.display = count > 0 ? 'inline-block' : 'none';
+            });
+
+            db.collection("support_messages").where("sender", "!=", "admin").onSnapshot(snap => {
+                snap.docChanges().forEach(change => {
+                    if (change.type === "added" && !sentTelegramAlerts.has(change.doc.id)) {
+                        sentTelegramAlerts.add(change.doc.id);
+                        const m = change.doc.data();
+                        const uid = m.userUid || '000000';
+                        const text = m.text || (m.image ? '[ছবি পাঠানো হয়েছে]' : 'নতুন মেসেজ');
+
+                        const msg = `💬 <b>কাস্টমার সাপোর্টে নতুন মেসেজ এসেছে!</b>\n\n` +
+                                    `👤 <b>UID:</b> <code>#${uid}</code>\n` +
+                                    `📩 <b>মেসেজ:</b> <i>"${text}"</i>`;
+
+                        const buttons = [[{ text: "💬 সরাসরি চ্যাটে রিপ্লাই দিন", url: `${ADMIN_BASE_URL}?action=support&uid=${uid}` }]];
+                        sendTelegramNotification(msg, buttons);
+                    }
+                });
             });
 
             // ৯. গেটওয়ে লোড
@@ -1336,7 +1490,7 @@
             });
         }
 
-        // ================= বুস্ট অনুমোদন পপআপ মডাল লজিক =================
+        // ================= বুস্ট অনুমোদন (প্রতি মিনিটের নিখুঁত রেট হিসাবসহ) =================
         function openBoostApprovalModal(reqId, postId, userUID, boostPkg) {
             document.getElementById('bApproveReqId').value = reqId;
             document.getElementById('bApprovePostId').value = postId;
@@ -1393,11 +1547,20 @@
                 const boostDurationMs = durationHours * 60 * 60 * 1000;
                 const expiresAt = now + boostDurationMs;
 
+                const totalMinutes = durationHours * 60;
+                const viewsPerMin = parseFloat((targetViews / totalMinutes).toFixed(4));
+                const likesPerMin = parseFloat((targetLikes / totalMinutes).toFixed(4));
+                const commentsPerMin = parseFloat((targetComments / totalMinutes).toFixed(4));
+
                 await db.collection("posts").doc(postId).update({
                     boostStatus: "active",
                     boostStartedAt: now,
                     boostExpiresAt: expiresAt,
                     boostDurationMs: boostDurationMs,
+                    totalDurationMinutes: totalMinutes,
+                    viewsPerMinute: viewsPerMin,
+                    likesPerMinute: likesPerMin,
+                    commentsPerMinute: commentsPerMin,
                     initialViewsTarget: targetViews,
                     initialLikesTarget: targetLikes,
                     initialCommentsTarget: targetComments,
@@ -1413,10 +1576,12 @@
                     category: "earnings",
                     platform: "boost",
                     title: "🚀 বুস্ট ক্যাম্পেইন চালু হয়েছে!",
-                    message: `আপনার পোস্টের ${boostPkg} বুস্ট সফলভাবে ${durationHours} ঘণ্টার জন্য চালু করা হয়েছে।`,
+                    message: `আপনার পোস্টের ${boostPkg} সফলভাবে ${durationHours} ঘণ্টার জন্য চালু করা হয়েছে।`,
                     actionUrl: "boost.html",
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+
+                sendTelegramNotification(`✅ <b>বুস্ট ক্যাম্পেইন সফলভাবে চালু করা হয়েছে!</b>\n\n👤 <b>UID:</b> #${userUID}\n⏱ <b>সময়কাল:</b> ${durationHours} ঘণ্টা\n👁️ টার্গেট ভিউ: ${targetViews} (প্রতি মিনিটে ${viewsPerMin})\n👍 টার্গেট লাইক: ${targetLikes} (প্রতি মিনিটে ${likesPerMin})`);
 
                 closeBoostApprovalModal();
                 playBeepAlert();
@@ -1439,36 +1604,17 @@
             try {
                 const snap = await db.collection("users").where("uid", "==", String(userUID)).get();
                 if (!snap.empty) {
-                    await snap.docs[0].ref.update({
-                        balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD)
-                    });
-                } else {
-                    await db.collection("users").doc(userUID).update({
-                        balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD)
-                    }).catch(() => {});
+                    await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD) });
                 }
 
                 await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
+                if (postId) await db.collection("posts").doc(postId).update({ boostStatus: "none" }).catch(() => {});
 
-                if (postId) {
-                    await db.collection("posts").doc(postId).update({ boostStatus: "none" }).catch(() => {});
-                }
-
-                await db.collection("notifications").add({
-                    targetUid: String(userUID),
-                    category: "earnings",
-                    platform: "boost",
-                    title: "❌ বুস্ট বাতিল ও সম্পূর্ণ রিফান্ড",
-                    message: `আপনার পোস্টের বুস্ট বাতিল করা হয়েছে এবং ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) আপনার মেইন ব্যালেন্সে ফেরত দেওয়া হয়েছে।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                sendTelegramNotification(`❌ <b>বুস্ট রিকোয়েস্ট রিজেক্ট ও রিফান্ড!</b>\n\n👤 <b>UID:</b> #${userUID}\n💵 <b>রিফান্ড:</b> ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)})`);
 
                 playBeepAlert();
                 showToast(`বুস্ট বাতিল এবং #${userUID}-এ ৳${refundAmountBDT} রিফান্ড সম্পন্ন!`, "info");
-            } catch (err) {
-                alert("বুস্ট রিফান্ডে সমস্যা: " + err.message);
-            }
+            } catch (err) { alert(err.message); }
         }
 
         // ================= ইউজার ব্যালেন্স যোগ ও কর্তন =================
@@ -1492,103 +1638,39 @@
                 if (actionType === 'add') {
                     if (!confirm(`UID #${uid}-এর অ্যাকাউন্টে $${amountUSD} (৳${amountBDT}) যোগ করতে চান?`)) return;
 
-                    await userDoc.ref.update({
-                        balanceUSD: firebase.firestore.FieldValue.increment(amountUSD)
-                    });
-
-                    await db.collection("notifications").add({
-                        targetUid: String(uid),
-                        category: "earnings",
-                        title: "🎉 ব্যালেন্স যোগ করা হয়েছে!",
-                        message: `এডমিন আপনার অ্যাকাউন্টে $${amountUSD.toFixed(2)} (৳${amountBDT}) যোগ করেছেন।`,
-                        actionUrl: "history.html",
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-
-                    playBeepAlert();
+                    await userDoc.ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(amountUSD) });
+                    sendTelegramNotification(`💳 <b>এডমিন ব্যালেন্স যোগ করেছেন!</b>\n\n👤 <b>UID:</b> #${uid}\n💵 <b>যোগ:</b> $${amountUSD.toFixed(2)} (৳${amountBDT})`);
                     showToast(`সফল! #${uid}-এ $${amountUSD} যোগ হয়েছে।`, "success");
                 } else if (actionType === 'deduct') {
                     if (!confirm(`UID #${uid}-এর অ্যাকাউন্ট থেকে $${amountUSD} (৳${amountBDT}) কেটে নিতে চান?`)) return;
 
                     const finalDeduct = Math.min(currentBal, amountUSD);
-                    await userDoc.ref.update({
-                        balanceUSD: firebase.firestore.FieldValue.increment(-finalDeduct)
-                    });
-
-                    await db.collection("notifications").add({
-                        targetUid: String(uid),
-                        category: "system",
-                        title: "⚠️ ব্যালেন্স কর্তন",
-                        message: `এডমিন আপনার অ্যাকাউন্ট থেকে $${finalDeduct.toFixed(2)} (৳${(finalDeduct * 120).toFixed(2)}) কেটে নিয়েছেন।`,
-                        actionUrl: "history.html",
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-
-                    playBeepAlert();
+                    await userDoc.ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(-finalDeduct) });
+                    sendTelegramNotification(`⚠️ <b>এডমিন ব্যালেন্স কেটে নিয়েছেন!</b>\n\n👤 <b>UID:</b> #${uid}\n💵 <b>কর্তন:</b> $${finalDeduct.toFixed(2)} (৳${(finalDeduct * 120).toFixed(2)})`);
                     showToast(`সফল! #${uid} থেকে $${finalDeduct.toFixed(2)} কাটা হয়েছে।`, "info");
                 }
 
                 document.getElementById('quickAmountInput').value = '';
-            } catch (err) {
-                alert("ব্যালেন্স আপডেট সমস্যা: " + err.message);
-            }
+            } catch (err) { alert(err.message); }
         }
 
         async function addBalancePrompt(docId, uid, curBal) {
-            const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) যোগ করতে চান? (যেমন: 1.50):`);
+            const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) যোগ করতে চান?:`);
             if (!input || isNaN(input) || Number(input) <= 0) return;
 
             const addUSD = parseFloat(Number(input).toFixed(2));
-            const addBDT = (addUSD * 120).toFixed(2);
-
-            try {
-                await db.collection("users").doc(docId).update({
-                    balanceUSD: firebase.firestore.FieldValue.increment(addUSD)
-                });
-
-                await db.collection("notifications").add({
-                    targetUid: String(uid),
-                    category: "earnings",
-                    title: "🎉 ব্যালেন্স যোগ করা হয়েছে!",
-                    message: `এডমিন আপনার অ্যাকাউন্টে $${addUSD.toFixed(2)} (৳${addBDT}) যোগ করেছেন।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                playBeepAlert();
-                showToast(`UID #${uid}-এ $${addUSD} যোগ হয়েছে!`, "success");
-            } catch (err) {
-                alert("ব্যালেন্স যোগ সমস্যা: " + err.message);
-            }
+            await db.collection("users").doc(docId).update({ balanceUSD: firebase.firestore.FieldValue.increment(addUSD) });
+            showToast(`UID #${uid}-এ $${addUSD} যোগ হয়েছে!`, "success");
         }
 
         async function deductBalancePrompt(docId, uid, curBal) {
-            const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) কেটে নিতে চান? (যেমন: 0.50):`);
+            const input = prompt(`UID #${uid}-এর বর্তমান ব্যালেন্স: $${Number(curBal).toFixed(2)}\n\nকত ডলার ($ USD) কেটে নিতে চান?:`);
             if (!input || isNaN(input) || Number(input) <= 0) return;
 
             const cutUSD = parseFloat(Number(input).toFixed(2));
             const actualCut = Math.min(Number(curBal), cutUSD);
-            const cutBDT = (actualCut * 120).toFixed(2);
-
-            try {
-                await db.collection("users").doc(docId).update({
-                    balanceUSD: firebase.firestore.FieldValue.increment(-actualCut)
-                });
-
-                await db.collection("notifications").add({
-                    targetUid: String(uid),
-                    category: "system",
-                    title: "⚠️ ব্যালেন্স কর্তন",
-                    message: `এডমিন আপনার অ্যাকাউন্ট থেকে $${actualCut.toFixed(2)} (৳${cutBDT}) কেটে নিয়েছেন।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                playBeepAlert();
-                showToast(`UID #${uid} থেকে $${actualCut.toFixed(2)} কাটা হয়েছে!`, "info");
-            } catch (err) {
-                alert("ব্যালেন্স কর্তন সমস্যা: " + err.message);
-            }
+            await db.collection("users").doc(docId).update({ balanceUSD: firebase.firestore.FieldValue.increment(-actualCut) });
+            showToast(`UID #${uid} থেকে $${actualCut.toFixed(2)} কাটা হয়েছে!`, "info");
         }
 
         function toggleVerify(docId, curStatus) {
@@ -1604,7 +1686,7 @@
 
         // ================= পোস্ট ইনকাম পে-আউট ও ডিলিট =================
         async function openPayoutPrompt(postId, userUID, likes, views, comments) {
-            const usdInput = prompt(`UID #${userUID}-এর এই পোস্টে লাইক: ${likes}, ভিউ: ${views}, কমেন্ট: ${comments} হয়েছে।\n\nকত ডলার ($ USD) ইনকাম ক্রেডিট করতে চান? (যেমন: 1.50):`, "1.00");
+            const usdInput = prompt(`UID #${userUID}-এর পোস্টে লাইক: ${likes}, ভিউ: ${views}, কমেন্ট: ${comments}\n\nকত ডলার ($ USD) ক্রেডিট করবেন?:`, "1.00");
             if (!usdInput || isNaN(usdInput) || Number(usdInput) <= 0) return;
 
             const payoutUSD = parseFloat(Number(usdInput).toFixed(2));
@@ -1618,34 +1700,14 @@
                         totalEarnUSD: firebase.firestore.FieldValue.increment(payoutUSD)
                     });
                 }
-
-                await db.collection("posts").doc(postId).update({
-                    payoutUSD: payoutUSD,
-                    payoutBDT: Number(payoutBDT)
-                });
-
-                await db.collection("notifications").add({
-                    targetUid: String(userUID),
-                    category: "earnings",
-                    platform: "boost",
-                    title: "🎉 পোস্ট থেকে ইনকাম জমা হয়েছে!",
-                    message: `আপনার বুস্ট করা পোস্ট থেকে $${payoutUSD.toFixed(2)} (৳${payoutBDT}) মেইন ব্যালেন্সে সফলভাবে যুক্ত হয়েছে!`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-
-                playBeepAlert();
+                await db.collection("posts").doc(postId).update({ payoutUSD: payoutUSD, payoutBDT: Number(payoutBDT) });
                 showToast(`সফল! #${userUID}-এ $${payoutUSD} যোগ হয়েছে।`, "success");
-            } catch (err) {
-                alert("ব্যালেন্স যোগ করতে সমস্যা: " + err.message);
-            }
+            } catch (err) { alert(err.message); }
         }
 
         function deletePostByAdmin(postId) {
-            if (!confirm("আপনি কি নিশ্চিত এই পোস্টটি সম্পূর্ণ মুছে ফেলতে চান?")) return;
-            db.collection("posts").doc(postId).delete().then(() => {
-                showToast("পোস্টটি স্থায়ীভাবে মুছে ফেলা হয়েছে!", "info");
-            }).catch(e => alert(e.message));
+            if (!confirm("পোস্টটি স্থায়ীভাবে মুছে ফেলতে চান?")) return;
+            db.collection("posts").doc(postId).delete().then(() => showToast("পোস্টটি ডিলিট হয়েছে!"));
         }
 
         // ================= ব্যানার আপলোড =================
@@ -1653,16 +1715,13 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            showToast("গ্যালারি থেকে ছবি প্রসেসিং হচ্ছে...", "info");
             document.getElementById('galleryBoxText').innerText = "ছবি প্রসেস হচ্ছে...";
-
             compressImage(file, 700, 350, 0.75, function(compressedBase64) {
                 selectedBannerBase64 = compressedBase64;
                 document.getElementById('bannerImgPreview').src = compressedBase64;
                 document.getElementById('bannerPreviewWrap').style.display = 'block';
                 document.getElementById('galleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(compressedBase64.length / 1024) + " KB)";
                 document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
-                playBeepAlert();
                 showToast("ছবি প্রস্তুত হয়েছে!", "success");
             });
         }
@@ -1677,35 +1736,31 @@
 
             const btn = document.getElementById('btnUploadBanner');
             btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> আপলোড হচ্ছে...`;
+            btn.innerHTML = `আপলোড হচ্ছে...`;
 
             db.collection("banners").add({
                 image: finalImage,
                 action: action,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp()
             }).then(() => {
-                playBeepAlert();
                 showToast("হোম ব্যানার আপলোড হয়েছে!", "success");
                 e.target.reset();
                 selectedBannerBase64 = "";
                 document.getElementById('bannerPreviewWrap').style.display = 'none';
                 document.getElementById('galleryBoxText').innerText = "১. গ্যালারি থেকে ছবি সিলেক্ট করুন";
-            }).catch(err => alert(err.message)).finally(() => {
+            }).finally(() => {
                 btn.disabled = false;
                 btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Upload Banner to Slider`;
             });
         }
 
         function deleteBannerDoc(id) {
-            if (confirm("ব্যানারটি ডিলিট করতে চান?")) {
-                db.collection("banners").doc(id).delete().then(() => showToast("ব্যানার ডিলিট হয়েছে।", "info"));
-            }
+            if (confirm("ব্যানারটি ডিলিট করতে চান?")) db.collection("banners").doc(id).delete();
         }
 
         // ================= লাকি ড্র =================
         function toggleLotterySales(isOpen) {
             db.collection("settings").doc("lottery").set({ ticketSalesOpen: isOpen }, { merge: true }).then(() => {
-                playBeepAlert();
                 showToast(isOpen ? "টিকিট বিক্রি চালু হয়েছে!" : "টিকিট বিক্রি বন্ধ হয়েছে!", "success");
             });
         }
@@ -1721,7 +1776,6 @@
             if (timeVal) payload.targetTimestamp = new Date(timeVal).getTime();
 
             db.collection("settings").doc("lottery").set(payload, { merge: true }).then(() => {
-                playBeepAlert();
                 showToast("লাকি ড্র সেটিংস সেভ হয়েছে!", "success");
             });
         }
@@ -1730,7 +1784,6 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            showToast("ছবি প্রসেসিং হচ্ছে...", "info");
             compressImage(file, 600, 350, 0.75, function(compressedBase64) {
                 selectedPrizeImgBase64 = compressedBase64;
                 document.getElementById('prizeGalleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(compressedBase64.length / 1024) + " KB)";
@@ -1749,10 +1802,6 @@
 
             if (!finalImage || finalImage === "Image Ready from Gallery") return alert("ছবি সিলেক্ট করুন বা URL দিন!");
 
-            const btn = document.getElementById('btnSavePrizeBanner');
-            btn.disabled = true;
-            btn.innerText = "Saving...";
-
             const newPrize = { rank: rank, title: title, valueText: valueText, image: finalImage };
             let updatedPrizes = Array.isArray(currentLoadedPrizes) ? [...currentLoadedPrizes] : [];
             const existingIdx = updatedPrizes.findIndex(p => p.rank === rank);
@@ -1763,14 +1812,10 @@
             updatedPrizes = updatedPrizes.slice(0, 5);
 
             db.collection("settings").doc("lottery").set({ prizes: updatedPrizes }, { merge: true }).then(() => {
-                playBeepAlert();
                 showToast(`Prize #${rank} ব্যানার সেভ হয়েছে!`, "success");
                 e.target.reset();
                 selectedPrizeImgBase64 = "";
                 document.getElementById('prizeGalleryBoxText').innerText = "গ্যালারি থেকে প্রাইজ ছবি দিন";
-            }).catch(err => alert(err.message)).finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-cloud-arrow-up"></i> Add / Update Prize Banner`;
             });
         }
 
@@ -1800,7 +1845,7 @@
             db.collection("settings").doc("lottery").set({ prizes: updated }, { merge: true });
         }
 
-        // ================= লাইভ চ্যাট সাপোর্ট =================
+        // ================= লাইভ কাস্টমার সাপোর্ট চ্যাট =================
         function openSupportChatModal() {
             openModuleModal('supportModal');
             loadSupportConversations();
@@ -1910,7 +1955,7 @@
             });
         }
 
-        // ================= ডিপোজিট/উইথড্রল অনুমোদন =================
+        // ================= ডিপোজিট ও উইথড্র অনুমোদন =================
         async function approveDeposit(depId, rawUid, amountBDT, method) {
             const dashUID = getDashboardUID(rawUid);
             if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট নিশ্চিত করবেন?`)) return;
@@ -1919,25 +1964,32 @@
                 const usdToAdd = parseFloat((amountBDT / 120).toFixed(4));
                 const snap = await db.collection("users").where("uid", "==", String(dashUID)).get();
                 if (!snap.empty) {
-                    await snap.docs[0].ref.update({
-                        balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd)
-                    });
+                    await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd) });
                 }
                 await db.collection("deposits").doc(depId).update({ status: "success" });
+
+                sendTelegramNotification(`✅ <b>ডিপোজিট সফলভাবে অ্যাপ্রুভ হয়েছে!</b>\n\n👤 <b>UID:</b> #${dashUID}\n💵 <b>Amount:</b> ৳${amountBDT} ($${usdToAdd.toFixed(2)})\n💳 <b>Method:</b> ${method.toUpperCase()}`);
+
                 playBeepAlert();
                 showToast(`৳${amountBDT} যোগ হয়েছে #${dashUID}-এ!`, "success");
             } catch (err) { alert(err.message); }
         }
 
         async function rejectDeposit(depId, rawUid, amountBDT, method) {
+            const dashUID = getDashboardUID(rawUid);
             if (!confirm("ডিপোজিট বাতিল করবেন?")) return;
             await db.collection("deposits").doc(depId).update({ status: "rejected" });
+            sendTelegramNotification(`❌ <b>ডিপোজিট বাতিল করা হয়েছে!</b>\n\n👤 <b>UID:</b> #${dashUID}\n💵 <b>Amount:</b> ৳${amountBDT}`);
             showToast("ডিপোজিট রিজেক্ট হয়েছে।", "info");
         }
 
         async function approveWithdrawal(id, rawUid, amountBDT, provider) {
+            const dashUID = getDashboardUID(rawUid);
             if (!confirm("উইথড্র সম্পন্ন হয়েছে?")) return;
             await db.collection("withdrawals").doc(id).update({ status: "success" });
+
+            sendTelegramNotification(`✅ <b>উইথড্রল সফলভাবে পরিশোধ করা হয়েছে!</b>\n\n👤 <b>UID:</b> #${dashUID}\n💰 <b>পেমেন্ট:</b> ৳${amountBDT}\n🏦 <b>মাধ্যম:</b> ${provider.toUpperCase()}`);
+
             playBeepAlert();
             showToast("উইথড্রল সম্পন্ন হয়েছে!", "success");
         }
@@ -1948,11 +2000,10 @@
 
             const snap = await db.collection("users").where("uid", "==", String(dashUID)).get();
             if (!snap.empty) {
-                await snap.docs[0].ref.update({
-                    balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0)
-                });
+                await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0) });
             }
             await db.collection("withdrawals").doc(id).update({ status: "rejected" });
+            sendTelegramNotification(`❌ <b>উইথড্রল বাতিল এবং রিফান্ড দেওয়া হয়েছে!</b>\n\n👤 <b>UID:</b> #${dashUID}\n💵 <b>রিফান্ড:</b> ৳${amountBDT} ($${Number(refundUSD).toFixed(2)})`);
             showToast("উইথড্র বাতিল ও রিফান্ড সম্পন্ন!", "info");
         }
 
@@ -1998,6 +2049,7 @@
                 await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD) });
             }
             await db.collection("task_submissions").doc(id).update({ status: "completed" });
+            sendTelegramNotification(`✅ <b>টাস্ক প্রুফ অ্যাপ্রুভ হয়েছে!</b>\n\n👤 <b>UID:</b> #${dashUID}\n🎁 <b>রিওয়ার্ড:</b> $${rewardUSD}\n🌐 <b>প্ল্যাটফর্ম:</b> ${platform.toUpperCase()}`);
             playBeepAlert();
             showToast("প্রুফ অ্যাপ্রুভ হয়েছে!", "success");
         }
@@ -2012,7 +2064,6 @@
                 binance_address: document.getElementById('settingBinance').value.trim(),
                 usd_bdt_rate: Number(document.getElementById('settingUsdBdt').value) || 120
             }, { merge: true }).then(() => {
-                playBeepAlert();
                 showToast("সেটিংস সফলভাবে সেভ হয়েছে!", "success");
             });
         }
@@ -2027,4 +2078,4 @@
         document.addEventListener('DOMContentLoaded', checkSession);
     </script>
 </body>
-</html
+</html>
