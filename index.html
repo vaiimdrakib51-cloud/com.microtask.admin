@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -187,7 +186,7 @@
         .tab-filter-btn {
             background: rgba(255, 255, 255, 0.08); border: 1px solid var(--card-border); color: var(--text-muted);
             padding: 7px 13px; border-radius: 20px; font-size: 11px; font-weight: 800; cursor: pointer;
-            white-space: nowrap; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
+            white-space: nowrap; transition: all 0.2s ease; display: inline-flex; align-items: gap; gap: 6px;
         }
         .tab-filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px var(--primary-glow); }
         .tab-filter-btn .count-badge { background: rgba(0, 0, 0, 0.35); padding: 1.5px 7px; border-radius: 10px; font-size: 9.5px; }
@@ -433,7 +432,7 @@
             <div class="box-card">
                 <h4 style="font-size:13px; font-weight:800; margin-bottom:6px; color:#38bdf8;"><i class="fa-solid fa-list-check"></i> Live Posts Manager</h4>
                 <p style="font-size:9.5px; color:var(--text-muted); margin-bottom:10px;">
-                    কত টাকার বুস্ট চলছে দেখুন। <strong>Pay</strong> বাটনে চাপ দিলে লাইক ইনকামের সাথে <strong>ইউজারের মূল বুস্ট ফি ফেরত</strong> যাবে।
+                    ইউজার প্যানেলের লাইভ প্রগ্রেস ও বাকি সময় দেখুন। <strong>Pay</strong> বাটনে চাপ দিলে লাইক ইনকামের সাথে <strong>ইউজারের মূল বুস্ট ফি ফেরত</strong> যাবে।
                 </p>
                 <div class="table-responsive">
                     <table>
@@ -442,8 +441,9 @@
                                 <th>User (UID/Name)</th>
                                 <th>Boost Pkg (ফি)</th>
                                 <th>Stats (L/V/C)</th>
+                                <th>Time Remaining</th>
                                 <th>Status & Rate</th>
-                                <th>Earning ($)</th>
+                                <th>Live Earning ($)</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -554,10 +554,10 @@
                     <input id="taskTitle" class="admin-input" placeholder="e.g. Watch Video & Follow #1" required>
 
                     <label style="font-size:10px; color:var(--accent); font-weight:800;">ইউজার থেকে যা যা প্রুফ চান (Select Rules):</label>
-                    <div class="checkbox-group">
-                        <label class="checkbox-label"><input type="checkbox" id="ruleLike" checked> Like Required</label>
+                    <div class="checkbox-group" style="display:flex; gap:12px; margin-bottom:12px; font-size:11px;">
+                        <label class="checkbox-label"><input type="checkbox" id="ruleLike" checked> Like</label>
                         <label class="checkbox-label"><input type="checkbox" id="ruleSubscribe" checked> Subscribe / Follow</label>
-                        <label class="checkbox-label"><input type="checkbox" id="ruleComment"> Comment Required</label>
+                        <label class="checkbox-label"><input type="checkbox" id="ruleComment"> Comment</label>
                     </div>
 
                     <label style="font-size:10px; color:var(--text-muted);">Reward USD ($)</label>
@@ -680,10 +680,10 @@
             <div class="box-card">
                 <form onsubmit="handleAddBanner(event)">
                     <input type="file" id="bannerFileInput" accept="image/*" style="display:none;" onchange="handleBannerFileSelect(event)">
-                    <div class="gallery-upload-box" onclick="document.getElementById('bannerFileInput').click()">
-                        <i class="fa-solid fa-images"></i>
-                        <span id="galleryBoxText">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</span>
-                        <small>ফোনের গ্যালারি থেকে যেকোনো ছবি বেছে নিন (Auto Compressed)</small>
+                    <div class="gallery-upload-box" onclick="document.getElementById('bannerFileInput').click()" style="border:1.5px dashed var(--primary); padding:15px; border-radius:12px; text-align:center; cursor:pointer; margin-bottom:10px;">
+                        <i class="fa-solid fa-images" style="font-size:24px; color:var(--primary); margin-bottom:6px;"></i><br>
+                        <span id="galleryBoxText" style="font-size:11px; font-weight:800;">১. গ্যালারি থেকে ছবি সিলেক্ট করুন</span><br>
+                        <small style="font-size:9.5px; color:var(--text-muted);">ফোনের গ্যালারি থেকে যেকোনো ছবি বেছে নিন</small>
                     </div>
                     <div id="bannerPreviewWrap" style="display:none; margin-bottom:10px; text-align:center;">
                         <img id="bannerImgPreview" src="" style="width:100%; height:90px; object-fit:cover; border-radius:10px; border:1px solid #38bdf8;">
@@ -769,7 +769,7 @@
                     <label style="font-size:10px; color:var(--text-muted);">Worth / Value Text</label>
                     <input id="prizeValueInput" class="admin-input" placeholder="e.g. Worth ৳1,50,000" required>
                     <input type="file" id="prizeImgFileInput" accept="image/*" style="display:none;" onchange="handlePrizeImgSelect(event)">
-                    <div class="gallery-upload-box" onclick="document.getElementById('prizeImgFileInput').click()">
+                    <div class="gallery-upload-box" onclick="document.getElementById('prizeImgFileInput').click()" style="border:1px dashed #38bdf8; padding:8px; text-align:center; border-radius:8px; cursor:pointer; margin-bottom:10px;">
                         <i class="fa-solid fa-image"></i>
                         <span id="prizeGalleryBoxText">গ্যালারি থেকে প্রাইজ ছবি দিন</span>
                     </div>
@@ -887,7 +887,7 @@
         </div>
     </div>
 
-    <!-- CUSTOM BOOST APPROVAL POPUP MODAL -->
+    <!-- 🌟 CUSTOM BOOST APPROVAL MODAL (WITH LIVE AUTO-CALCULATION) -->
     <div id="boostApprovalModal">
         <div class="boost-approval-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -905,7 +905,7 @@
                 <input type="hidden" id="bApproveBoostFeeBDT">
                 <input type="hidden" id="bApproveBoostFeeUSD">
 
-                <label style="font-size:10px; color:var(--text-muted);">ক্যাম্পেইনের সময়কাল (Select Campaign Duration)</label>
+                <label style="font-size:10px; color:var(--text-muted);">ক্যাম্পেইনের সময়কাল (Campaign Duration)</label>
                 <select id="bApproveDurationSelect" class="admin-input" onchange="toggleCustomDurationInput(this.value)">
                     <option value="10">১০ ঘণ্টা (10 Hours)</option>
                     <option value="12">১২ ঘণ্টা (12 Hours)</option>
@@ -930,20 +930,24 @@
                     </div>
                     <div>
                         <label style="font-size:10px; color:var(--text-muted);">👍 Likes Target</label>
-                        <input type="number" id="bApproveLikesInput" class="admin-input" placeholder="e.g. 80" value="80" required>
+                        <input type="number" id="bApproveLikesInput" class="admin-input" placeholder="e.g. 80" value="80" required oninput="updateBoostLiveCalculation()">
                     </div>
                 </div>
 
-                <label style="font-size:10px; color:var(--text-muted);">💬 Comments Target (Multilingual Profiles)</label>
+                <label style="font-size:10px; color:var(--text-muted);">💬 Comments Target (Global Profiles)</label>
                 <input type="number" id="bApproveCommentsInput" class="admin-input" placeholder="e.g. 15" value="15" required>
 
                 <div style="margin-top:2px;">
-                    <label style="font-size:10px; color:#10b981; font-weight:800;">💰 প্রতি লাইকে ইউজারের ব্যালেন্সে যোগ হবে ($ USD):</label>
-                    <input type="number" step="0.0001" id="bApproveEarningPerLikeInput" class="admin-input" placeholder="e.g. 0.005" value="0.005" required>
-                    <small style="font-size:9.5px; color:#94a3b8; display:block; margin-top:-8px; margin-bottom:10px;">লাইক বাড়ার সাথে সাথে ইউজারের একাউন্টে অটো ব্যালেন্স যোগ হবে।</small>
+                    <label style="font-size:10px; color:#10b981; font-weight:800;">💰 প্রতি লাইকে ইউজার কত পাবে ($ USD):</label>
+                    <input type="number" step="0.0001" id="bApproveEarningPerLikeInput" class="admin-input" placeholder="e.g. 0.005" value="0.005" required oninput="updateBoostLiveCalculation()">
                 </div>
 
-                <div style="display:flex; gap:8px; margin-top:6px;">
+                <!-- 🌟 অটো ক্যালকুলেশন প্রিভিউ বক্স -->
+                <div id="boostLiveCalcBox" style="background:#070e22; border:1px solid #10b981; border-radius:12px; padding:10px; margin-bottom:12px; font-size:10.5px;">
+                    <div id="boostCalcPreviewText"></div>
+                </div>
+
+                <div style="display:flex; gap:8px;">
                     <button type="button" class="btn-act reject" style="flex:1; padding:11px; justify-content:center;" onclick="closeBoostApprovalModal()">বাতিল</button>
                     <button type="submit" id="btnConfirmBoostStart" class="btn-act approve" style="flex:2; padding:11px; justify-content:center; font-size:12px;">
                         <i class="fa-solid fa-play"></i> Start Campaign
@@ -977,33 +981,12 @@
 
         const MASTER_PIN = "778899";
 
-        // টেলিগ্রাম বট ও চ্যানেল
+        // টেলিগ্রাম কনফিগ
         const TELEGRAM_BOT_TOKEN = "9166237872:AAEnqeRwrUYAoKzCL_yTBZJqqYx-J_Q-bKo";
         const TELEGRAM_CHAT_ID = "@MicroTaskupdate";
         const ADMIN_BASE_URL = "https://vaiimdrakib51-cloud.github.io/com.microtask.admin/";
 
-        const sentTelegramAlerts = new Set();
         let currentUsdBdtRate = 120;
-
-        function sendTelegramNotification(textMessage, actionButtons = null) {
-            try {
-                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-                let payload = { chat_id: TELEGRAM_CHAT_ID, text: textMessage, parse_mode: "HTML" };
-                if (actionButtons && Array.isArray(actionButtons)) {
-                    payload.reply_markup = { inline_keyboard: actionButtons };
-                }
-                fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(err => console.error(err));
-            } catch (e) {}
-        }
-
-        function testTelegramConnection() {
-            showToast("টেলিগ্রাম টেস্ট মেসেজ পাঠানো হচ্ছে...", "info");
-            const testMsg = `🔔 <b>MicroTask Admin টেস্ট মেসেজ!</b>\n\n✅ বট ও চ্যানেল কানেক্ট হয়েছে।\n⏰ সময়: ${new Date().toLocaleTimeString('bn-BD')}`;
-            const testBtn = [[{ text: "⚡ ওপেন এডমিন কনসোল", url: ADMIN_BASE_URL }]];
-            sendTelegramNotification(testMsg, testBtn);
-            showToast("টেস্ট রিকোয়েস্ট সেন্ট!", "success");
-        }
-        
         let isSoundMuted = false;
         let selectedBannerBase64 = "";
         let selectedPrizeImgBase64 = "";
@@ -1015,32 +998,54 @@
         window.allBoostRequests = [];
         window.allTaskProofs = [];
         window.allUsers = [];
+        window.allPosts = [];
 
         let currentDepFilter = 'pending';
         let currentWithFilter = 'pending';
         let currentBoostFilter = 'pending';
         let currentProofFilter = 'pending';
 
-        function compressImage(file, maxWidth, maxHeight, quality, callback) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = function (event) {
-                const img = new Image();
-                img.src = event.target.result;
-                img.onload = function () {
-                    let width = img.width, height = img.height;
-                    if (width > height) {
-                        if (width > maxWidth) { height = Math.round((height * maxWidth) / width); width = maxWidth; }
-                    } else {
-                        if (height > maxHeight) { width = Math.round((width * maxHeight) / height); height = maxHeight; }
-                    }
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width; canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    callback(canvas.toDataURL('image/jpeg', quality));
+        window.usersBySixDigit = {};
+        window.usersByDocId = {};
+
+        // ================= 🌟 স্টেলথ (গোপন) ইউজার নোটিফিকেশন হেল্পার =================
+        // ইউজার যেন কখনো বুঝতে না পারে এডমিন প্যানেল থেকে পাঠানো হয়েছে, পুরোপুরি সিস্টেম বার্তা হিসেবে যাবে
+        async function sendUserSystemNotification(targetUid, title, message, category = "system", actionUrl = "") {
+            if (!targetUid || targetUid === "000000") return;
+            try {
+                const notifDoc = {
+                    targetUid: String(targetUid).trim(),
+                    userId: String(targetUid).trim(),
+                    title: title,
+                    message: message,
+                    category: category,
+                    actionUrl: actionUrl,
+                    read: false,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-            };
+                await db.collection("notifications").add(notifDoc);
+            } catch (e) {
+                console.error("System notification error:", e);
+            }
+        }
+
+        function sendTelegramNotification(textMessage, actionButtons = null) {
+            try {
+                const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+                let payload = { chat_id: TELEGRAM_CHAT_ID, text: textMessage, parse_mode: "HTML" };
+                if (actionButtons && Array.isArray(actionButtons)) {
+                    payload.reply_markup = { inline_keyboard: actionButtons };
+                }
+                fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }).catch(() => {});
+            } catch (e) {}
+        }
+
+        function testTelegramConnection() {
+            showToast("টেলিগ্রাম টেস্ট মেসেজ পাঠানো হচ্ছে...", "info");
+            const testMsg = `🔔 <b>MicroTask Admin টেস্ট মেসেজ!</b>\n\n✅ বট ও চ্যানেল কানেক্ট হয়েছে।\n⏰ সময়: ${new Date().toLocaleTimeString('bn-BD')}`;
+            const testBtn = [[{ text: "⚡ ওপেন এডমিন কনসোল", url: ADMIN_BASE_URL }]];
+            sendTelegramNotification(testMsg, testBtn);
+            showToast("টেস্ট রিকোয়েস্ট সেন্ট!", "success");
         }
 
         function playBeepAlert() {
@@ -1077,9 +1082,6 @@
                 playBeepAlert();
             }
         }
-
-        window.usersBySixDigit = {};
-        window.usersByDocId = {};
 
         function openModuleModal(modalId) {
             const modal = document.getElementById(modalId);
@@ -1157,10 +1159,63 @@
             renderProofTable();
         }
 
+        // ================= 🌟 লাইভ পোস্টের নিখুঁত রিয়েল-টাইম প্রগ্রেস ও বাকি সময় বের করা =================
+        // ইউজার প্যানেল যেভাবে রিয়েল-টাইমে হিসাব করে, এডমিন প্যানেলেও হুবহু একই হিসাব হবে আপনি বাইরে থাকলেও
+        function calculateRealTimePostProgress(p) {
+            const now = Date.now();
+            const startedAt = Number(p.boostStartedAt) || 0;
+            const expiresAt = Number(p.boostExpiresAt) || 0;
+            const likesTarget = Number(p.initialLikesTarget) || 0;
+            const viewsTarget = Number(p.initialViewsTarget) || 0;
+            const commentsTarget = Number(p.initialCommentsTarget) || 0;
+            const ratePerLike = Number(p.earningPerLikeUSD) || 0;
+
+            let curLikes = Number(p.likesCount) || 0;
+            let curViews = Number(p.viewsCount) || 0;
+            let curComments = (p.comments || []).length;
+            let remainingText = '';
+
+            if (p.boostStatus === 'active' && startedAt && expiresAt) {
+                if (now >= expiresAt) {
+                    curLikes = likesTarget > 0 ? likesTarget : curLikes;
+                    curViews = viewsTarget > 0 ? viewsTarget : curViews;
+                    curComments = commentsTarget > 0 ? commentsTarget : curComments;
+                    remainingText = '<span style="color:#10b981; font-weight:800;">✓ Completed</span>';
+                } else {
+                    const elapsed = now - startedAt;
+                    const totalDuration = Math.max(1, expiresAt - startedAt);
+                    const progressRatio = Math.min(1, elapsed / totalDuration);
+
+                    curLikes = Math.max(curLikes, Math.floor(progressRatio * likesTarget));
+                    curViews = Math.max(curViews, Math.floor(progressRatio * viewsTarget));
+                    curComments = Math.max(curComments, Math.floor(progressRatio * commentsTarget));
+
+                    // বাকি সময় নিখুঁতভাবে সেকেন্ডসহ বের করা
+                    const totalSecs = Math.max(0, Math.floor((expiresAt - now) / 1000));
+                    const days = Math.floor(totalSecs / 86400);
+                    const hours = Math.floor((totalSecs % 86400) / 3600);
+                    const mins = Math.floor((totalSecs % 3600) / 60);
+                    const secs = totalSecs % 60;
+
+                    let tStr = '';
+                    if (days > 0) tStr += `${days}d `;
+                    tStr += `${String(hours).padStart(2, '0')}h : ${String(mins).padStart(2, '0')}m : ${String(secs).padStart(2, '0')}s`;
+                    remainingText = `<span style="color:#f59e0b; font-weight:800; font-family:monospace; font-size:10px;">⏳ ${tStr}</span>`;
+                }
+            } else if (p.boostStatus === 'completed') {
+                remainingText = '<span style="color:#10b981; font-weight:800;">✓ Completed</span>';
+            } else {
+                remainingText = '<span style="color:#94a3b8;">Inactive</span>';
+            }
+
+            const liveEarnedUSD = parseFloat((curLikes * ratePerLike).toFixed(4));
+            return { curLikes, curViews, curComments, liveEarnedUSD, remainingText };
+        }
+
         // ================= ফায়ারবেস হাই-স্পিড অপ্টিমাইজড সিঙ্ক =================
         function initAdminSync() {
 
-            // ১. গেটওয়ে ও রেট সিঙ্ক
+            // ১. গেটওয়ে ও রেট সিঙ্ক
             db.collection("settings").doc("gateways").onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
@@ -1174,7 +1229,7 @@
                 }
             });
 
-            // ২. ইউজার্স সিঙ্ক (দ্রুত রেন্ডারিংয়ের জন্য DocumentFragment ব্যবহার)
+            // ২. ইউজার্স সিঙ্ক
             db.collection("users").onSnapshot(snap => {
                 let totalBal = 0;
                 window.usersBySixDigit = {};
@@ -1235,7 +1290,7 @@
                 renderBoostTable();
             });
 
-            // ৩. ডিপোজিট ও উইথড্রল সিঙ্ক (সাম্প্রতিক ৬০টি লিমিট দিয়ে ফাস্ট লোড)
+            // ৩. ডিপোজিট ও উইথড্রল সিঙ্ক
             db.collection("deposits").orderBy("createdAt", "desc").limit(60).onSnapshot(snap => {
                 window.allDeposits = [];
                 let pendingCount = 0, successCount = 0, rejectedCount = 0;
@@ -1280,7 +1335,7 @@
                 renderWithdrawalsTable();
             });
 
-            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক (লিমিট ৬০)
+            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক
             db.collection("boost_requests").orderBy("createdAt", "desc").limit(60).onSnapshot(snap => {
                 window.allBoostRequests = [];
                 let pendingCount = 0, completedCount = 0, rejectedCount = 0;
@@ -1305,60 +1360,16 @@
                 renderBoostTable();
             });
 
-            // ৫. লাইভ পোস্ট ম্যানেজার (লিমিট ৪০)
+            // ৫. লাইভ পোস্ট ম্যানেজার সিঙ্ক
             db.collection("posts").orderBy("createdAt", "desc").limit(40).onSnapshot(snap => {
-                const tbody = document.getElementById('adminPostsManagerTableBody');
-                const fragment = document.createDocumentFragment();
-
+                window.allPosts = [];
                 snap.forEach(doc => {
-                    const p = doc.data();
-                    const dashUid = getDashboardUID(p.userId);
-                    const uObj = window.usersBySixDigit[dashUid] || {};
-                    const uName = uObj.name || p.userName || 'User';
-
-                    const l = p.likesCount || 0, v = p.viewsCount || 0, c = (p.comments || []).length;
-                    const payout = Number(p.payoutUSD || 0);
-                    const ratePerLike = Number(p.earningPerLikeUSD || 0);
-                    const feeBDT = Number(p.boostFeeBDT) || 100;
-                    const feeUSD = Number(p.boostFeeUSD) || parseFloat((feeBDT / currentUsdBdtRate).toFixed(2));
-                    const isRefunded = !!p.boostFeeRefunded;
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>
-                            <strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong>
-                            <div style="font-size:10px; color:#cbd5e1; font-weight:600; margin-top:2px;">${uName}</div>
-                        </td>
-                        <td>
-                            <strong style="color:#f59e0b; font-size:11.5px;">৳${feeBDT}</strong>
-                            <div style="font-size:9.5px; color:#94a3b8;">($${feeUSD.toFixed(2)})</div>
-                        </td>
-                        <td><span style="color:#f59e0b;">👍 ${l}</span> | <span style="color:#38bdf8;">👁️ ${v}</span> | <span style="color:#10b981;">💬 ${c}</span></td>
-                        <td>
-                            <span class="status-badge ${p.boostStatus || 'none'}">${p.boostStatus || 'none'}</span>
-                            <div style="color:#34d399; font-weight:800; font-size:9.5px; margin-top:2px;">${ratePerLike > 0 ? '$'+ratePerLike.toFixed(4)+'/Like' : '-'}</div>
-                        </td>
-                        <td>
-                            <strong style="color:#10b981;">$${payout.toFixed(3)}</strong>
-                            ${isRefunded ? '<div style="font-size:9px; color:#34d399; font-weight:700;">✓ Fee Refunded</div>' : ''}
-                        </td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn-act payout" title="Pay and Refund Fee" onclick="openPayoutPrompt('${doc.id}', '${dashUid}', ${l}, ${v}, ${c}, ${feeBDT}, ${feeUSD}, ${payout})">
-                                    <i class="fa-solid fa-hand-holding-dollar"></i> Pay
-                                </button>
-                                <button class="btn-act reject" title="Delete Post" onclick="deletePostByAdmin('${doc.id}')"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        </td>
-                    `;
-                    fragment.appendChild(tr);
+                    window.allPosts.push({ id: doc.id, ...doc.data() });
                 });
-
-                tbody.innerHTML = '';
-                tbody.appendChild(fragment);
+                renderLivePostsManagerTable();
             });
 
-            // ৬. টাস্ক প্রুফ সিঙ্ক (লিমিট ৬০)
+            // ৬. টাস্ক প্রুফ সিঙ্ক
             db.collection("task_submissions").orderBy("createdAt", "desc").limit(60).onSnapshot(snap => {
                 window.allTaskProofs = [];
                 let pendingCount = 0, completedCount = 0, rejectedCount = 0;
@@ -1384,7 +1395,7 @@
                 renderProofTable();
             });
 
-            // ৭. টাস্ক ও ব্যানার সিঙ্ক
+            // ৭. টাস্ক ও ব্যানার
             db.collection("tasks").onSnapshot(snap => {
                 const tbody = document.getElementById('activeTasksTableBody');
                 const fragment = document.createDocumentFragment();
@@ -1474,11 +1485,70 @@
                 document.getElementById('statTotalTicketsCount').innerText = totalCount;
                 document.getElementById('statTotalTicketsMoney').innerText = `৳${totalBDT}`;
             });
-
-            startAutomaticBoostProcessor();
         }
 
-        // ================= USD ($) ও BDT (৳) ব্যালেন্স অ্যাডজাস্টমেন্ট লজিক =================
+        // 🌟 লাইভ পোস্ট ম্যানেজার টেবিল রেন্ডার এবং প্রতি সেকেন্ডে লাইভ কাউন্টডাউন টিক
+        function renderLivePostsManagerTable() {
+            const tbody = document.getElementById('adminPostsManagerTableBody');
+            if (!tbody) return;
+            const fragment = document.createDocumentFragment();
+
+            window.allPosts.forEach(p => {
+                const dashUid = getDashboardUID(p.userId);
+                const uObj = window.usersBySixDigit[dashUid] || {};
+                const uName = uObj.name || p.userName || 'User';
+
+                // রিয়েল-টাইম ক্যালকুলেশন
+                const live = calculateRealTimePostProgress(p);
+                const ratePerLike = Number(p.earningPerLikeUSD) || 0;
+                const feeBDT = Number(p.boostFeeBDT) || 100;
+                const feeUSD = Number(p.boostFeeUSD) || parseFloat((feeBDT / currentUsdBdtRate).toFixed(2));
+                const isRefunded = !!p.boostFeeRefunded;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong>
+                        <div style="font-size:10px; color:#cbd5e1; font-weight:600; margin-top:2px;">${uName}</div>
+                    </td>
+                    <td>
+                        <strong style="color:#f59e0b; font-size:11.5px;">৳${feeBDT}</strong>
+                        <div style="font-size:9.5px; color:#94a3b8;">($${feeUSD.toFixed(2)})</div>
+                    </td>
+                    <td><span style="color:#f59e0b;">👍 ${live.curLikes}</span> | <span style="color:#38bdf8;">👁️ ${live.curViews}</span> | <span style="color:#10b981;">💬 ${live.curComments}</span></td>
+                    <td>${live.remainingText}</td>
+                    <td>
+                        <span class="status-badge ${p.boostStatus || 'none'}">${p.boostStatus || 'none'}</span>
+                        <div style="color:#34d399; font-weight:800; font-size:9.5px; margin-top:2px;">${ratePerLike > 0 ? '$'+ratePerLike.toFixed(4)+'/Like' : '-'}</div>
+                    </td>
+                    <td>
+                        <strong style="color:#10b981;">$${live.liveEarnedUSD.toFixed(3)}</strong>
+                        ${isRefunded ? '<div style="font-size:9px; color:#34d399; font-weight:700;">✓ Fee Refunded</div>' : ''}
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-act payout" title="Pay and Refund Fee" onclick="openPayoutPrompt('${p.id}', '${dashUid}', ${live.curLikes}, ${live.curViews}, ${live.curComments}, ${feeBDT}, ${feeUSD}, ${live.liveEarnedUSD})">
+                                <i class="fa-solid fa-hand-holding-dollar"></i> Pay
+                            </button>
+                            <button class="btn-act reject" title="Delete Post" onclick="deletePostByAdmin('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+        }
+
+        // প্রতি সেকেন্ডে কাউন্টডাউন ও লাইভ প্রগ্রেস রিফ্রেশ
+        setInterval(() => {
+            if (window.allPosts && window.allPosts.length > 0) {
+                renderLivePostsManagerTable();
+            }
+        }, 1000);
+
+        // ================= USD ($) ও BDT (৳) ব্যালেন্স অ্যাডজাস্টমেন্ট =================
         let currentAdjustCurrency = 'USD';
 
         function openBalanceAdjustModal(docId, uid, name, currentBalUSD, defaultAction = 'add') {
@@ -1587,8 +1657,17 @@
                     await db.collection("users").doc(docId).update({
                         balanceUSD: firebase.firestore.FieldValue.increment(amountInUSD)
                     });
+                    
+                    // স্টেলথ নোটিফিকেশন ইউজারের ওয়ালেটে
+                    await sendUserSystemNotification(
+                        uid, 
+                        "Balance Credited", 
+                        `An adjustment of $${amountInUSD.toFixed(2)} (≈ ৳${amountInBDT}) has been added to your wallet.`,
+                        "wallet"
+                    );
+
                     sendTelegramNotification(
-                        `💳 <b>এডমিন ব্যালেন্স যোগ করেছেন!</b>\n\n` +
+                        `💳 <b>ব্যালেন্স যোগ করা হয়েছে!</b>\n\n` +
                         `👤 <b>UID:</b> #${uid}\n` +
                         `💵 <b>যোগ:</b> $${amountInUSD.toFixed(2)} (৳${amountInBDT})`
                     );
@@ -1600,8 +1679,16 @@
                         balanceUSD: firebase.firestore.FieldValue.increment(-finalDeduct)
                     });
                     const finalDeductBDT = (finalDeduct * currentUsdBdtRate).toFixed(2);
+                    
+                    await sendUserSystemNotification(
+                        uid, 
+                        "Balance Adjusted", 
+                        `An adjustment deduction of $${finalDeduct.toFixed(2)} (≈ ৳${finalDeductBDT}) was processed.`,
+                        "wallet"
+                    );
+
                     sendTelegramNotification(
-                        `⚠️ <b>এডমিন ব্যালেন্স কেটে নিয়েছেন!</b>\n\n` +
+                        `⚠️ <b>ব্যালেন্স কর্তন করা হয়েছে!</b>\n\n` +
                         `👤 <b>UID:</b> #${uid}\n` +
                         `💵 <b>কর্তন:</b> $${finalDeduct.toFixed(2)} (৳${finalDeductBDT})`
                     );
@@ -1616,7 +1703,7 @@
             }
         }
 
-        // ================= পে (Pay) অপশনে USD এবং BDT উভয়েই পে করার সুবিধা =================
+        // ================= পে (Pay) অপশনে লাইক ও ফি পে-আউট =================
         async function openPayoutPrompt(postId, userUID, likes, views, comments, boostFeeBDT, boostFeeUSD, earnedUSD) {
             boostFeeBDT = Number(boostFeeBDT) || 100;
             boostFeeUSD = Number(boostFeeUSD) || parseFloat((boostFeeBDT / currentUsdBdtRate).toFixed(4));
@@ -1675,14 +1762,14 @@
                     }, { merge: true });
                 }
 
-                await db.collection("notifications").add({
-                    targetUid: String(userUID),
-                    category: "earnings",
-                    title: "🎉 বুস্ট ইনকাম ও ফি ফেরত জমা হয়েছে!",
-                    message: `আপনার পোস্টের লাইক ইনকাম $${earnedUSD.toFixed(3)} এবং মূল বুস্ট ফি ৳${boostFeeBDT} ($${boostFeeUSD.toFixed(2)}) আপনার মেইন ব্যালেন্সে জমা করা হয়েছে।`,
-                    actionUrl: "history.html",
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                // স্টেলথ ইউজার নোটিফিকেশন
+                await sendUserSystemNotification(
+                    userUID,
+                    "Campaign Payout Settled",
+                    `Your campaign earnings of $${earnedUSD.toFixed(3)} and security fee refund of ৳${boostFeeBDT} ($${boostFeeUSD.toFixed(2)}) have been credited to your balance.`,
+                    "earnings",
+                    "history.html"
+                );
 
                 sendTelegramNotification(
                     `💰 <b>বুস্ট ইনকাম ও ফি রিফান্ড সম্পন্ন!</b>\n\n` +
@@ -1697,7 +1784,38 @@
             } catch (err) { alert("পেমেন্ট ত্রুটি: " + err.message); }
         }
 
-        // ================= বুস্ট টেবিল ও অনুমোদন =================
+        // ================= বুস্ট টেবিল ও অটো-ক্যালকুলেশন ফাংশন =================
+        function updateBoostLiveCalculation() {
+            const likes = parseInt(document.getElementById('bApproveLikesInput').value) || 0;
+            const rate = parseFloat(document.getElementById('bApproveEarningPerLikeInput').value) || 0;
+            const feeBDT = Number(document.getElementById('bApproveBoostFeeBDT').value) || 0;
+            const feeUSD = Number(document.getElementById('bApproveBoostFeeUSD').value) || 0;
+
+            const totalLikeUSD = parseFloat((likes * rate).toFixed(4));
+            const totalLikeBDT = parseFloat((totalLikeUSD * currentUsdBdtRate).toFixed(2));
+
+            const totalReturnUSD = parseFloat((totalLikeUSD + feeUSD).toFixed(3));
+            const totalReturnBDT = Math.round(totalLikeBDT + feeBDT);
+
+            const displayEl = document.getElementById('boostCalcPreviewText');
+            if (displayEl) {
+                displayEl.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                        <span style="color:#94a3b8;">👍 লাইক ইনকাম (${likes} × $${rate}):</span>
+                        <strong style="color:#10b981;">$${totalLikeUSD.toFixed(3)} (≈ ৳${totalLikeBDT})</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                        <span style="color:#94a3b8;">🎁 মূল বুস্ট ফি রিফান্ড:</span>
+                        <strong style="color:#f59e0b;">৳${feeBDT} (≈ $${feeUSD.toFixed(2)})</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--card-border); padding-top:4px; margin-top:4px;">
+                        <span style="color:#ffffff; font-weight:800;">💰 ইউজার মোট ফেরত পাবে:</span>
+                        <strong style="color:#38bdf8; font-size:11px;">$${totalReturnUSD} (≈ ৳${totalReturnBDT})</strong>
+                    </div>
+                `;
+            }
+        }
+
         function renderBoostTable() {
             const tbody = document.getElementById('boostTableBody');
             const filtered = window.allBoostRequests.filter(b => (currentBoostFilter === 'all') ? true : b.status === currentBoostFilter);
@@ -1753,7 +1871,7 @@
             document.getElementById('bApproveBoostFeeBDT').value = feeBDT;
             document.getElementById('bApproveBoostFeeUSD').value = feeUSD;
             
-            document.getElementById('boostModalTargetUid').innerText = `Approve For: #${userUID} (ফি: ৳${feeBDT})`;
+            document.getElementById('boostModalTargetUid').innerText = `Approve For: #${userUID} (প্যাকেজ ফি: ৳${feeBDT})`;
 
             document.getElementById('bApproveDurationSelect').value = "24";
             document.getElementById('customDurationBox').style.display = 'none';
@@ -1761,6 +1879,9 @@
             document.getElementById('bApproveLikesInput').value = "80";
             document.getElementById('bApproveCommentsInput').value = "15";
             document.getElementById('bApproveEarningPerLikeInput').value = "0.005";
+
+            // ওপেন হওয়ার সাথে সাথেই লাইভ হিসাব তৈরি
+            updateBoostLiveCalculation();
 
             document.getElementById('boostApprovalModal').classList.add('active');
         }
@@ -1798,12 +1919,14 @@
                 const now = Date.now();
                 const boostDurationMs = durationHours * 60 * 60 * 1000;
                 const totalMinutes = durationHours * 60;
+                const daysNum = durationHours > 28 ? 2 : 1;
 
                 if (postId) {
                     await db.collection("posts").doc(postId).set({
                         userId: String(userUID),
                         boostStatus: "active",
                         boostPackage: boostPkg,
+                        boostDays: daysNum,
                         boostFeeBDT: feeBDT,
                         boostFeeUSD: feeUSD,
                         boostStartedAt: now,
@@ -1824,6 +1947,16 @@
                 }
 
                 await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
+                
+                // স্টেলথ নোটিফিকেশন ইউজারের ইনবক্সে
+                await sendUserSystemNotification(
+                    userUID, 
+                    "Campaign Started", 
+                    `Your boost campaign is started! Package: ${boostPkg}, Duration: ${daysNum} Day${daysNum > 1 ? 's' : ''}.`,
+                    "boost",
+                    "boost.html"
+                );
+
                 closeBoostApprovalModal();
                 playBeepAlert();
                 showToast(`বুস্ট সফলভাবে চালু হয়েছে! ($${earningPerLike}/Like)`, "success");
@@ -1848,6 +1981,15 @@
                 await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
                 if (postId) await db.collection("posts").doc(postId).set({ boostStatus: "none" }, { merge: true }).catch(() => {});
 
+                // স্টেলথ রিফান্ড নোটিফিকেশন
+                await sendUserSystemNotification(
+                    userUID,
+                    "Campaign Notice",
+                    `Your boost request could not be launched. The fee of ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) has been returned to your wallet.`,
+                    "boost",
+                    "boost.html"
+                );
+
                 sendTelegramNotification(`❌ <b>বুস্ট রিজেক্ট ও রিফান্ড!</b>\n\n👤 UID: #${userUID}\n💵 ৳${refundAmountBDT}`);
                 playBeepAlert();
                 showToast(`বুস্ট বাতিল ও রিফান্ড সম্পন্ন!`, "info");
@@ -1859,68 +2001,7 @@
             db.collection("posts").doc(postId).delete().then(() => showToast("পোস্টটি ডিলিট হয়েছে!"));
         }
 
-        // ================= অপ্টিমাইজড বুস্ট প্রসেসর (লুপের ভিতর এক্সট্রা কুয়েরি বন্ধ) =================
-        function startAutomaticBoostProcessor() {
-            setInterval(async () => {
-                try {
-                    const now = Date.now();
-                    const activePostsSnap = await db.collection("posts")
-                        .where("boostStatus", "==", "active")
-                        .limit(25)
-                        .get();
-
-                    if (activePostsSnap.empty) return;
-
-                    const batch = db.batch();
-
-                    for (const doc of activePostsSnap.docs) {
-                        const p = doc.data();
-                        const userUID = String(p.userId);
-                        const expiresAt = p.boostExpiresAt || 0;
-                        const earningPerLike = Number(p.earningPerLikeUSD) || 0;
-                        const likesTarget = Number(p.initialLikesTarget) || 0;
-                        const currentLikes = Number(p.likesCount) || 0;
-
-                        if (now >= expiresAt || (likesTarget > 0 && currentLikes >= likesTarget)) {
-                            batch.set(doc.ref, { boostStatus: "completed" }, { merge: true });
-                            continue;
-                        }
-
-                        const likesPerMin = Number(p.likesPerMinute) || 0.5;
-                        const viewsPerMin = Number(p.viewsPerMinute) || 2;
-                        const newLikesToAdd = Math.max(1, Math.round(likesPerMin * 0.5));
-                        const newViewsToAdd = Math.max(2, Math.round(viewsPerMin * 0.5));
-
-                        const actualLikesAdded = (likesTarget > 0) ? Math.min(newLikesToAdd, likesTarget - currentLikes) : newLikesToAdd;
-                        if (actualLikesAdded <= 0) continue;
-
-                        const addedEarningUSD = parseFloat((actualLikesAdded * earningPerLike).toFixed(4));
-
-                        batch.set(doc.ref, {
-                            likesCount: firebase.firestore.FieldValue.increment(actualLikesAdded),
-                            viewsCount: firebase.firestore.FieldValue.increment(newViewsToAdd),
-                            payoutUSD: firebase.firestore.FieldValue.increment(addedEarningUSD),
-                            payoutBDT: firebase.firestore.FieldValue.increment(Math.round(addedEarningUSD * currentUsdBdtRate))
-                        }, { merge: true });
-
-                        const cachedUser = window.usersBySixDigit[userUID];
-                        if (addedEarningUSD > 0 && cachedUser && cachedUser.docId) {
-                            const userRef = db.collection("users").doc(cachedUser.docId);
-                            batch.update(userRef, {
-                                balanceUSD: firebase.firestore.FieldValue.increment(addedEarningUSD),
-                                totalEarnUSD: firebase.firestore.FieldValue.increment(addedEarningUSD)
-                            });
-                        }
-                    }
-
-                    await batch.commit();
-                } catch (e) {
-                    console.error("Boost Processor Error:", e);
-                }
-            }, 40000);
-        }
-
-        // ================= ডিপোজিট ও উইথড্রয়াল টেবিল =================
+        // ================= ডিপোজিট ও উইথড্রয়াল অ্যাকশন (স্টেলথ নোটিফিকেশনসহ) =================
         function renderDepositsTable() {
             const tbody = document.getElementById('depositsTableBody');
             const filtered = window.allDeposits.filter(d => (currentDepFilter === 'all') ? true : d.status === currentDepFilter);
@@ -1995,9 +2076,22 @@
             const dashUID = getDashboardUID(rawUid);
             if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট নিশ্চিত করবেন?`)) return;
             const usdToAdd = parseFloat((amountBDT / currentUsdBdtRate).toFixed(4));
+            
             const snap = await db.collection("users").where("uid", "==", String(dashUID)).limit(1).get();
-            if (!snap.empty) await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd) });
+            if (!snap.empty) {
+                await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd) });
+            }
             await db.collection("deposits").doc(depId).update({ status: "success" });
+
+            // স্টেলথ ইউজার নোটিফিকেশন
+            await sendUserSystemNotification(
+                dashUID,
+                "Deposit Confirmed",
+                `Your deposit of ৳${amountBDT} ($${usdToAdd.toFixed(2)}) via ${(method || '').toUpperCase()} has been verified and added to your balance.`,
+                "deposit",
+                "history.html"
+            );
+
             sendTelegramNotification(`✅ <b>ডিপোজিট অ্যাপ্রুভ!</b> UID: #${dashUID}, ৳${amountBDT}`);
             playBeepAlert();
             showToast(`৳${amountBDT} যোগ হয়েছে #${dashUID}-এ!`, "success");
@@ -2007,6 +2101,16 @@
             const dashUID = getDashboardUID(rawUid);
             if (!confirm("ডিপোজিট বাতিল করবেন?")) return;
             await db.collection("deposits").doc(depId).update({ status: "rejected" });
+
+            // স্টেলথ ইউজার নোটিফিকেশন
+            await sendUserSystemNotification(
+                dashUID,
+                "Deposit Failed",
+                `Deposit verification for ৳${amountBDT} (${method}) could not be validated. Please check Transaction ID.`,
+                "deposit",
+                "deposit.html"
+            );
+
             showToast("ডিপোজিট রিজেক্ট হয়েছে।", "info");
         }
 
@@ -2014,6 +2118,16 @@
             const dashUID = getDashboardUID(rawUid);
             if (!confirm("উইথড্র সম্পন্ন হয়েছে?")) return;
             await db.collection("withdrawals").doc(id).update({ status: "success" });
+
+            // স্টেলথ ইউজার নোটিফিকেশন
+            await sendUserSystemNotification(
+                dashUID,
+                "Withdrawal Processed",
+                `Your withdrawal of ৳${amountBDT} has been processed and sent to your ${(provider || '').toUpperCase()} account.`,
+                "withdrawal",
+                "history.html"
+            );
+
             sendTelegramNotification(`✅ <b>উইথড্র পরিশোধিত!</b> UID: #${dashUID}, ৳${amountBDT}`);
             playBeepAlert();
             showToast("উইথড্রল সম্পন্ন হয়েছে!", "success");
@@ -2022,13 +2136,26 @@
         async function rejectWithdrawal(id, rawUid, refundUSD, amountBDT, provider) {
             const dashUID = getDashboardUID(rawUid);
             if (!confirm(`UID #${dashUID}-এ $${refundUSD} রিফান্ড দিবেন?`)) return;
+            
             const snap = await db.collection("users").where("uid", "==", String(dashUID)).limit(1).get();
-            if (!snap.empty) await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0) });
+            if (!snap.empty) {
+                await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0) });
+            }
             await db.collection("withdrawals").doc(id).update({ status: "rejected" });
+
+            // স্টেলথ ইউজার নোটিফিকেশন
+            await sendUserSystemNotification(
+                dashUID,
+                "Withdrawal Cancelled & Refunded",
+                `Your withdrawal request of ৳${amountBDT} could not be settled. Amount ($${Number(refundUSD).toFixed(2)}) has been refunded back to your wallet.`,
+                "withdrawal",
+                "history.html"
+            );
+
             showToast("উইথড্র বাতিল ও রিফান্ড সম্পন্ন!", "info");
         }
 
-        // ================= টাস্ক প্রুফ টেবিল =================
+        // ================= টাস্ক প্রুফ অ্যাকশন =================
         function renderProofTable() {
             const tbody = document.getElementById('taskProofsTableBody');
             const filtered = window.allTaskProofs.filter(p => (currentProofFilter === 'all') ? true : p.status === currentProofFilter);
@@ -2052,7 +2179,7 @@
                         ${p.status === 'pending' ? `
                             <div class="action-btns">
                                 <button class="btn-act approve" onclick="approveProof('${p.id}', '${p.uid}', ${p.rewardUSD || 0.20}, '${p.platform}')"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn-act reject" onclick="rejectProof('${p.id}')"><i class="fa-solid fa-xmark"></i></button>
+                                <button class="btn-act reject" onclick="rejectProof('${p.id}', '${p.uid}', '${p.platform}')"><i class="fa-solid fa-xmark"></i></button>
                             </div>
                         ` : '-'}
                     </td>
@@ -2080,14 +2207,42 @@
             const dashUID = getDashboardUID(rawUid);
             const snap = await db.collection("users").where("uid", "==", String(dashUID)).limit(1).get();
             if (!snap.empty) {
-                await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD) });
+                await snap.docs[0].ref.update({ 
+                    balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD),
+                    todayEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD),
+                    totalEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD)
+                });
             }
             await db.collection("task_submissions").doc(id).update({ status: "completed" });
+
+            // স্টেলথ ইউজার নোটিফিকেশন
+            await sendUserSystemNotification(
+                dashUID,
+                "Task Approved",
+                `Your ${platform.toUpperCase()} task was verified. Reward of $${Number(rewardUSD).toFixed(2)} has been credited to your balance.`,
+                "task",
+                "history.html"
+            );
+
             playBeepAlert();
             showToast("প্রুফ অ্যাপ্রুভ হয়েছে!", "success");
         }
 
-        function rejectProof(id) { db.collection("task_submissions").doc(id).update({ status: "rejected" }); }
+        async function rejectProof(id, rawUid, platform) {
+            const dashUID = getDashboardUID(rawUid);
+            await db.collection("task_submissions").doc(id).update({ status: "rejected" });
+
+            // স্টেলথ ইউজার নোটিফিকেশন
+            await sendUserSystemNotification(
+                dashUID,
+                "Task Incomplete",
+                `Your submitted proof for ${platform.toUpperCase()} task did not match the instructions. Please follow rules.`,
+                "task",
+                "youtube-tasks.html"
+            );
+
+            showToast("প্রুফ রিজেক্ট করা হয়েছে।", "info");
+        }
 
         // ================= ইউজার ব্লক / আনব্লক অ্যাকশন =================
         async function toggleBlockUser(docId, curBlockedStatus, userUID) {
@@ -2112,7 +2267,7 @@
             });
         }
 
-        // ================= রেফারেল ম্যানেজমেন্ট হাব =================
+        // ================= রেফারেল ম্যানেজমেন্ট =================
         function renderReferralManagement() {
             const tbody = document.getElementById('referralsTableBody');
             if (!tbody) return;
@@ -2164,7 +2319,7 @@
             });
         }
 
-        // ================= টাস্ক তৈরি ও সেটিংস সেভ =================
+        // ================= টাস্ক তৈরি ও সেটিংস =================
         function handleCreateTask(e) {
             e.preventDefault();
             db.collection("tasks").add({
@@ -2200,17 +2355,19 @@
             }, { merge: true }).then(() => showToast("সেটিংস সফলভাবে সেভ হয়েছে!", "success"));
         }
 
-        // ================= ব্যানার ও সাপোর্ট চ্যাট =================
+        // ================= ব্যানার ও লাইভ সাপোর্ট =================
         function handleBannerFileSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
-            compressImage(file, 700, 350, 0.75, function(base64) {
-                selectedBannerBase64 = base64;
-                document.getElementById('bannerImgPreview').src = base64;
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (ev) => {
+                selectedBannerBase64 = ev.target.result;
+                document.getElementById('bannerImgPreview').src = ev.target.result;
                 document.getElementById('bannerPreviewWrap').style.display = 'block';
-                document.getElementById('galleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(base64.length / 1024) + " KB)";
+                document.getElementById('galleryBoxText').innerText = "✓ ছবি প্রস্তুত";
                 document.getElementById('bannerImgUrl').value = "Image Ready from Gallery";
-            });
+            };
         }
 
         function handleAddBanner(e) {
@@ -2286,7 +2443,7 @@
                     const isAdmin = m.sender === "admin";
                     const b = document.createElement('div');
                     b.style = `padding:8px 12px; border-radius:12px; font-size:11.5px; max-width:80%; line-height:1.35; ${isAdmin ? 'background:var(--primary); align-self:flex-end; color:#fff;' : 'background:#1e293b; align-self:flex-start; color:#f8fafc;'}`;
-                    b.innerHTML = m.image ? `<img src="${m.image}" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;">` : `<div><strong>${isAdmin ? 'Admin' : 'User'}:</strong> ${m.text}</div>`;
+                    b.innerHTML = m.image ? `<img src="${m.image}" style="width:100%; max-height:160px; object-fit:cover; border-radius:8px;">` : `<div><strong>${isAdmin ? 'Support Team' : 'User'}:</strong> ${m.text}</div>`;
                     fragment.appendChild(b);
                 });
 
@@ -2314,7 +2471,7 @@
                     unreadByAdmin: false
                 }, { merge: true });
                 input.value = '';
-                showToast("রিপ্লাই সেন্ট!", "success");
+                showToast("মেসেজ সেন্ট!", "success");
             });
         }
 
@@ -2339,11 +2496,13 @@
         function handlePrizeImgSelect(e) {
             const file = e.target.files[0];
             if (!file) return;
-            compressImage(file, 600, 350, 0.75, function(base64) {
-                selectedPrizeImgBase64 = base64;
-                document.getElementById('prizeGalleryBoxText').innerText = "✓ ছবি প্রস্তুত (" + Math.round(base64.length / 1024) + " KB)";
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (ev) => {
+                selectedPrizeImgBase64 = ev.target.result;
+                document.getElementById('prizeGalleryBoxText').innerText = "✓ ছবি প্রস্তুত";
                 document.getElementById('prizeImgUrlInput').value = "Image Ready from Gallery";
-            });
+            };
         }
 
         function handleUploadPrizeBanner(e) {
