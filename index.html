@@ -113,7 +113,7 @@
         .mod-icon-wrap { width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #ffffff; box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
         .mod-arrow { font-size: 10px; color: var(--text-muted); }
         .mod-meta { margin-top: 10px; }
-        .mod-meta h4 { font-size: 13px; font-weight: 800; color: #ffffff; }
+        .mod-meta h4 { font-size: 13px; font-weight: 850; color: #ffffff; }
         .mod-meta p { font-size: 9.5px; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
         .pending-pill { background: var(--danger); color: #fff; font-size: 9px; font-weight: 900; padding: 2px 7px; border-radius: 10px; }
 
@@ -130,7 +130,6 @@
         .modal-header-titles h3 { font-size: 15px; font-weight: 850; color: #ffffff; }
         .modal-header-titles p { font-size: 9.5px; color: var(--text-muted); font-weight: 600; margin-top: 1px; }
 
-        /* মডাল বডি ও প্যাডিং */
         .modal-scroll-body { 
             flex: 1; 
             overflow-y: auto; 
@@ -172,7 +171,6 @@
             white-space: nowrap; 
         }
 
-        /* STATUS FILTER TABS */
         .tab-filter-strip { 
             display: flex; 
             gap: 8px; 
@@ -186,7 +184,7 @@
         .tab-filter-btn {
             background: rgba(255, 255, 255, 0.08); border: 1px solid var(--card-border); color: var(--text-muted);
             padding: 7px 13px; border-radius: 20px; font-size: 11px; font-weight: 800; cursor: pointer;
-            white-space: nowrap; transition: all 0.2s ease; display: inline-flex; align-items: gap; gap: 6px;
+            white-space: nowrap; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px;
         }
         .tab-filter-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); box-shadow: 0 4px 12px var(--primary-glow); }
         .tab-filter-btn .count-badge { background: rgba(0, 0, 0, 0.35); padding: 1.5px 7px; border-radius: 10px; font-size: 9.5px; }
@@ -201,21 +199,20 @@
         .btn-act.approve { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; color: #34d399; }
         .btn-act.reject { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; color: #f87171; }
         .btn-act.payout { background: rgba(234, 179, 8, 0.2); border: 1px solid #eab308; color: #facc15; }
-        .btn-act.block { background: rgba(239, 68, 68, 0.25); border: 1px solid #ef4444; color: #fca5a5; }
-        .btn-act.unblock { background: rgba(56, 189, 248, 0.25); border: 1px solid #38bdf8; color: #7dd3fc; }
+        .btn-act.view-proof { background: rgba(56, 189, 248, 0.2); border: 1px solid #38bdf8; color: #7dd3fc; }
 
         /* ALL POPUP OVERLAY MODALS */
-        #proofImagesModal, #boostApprovalModal, #balanceAdjustModal {
+        #proofImagesModal, #boostApprovalModal, #balanceAdjustModal, #typingTextModal, #customDialogModal, #boostPayoutModal {
             position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); z-index: 3000;
-            display: none !important; align-items: center; justify-content: center; padding: 14px; backdrop-filter: blur(5px);
+            display: none !important; align-items: center; justify-content: center; padding: 14px; backdrop-filter: blur(6px);
         }
-        #proofImagesModal.active, #boostApprovalModal.active, #balanceAdjustModal.active {
+        #proofImagesModal.active, #boostApprovalModal.active, #balanceAdjustModal.active, #typingTextModal.active, #customDialogModal.active, #boostPayoutModal.active {
             display: flex !important;
         }
 
-        .proof-modal-content {
-            background: #0d1a38; border: 1.5px solid #8b5cf6; border-radius: 20px; width: 100%;
-            max-width: 400px; padding: 16px; max-height: 85vh; overflow-y: auto; text-align: center;
+        .proof-modal-content, .typing-modal-content {
+            background: #0d1a38; border: 1.5px solid #38bdf8; border-radius: 20px; width: 100%;
+            max-width: 420px; padding: 18px 16px; max-height: 85vh; overflow-y: auto; text-align: left;
         }
         .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 8px; margin: 12px 0; }
         .proof-box { background: #070e22; border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; height: 110px; }
@@ -226,6 +223,26 @@
             padding: 20px 18px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6); animation: zoomIn 0.22s ease-out;
         }
         @keyframes zoomIn { from { transform: scale(0.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* 🌟 আধুনিক ইউনিভার্সাল ডায়ালগ ও কনফার্মেশন মডাল */
+        .custom-dialog-card {
+            background: #0d1a38; border: 1.5px solid #38bdf8; border-radius: 24px; width: 100%; max-width: 330px;
+            padding: 24px 20px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7); animation: zoomIn 0.22s ease-out;
+        }
+        .custom-dialog-icon {
+            width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 26px; margin: 0 auto 14px;
+        }
+        .custom-dialog-icon.info { background: rgba(2, 132, 199, 0.2); border: 2px solid #38bdf8; color: #38bdf8; }
+        .custom-dialog-icon.success { background: rgba(16, 185, 129, 0.2); border: 2px solid #10b981; color: #34d399; }
+        .custom-dialog-icon.danger { background: rgba(239, 68, 68, 0.2); border: 2px solid #ef4444; color: #f87171; }
+        .custom-dialog-icon.warning { background: rgba(245, 158, 11, 0.2); border: 2px solid #f59e0b; color: #fbbf24; }
+        .custom-dialog-card h3 { font-size: 16px; font-weight: 850; color: #ffffff; margin-bottom: 6px; }
+        .custom-dialog-card p { font-size: 12px; color: #94a3b8; line-height: 1.45; margin-bottom: 18px; }
+        .custom-dialog-actions { display: flex; gap: 8px; }
+        .btn-dialog-cancel { flex: 1; padding: 10px; border-radius: 12px; border: 1px solid var(--card-border); background: #070e22; color: #94a3b8; font-size: 12px; font-weight: 800; cursor: pointer; }
+        .btn-dialog-confirm { flex: 1; padding: 10px; border-radius: 12px; border: none; background: linear-gradient(135deg, #0284c7, #0265dc); color: #fff; font-size: 12px; font-weight: 800; cursor: pointer; }
+        .btn-dialog-confirm.danger { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
         /* Toast */
         .toast {
@@ -320,6 +337,15 @@
                 <div class="mod-meta"><h4>Withdrawals</h4><p>Pending, Paid & Refunded</p></div>
             </div>
 
+            <!-- টাইপিং টাস্ক মডিউল -->
+            <div class="module-card" onclick="openModuleModal('typingReviewModal')" style="border-color:#38bdf8;">
+                <div class="mod-top">
+                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #0284c7, #0891b2);"><i class="fa-solid fa-keyboard"></i></div>
+                    <span class="pending-pill" id="modPendingTypingPill" style="display:none;">0</span>
+                </div>
+                <div class="mod-meta"><h4>Typing Tasks</h4><p>Paragraph Review & Approve</p></div>
+            </div>
+
             <div class="module-card" onclick="openModuleModal('boostModal')">
                 <div class="mod-top">
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-rocket"></i></div>
@@ -349,15 +375,7 @@
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #8b5cf6, #7c3aed);"><i class="fa-solid fa-clipboard-check"></i></div>
                     <span class="pending-pill" id="modPendingProofsPill" style="display:none;">0</span>
                 </div>
-                <div class="mod-meta"><h4>Task Proofs</h4><p>Pending, Completed & Rejected</p></div>
-            </div>
-
-            <div class="module-card" onclick="openModuleModal('referralModal')">
-                <div class="mod-top">
-                    <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #10b981, #047857);"><i class="fa-solid fa-bullhorn"></i></div>
-                    <i class="fa-solid fa-chevron-right mod-arrow"></i>
-                </div>
-                <div class="mod-meta"><h4>Referral Hub</h4><p>Track Refers, Income & Dates</p></div>
+                <div class="mod-meta"><h4>Video Proofs</h4><p>Screenshots Verify & Pay</p></div>
             </div>
 
             <div class="module-card" onclick="openModuleModal('settingsModal')">
@@ -396,6 +414,72 @@
     </div>
 
     <!-- ==================== SUB-PAGE MODALS ==================== -->
+
+    <!-- MODAL: TYPING TASKS REVIEW -->
+    <div class="admin-modal-screen" id="typingReviewModal">
+        <div class="modal-top-bar">
+            <button class="modal-back-btn" onclick="closeModuleModal('typingReviewModal')"><i class="fa-solid fa-arrow-left"></i></button>
+            <div class="modal-header-titles">
+                <h3>Typing Task Submissions</h3>
+                <p>Read full text, Approve or Reject & Auto-Refund</p>
+            </div>
+        </div>
+        <div class="modal-scroll-body">
+            <div class="tab-filter-strip">
+                <button class="tab-filter-btn active" id="typingTabPending" onclick="setTypingFilter('pending')"><i class="fa-solid fa-clock"></i> Pending <span class="count-badge" id="typingBadgePending">0</span></button>
+                <button class="tab-filter-btn" id="typingTabSuccess" onclick="setTypingFilter('success')"><i class="fa-solid fa-check-circle"></i> Approved <span class="count-badge" id="typingBadgeSuccess">0</span></button>
+                <button class="tab-filter-btn" id="typingTabRejected" onclick="setTypingFilter('rejected')"><i class="fa-solid fa-circle-xmark"></i> Rejected <span class="count-badge" id="typingBadgeRejected">0</span></button>
+                <button class="tab-filter-btn" id="typingTabAll" onclick="setTypingFilter('all')"><i class="fa-solid fa-list"></i> All <span class="count-badge" id="typingBadgeAll">0</span></button>
+            </div>
+
+            <div class="box-card">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User UID</th>
+                                <th>Topic & Language</th>
+                                <th>Words</th>
+                                <th>Reward (প্রফিট)</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="typingSubmissionsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP: FULL TYPING TEXT VIEWER -->
+    <div id="typingTextModal">
+        <div class="typing-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--card-border); padding-bottom:8px; margin-bottom:10px;">
+                <h4 style="font-size:14px; font-weight:850; color:#38bdf8;" id="ttmModalHeader">User Paragraph Review</h4>
+                <button onclick="closeTypingTextModal()" style="background:none; border:none; color:#f87171; font-size:18px; cursor:pointer;">&times;</button>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:8px;">
+                <span style="color:#94a3b8;">User: <strong id="ttmUserUID" style="color:#fff; font-family:monospace;">#000000</strong></span>
+                <span style="color:#94a3b8;">Language: <strong id="ttmLang" style="color:#10b981;">English</strong></span>
+            </div>
+            <div style="font-size:11px; margin-bottom:10px; color:#facc15;">
+                Topic: <strong id="ttmTopic">General Topic</strong>
+            </div>
+
+            <div style="background:#070e22; border:1.5px solid var(--card-border); border-radius:12px; padding:12px; max-height:260px; overflow-y:auto; font-size:11.5px; line-height:1.5; color:#f8fafc; white-space:pre-wrap; word-break:break-word;" id="ttmFullContent">
+                Loading text...
+            </div>
+
+            <div style="display:flex; justify-content:space-between; font-size:11px; margin:10px 0;">
+                <span style="color:#94a3b8;">Total Words: <strong id="ttmWordCount" style="color:#38bdf8;">0 Words</strong></span>
+                <span style="color:#94a3b8;">Reward: <strong id="ttmReward" style="color:#10b981;">৳0</strong></span>
+            </div>
+
+            <div id="ttmActionButtons" style="display:flex; gap:8px; margin-top:8px;"></div>
+        </div>
+    </div>
 
     <!-- MODAL: BOOST CAMPAIGNS -->
     <div class="admin-modal-screen" id="boostModal">
@@ -458,7 +542,7 @@
     <div class="admin-modal-screen" id="usersModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('usersModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Users Management</h3><p>Password, Adjust USD/BDT Balance & Block User</p></div>
+            <div class="modal-header-titles"><h3>Users Management</h3><p>Live USD/BDT Balance, Block User</p></div>
         </div>
         <div class="modal-scroll-body">
             <div class="box-card">
@@ -585,11 +669,11 @@
         </div>
     </div>
 
-    <!-- MODAL: TASK PROOFS -->
+    <!-- MODAL: TASK PROOFS (VIDEO SCREENSHOTS) -->
     <div class="admin-modal-screen" id="proofsModal">
         <div class="modal-top-bar">
             <button class="modal-back-btn" onclick="closeModuleModal('proofsModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Task Submissions</h3><p>Filter by Status & Verify Screenshots</p></div>
+            <div class="modal-header-titles"><h3>Video Task Proofs</h3><p>Filter by Status & Verify Screenshots</p></div>
         </div>
         <div class="modal-scroll-body">
             <div class="tab-filter-strip">
@@ -604,43 +688,6 @@
                     <table>
                         <thead><tr><th>Platform</th><th>User UID</th><th>Profile Link</th><th>Screenshots</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody id="taskProofsTableBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: REFERRAL MANAGEMENT -->
-    <div class="admin-modal-screen" id="referralModal">
-        <div class="modal-top-bar">
-            <button class="modal-back-btn" onclick="closeModuleModal('referralModal')"><i class="fa-solid fa-arrow-left"></i></button>
-            <div class="modal-header-titles"><h3>Referral Management Hub</h3><p>Track Referrers, Referrals, Incomes & Dates</p></div>
-        </div>
-        <div class="modal-scroll-body">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-                <div class="box-card" style="padding:12px; text-align:center; border-color:#10b981;">
-                    <span style="font-size:10px; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Total Referrals</span>
-                    <h3 id="statTotalRefersCount" style="font-size:18px; color:#34d399; margin-top:2px;">0</h3>
-                </div>
-                <div class="box-card" style="padding:12px; text-align:center; border-color:#f59e0b;">
-                    <span style="font-size:10px; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Total Bonus Paid</span>
-                    <h3 id="statTotalRefersMoney" style="font-size:18px; color:#facc15; margin-top:2px;">৳0</h3>
-                </div>
-            </div>
-            <div class="box-card">
-                <input type="text" id="referSearchInput" class="admin-input" placeholder="Search by Referrer UID or Referred Member..." oninput="filterReferralsTable()">
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Referrer (কার রেফার)</th>
-                                <th>Referred Member (কে খুলেছে)</th>
-                                <th>Joined Date</th>
-                                <th>Verify Status</th>
-                                <th>Bonus Earned</th>
-                            </tr>
-                        </thead>
-                        <tbody id="referralsTableBody"></tbody>
                     </table>
                 </div>
             </div>
@@ -822,7 +869,7 @@
         </div>
     </div>
 
-    <!-- ==================== USD & BDT BALANCE ADJUST MODAL ==================== -->
+    <!-- BALANCE ADJUST MODAL -->
     <div id="balanceAdjustModal">
         <div class="balance-adjust-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -846,7 +893,6 @@
             <form onsubmit="handleConfirmBalanceAdjust(event)">
                 <input type="hidden" id="adjustDocId">
                 <input type="hidden" id="adjustUserUID">
-                <input type="hidden" id="adjustCurrentUSD">
                 <input type="hidden" id="adjustActionType" value="add">
 
                 <label style="font-size:10px; color:var(--text-muted); font-weight:800; display:block; margin-bottom:5px;">অ্যাকশন সিলেক্ট করুন:</label>
@@ -887,7 +933,56 @@
         </div>
     </div>
 
-    <!-- 🌟 CUSTOM BOOST APPROVAL MODAL (WITH LIVE AUTO-CALCULATION) -->
+    <!-- 🌟 আধুনিক পে-আউট মডাল (PROMPT বাদ দিয়ে) -->
+    <div id="boostPayoutModal">
+        <div class="boost-approval-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="font-size:14.5px; font-weight:850; color:#facc15;"><i class="fa-solid fa-hand-holding-dollar"></i> ক্যাম্পেইন পে-আউট ও ফি রিফান্ড</h3>
+                <button onclick="closeBoostPayoutModal()" style="background:none; border:none; color:#94a3b8; font-size:18px; cursor:pointer;">&times;</button>
+            </div>
+            
+            <div style="background:#070e22; border:1px solid var(--card-border); border-radius:12px; padding:10px; margin-bottom:12px; font-size:11px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="color:#94a3b8;">ইউজার:</span> <strong id="payoutModalUid" style="color:#38bdf8; font-family:monospace;">#000000</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="color:#94a3b8;">পরিসংখ্যান:</span> <span id="payoutModalStats" style="color:#fff;">0 Likes | 0 Views</span></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:3px;"><span style="color:#94a3b8;">লাইক ইনকাম:</span> <strong id="payoutModalEarn" style="color:#10b981;">$0.00 (৳0.00)</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#94a3b8;">বুস্ট সিকিউরিটি ফি:</span> <strong id="payoutModalFee" style="color:#f59e0b;">৳100 ($0.83)</strong></div>
+            </div>
+
+            <form onsubmit="handleExecuteBoostPayout(event)">
+                <input type="hidden" id="payoutPostId">
+                <input type="hidden" id="payoutUserUid">
+                <input type="hidden" id="payoutFeeBDT">
+                <input type="hidden" id="payoutEarnUSD">
+
+                <label style="font-size:10px; color:#cbd5e1; font-weight:800; display:block; margin-bottom:4px;">মোট প্রদেয় অ্যামাউন্ট ($ USD):</label>
+                <input type="number" step="any" id="payoutFinalUsdInput" class="admin-input" required>
+
+                <div style="display:flex; gap:8px;">
+                    <button type="button" class="btn-act reject" style="flex:1; padding:10px; justify-content:center;" onclick="closeBoostPayoutModal()">বাতিল</button>
+                    <button type="submit" id="btnConfirmPayoutSubmit" class="btn-act approve" style="flex:2; padding:10px; justify-content:center; font-size:12px;">
+                        <i class="fa-solid fa-paper-plane"></i> পে-আউট কনফার্ম
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 🌟 সার্বজনীন প্রিমিয়াম ডায়ালগ মডাল (ALERT & CONFIRM বাদ দিয়ে) -->
+    <div id="customDialogModal">
+        <div class="custom-dialog-card">
+            <div class="custom-dialog-icon info" id="dialogIconBox">
+                <i class="fa-solid fa-circle-question" id="dialogIcon"></i>
+            </div>
+            <h3 id="dialogTitle">অ্যাকশন নিশ্চিত করুন</h3>
+            <p id="dialogMessage">আপনি কি এই কাজটি সম্পন্ন করতে চান?</p>
+            <div class="custom-dialog-actions" id="dialogActions">
+                <button type="button" class="btn-dialog-cancel" id="dialogBtnCancel">বাতিল</button>
+                <button type="button" class="btn-dialog-confirm" id="dialogBtnConfirm">নিশ্চিত করুন</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🌟 কাস্টম বুস্ট অনুমোদন মডাল -->
     <div id="boostApprovalModal">
         <div class="boost-approval-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -919,7 +1014,7 @@
                 </select>
 
                 <div id="customDurationBox" style="display:none;">
-                    <label style="font-size:10px; color:#f59e0b;">কাস্টম ঘণ্টা লিখুন (e.g. 15 or 36)</label>
+                    <label style="font-size:10px; color:#f59e0b;">কাস্টম ঘণ্টা লিখুন</label>
                     <input type="number" id="bApproveCustomHours" class="admin-input" placeholder="ঘণ্টা লিখুন">
                 </div>
 
@@ -934,7 +1029,7 @@
                     </div>
                 </div>
 
-                <label style="font-size:10px; color:var(--text-muted);">💬 Comments Target (Global Profiles)</label>
+                <label style="font-size:10px; color:var(--text-muted);">💬 Comments Target</label>
                 <input type="number" id="bApproveCommentsInput" class="admin-input" placeholder="e.g. 15" value="15" required>
 
                 <div style="margin-top:2px;">
@@ -942,7 +1037,6 @@
                     <input type="number" step="0.0001" id="bApproveEarningPerLikeInput" class="admin-input" placeholder="e.g. 0.005" value="0.005" required oninput="updateBoostLiveCalculation()">
                 </div>
 
-                <!-- 🌟 অটো ক্যালকুলেশন প্রিভিউ বক্স -->
                 <div id="boostLiveCalcBox" style="background:#070e22; border:1px solid #10b981; border-radius:12px; padding:10px; margin-bottom:12px; font-size:10.5px;">
                     <div id="boostCalcPreviewText"></div>
                 </div>
@@ -980,8 +1074,6 @@
         const db = firebase.firestore();
 
         const MASTER_PIN = "778899";
-
-        // টেলিগ্রাম কনফিগ
         const TELEGRAM_BOT_TOKEN = "9166237872:AAEnqeRwrUYAoKzCL_yTBZJqqYx-J_Q-bKo";
         const TELEGRAM_CHAT_ID = "@MicroTaskupdate";
         const ADMIN_BASE_URL = "https://vaiimdrakib51-cloud.github.io/com.microtask.admin/";
@@ -997,6 +1089,7 @@
         window.allWithdrawals = [];
         window.allBoostRequests = [];
         window.allTaskProofs = [];
+        window.allTypingTasks = [];
         window.allUsers = [];
         window.allPosts = [];
 
@@ -1004,16 +1097,123 @@
         let currentWithFilter = 'pending';
         let currentBoostFilter = 'pending';
         let currentProofFilter = 'pending';
+        let currentTypingFilter = 'pending';
 
         window.usersBySixDigit = {};
         window.usersByDocId = {};
 
-        // ================= 🌟 স্টেলথ (গোপন) ইউজার নোটিফিকেশন হেল্পার =================
-        // ইউজার যেন কখনো বুঝতে না পারে এডমিন প্যানেল থেকে পাঠানো হয়েছে, পুরোপুরি সিস্টেম বার্তা হিসেবে যাবে
+        // 🌟 নির্ভুল ব্যালেন্স এক্সট্রাক্ট ফাংশন (যে ফিল্ডেই ব্যালেন্স থাকুক না কেন ১০০% সঠিক বের করবে)
+        function extractUserBalanceUSD(u) {
+            if (!u) return 0;
+            if (u.balanceUSD !== undefined && u.balanceUSD !== null && !isNaN(Number(u.balanceUSD))) {
+                return Number(u.balanceUSD);
+            }
+            if (u.balance !== undefined && u.balance !== null && !isNaN(Number(u.balance))) {
+                return Number(u.balance);
+            }
+            if (u.wallet !== undefined && u.wallet !== null && !isNaN(Number(u.wallet))) {
+                return Number(u.wallet);
+            }
+            if (u.balanceBDT !== undefined && u.balanceBDT !== null && !isNaN(Number(u.balanceBDT))) {
+                return Number(u.balanceBDT) / (currentUsdBdtRate || 120);
+            }
+            return 0;
+        }
+
+        // 🌟 সার্বজনীন ইউজার ডকুমেন্ট সমাধানকারী
+        async function resolveUserDocRef(rawUid) {
+            if (!rawUid) return null;
+            const str = String(rawUid).trim();
+            try {
+                const docSnap = await db.collection("users").doc(str).get();
+                if (docSnap.exists) return docSnap.ref;
+
+                if (window.usersBySixDigit[str] && window.usersBySixDigit[str].docId) {
+                    return db.collection("users").doc(window.usersBySixDigit[str].docId);
+                }
+
+                const qStr = await db.collection("users").where("uid", "==", str).limit(1).get();
+                if (!qStr.empty) return qStr.docs[0].ref;
+
+                if (!isNaN(str)) {
+                    const qNum = await db.collection("users").where("uid", "==", Number(str)).limit(1).get();
+                    if (!qNum.empty) return qNum.docs[0].ref;
+                }
+            } catch (e) {
+                console.error("resolveUserDocRef error:", e);
+            }
+            return null;
+        }
+
+        // ================= 🌟 আধুনিক ডায়ালগ ও কনফার্মেশন সিস্টেম (NO BROWSER POPUPS) =================
+        function customAlert({ title = "বিজ্ঞপ্তি", message = "", type = "info", btnText = "ঠিক আছে" }) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('customDialogModal');
+                const iconBox = document.getElementById('dialogIconBox');
+                const icon = document.getElementById('dialogIcon');
+                
+                document.getElementById('dialogTitle').innerText = title;
+                document.getElementById('dialogMessage').innerText = message;
+                
+                iconBox.className = `custom-dialog-icon ${type}`;
+                if (type === 'success') icon.className = "fa-solid fa-circle-check";
+                else if (type === 'danger') icon.className = "fa-solid fa-circle-exclamation";
+                else if (type === 'warning') icon.className = "fa-solid fa-triangle-exclamation";
+                else icon.className = "fa-solid fa-circle-info";
+
+                const btnCancel = document.getElementById('dialogBtnCancel');
+                const btnConfirm = document.getElementById('dialogBtnConfirm');
+                btnCancel.style.display = 'none';
+                btnConfirm.className = "btn-dialog-confirm";
+                btnConfirm.innerText = btnText;
+
+                btnConfirm.onclick = () => {
+                    modal.classList.remove('active');
+                    resolve(true);
+                };
+
+                modal.classList.add('active');
+            });
+        }
+
+        function customConfirm({ title = "নিশ্চিত করুন", message = "", confirmText = "নিশ্চিত করুন", cancelText = "বাতিল", isDanger = false, type = "warning" }) {
+            return new Promise((resolve) => {
+                const modal = document.getElementById('customDialogModal');
+                const iconBox = document.getElementById('dialogIconBox');
+                const icon = document.getElementById('dialogIcon');
+                
+                document.getElementById('dialogTitle').innerText = title;
+                document.getElementById('dialogMessage').innerText = message;
+                
+                iconBox.className = `custom-dialog-icon ${isDanger ? 'danger' : type}`;
+                icon.className = isDanger ? "fa-solid fa-triangle-exclamation" : "fa-solid fa-circle-question";
+
+                const btnCancel = document.getElementById('dialogBtnCancel');
+                const btnConfirm = document.getElementById('dialogBtnConfirm');
+                btnCancel.style.display = 'block';
+                btnCancel.innerText = cancelText;
+
+                btnConfirm.className = isDanger ? "btn-dialog-confirm danger" : "btn-dialog-confirm";
+                btnConfirm.innerText = confirmText;
+
+                btnConfirm.onclick = () => {
+                    modal.classList.remove('active');
+                    resolve(true);
+                };
+
+                btnCancel.onclick = () => {
+                    modal.classList.remove('active');
+                    resolve(false);
+                };
+
+                modal.classList.add('active');
+            });
+        }
+
         async function sendUserSystemNotification(targetUid, title, message, category = "system", actionUrl = "") {
             if (!targetUid || targetUid === "000000") return;
             try {
-                const notifDoc = {
+                await db.collection("notifications").add({
                     targetUid: String(targetUid).trim(),
                     userId: String(targetUid).trim(),
                     title: title,
@@ -1022,8 +1222,7 @@
                     actionUrl: actionUrl,
                     read: false,
                     createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-                await db.collection("notifications").add(notifDoc);
+                });
             } catch (e) {
                 console.error("System notification error:", e);
             }
@@ -1093,7 +1292,7 @@
             if (modal) modal.classList.remove('active');
         }
 
-        function handleAdminLogin(e) {
+        async function handleAdminLogin(e) {
             e.preventDefault();
             const pin = document.getElementById('adminPinInput').value.trim();
             if (pin === MASTER_PIN) {
@@ -1103,7 +1302,7 @@
                 showToast("লগইন সফল হয়েছে!", "success");
                 initAdminSync();
             } else {
-                alert("ভুল পিন! আবার চেষ্টা করুন।");
+                await customAlert({ title: "ভুল পিন", message: "প্রদত্ত এডমিন পিনটি ভুল। সঠিক পিন দিয়ে চেষ্টা করুন।", type: "danger" });
             }
         }
 
@@ -1159,63 +1358,18 @@
             renderProofTable();
         }
 
-        // ================= 🌟 লাইভ পোস্টের নিখুঁত রিয়েল-টাইম প্রগ্রেস ও বাকি সময় বের করা =================
-        // ইউজার প্যানেল যেভাবে রিয়েল-টাইমে হিসাব করে, এডমিন প্যানেলেও হুবহু একই হিসাব হবে আপনি বাইরে থাকলেও
-        function calculateRealTimePostProgress(p) {
-            const now = Date.now();
-            const startedAt = Number(p.boostStartedAt) || 0;
-            const expiresAt = Number(p.boostExpiresAt) || 0;
-            const likesTarget = Number(p.initialLikesTarget) || 0;
-            const viewsTarget = Number(p.initialViewsTarget) || 0;
-            const commentsTarget = Number(p.initialCommentsTarget) || 0;
-            const ratePerLike = Number(p.earningPerLikeUSD) || 0;
-
-            let curLikes = Number(p.likesCount) || 0;
-            let curViews = Number(p.viewsCount) || 0;
-            let curComments = (p.comments || []).length;
-            let remainingText = '';
-
-            if (p.boostStatus === 'active' && startedAt && expiresAt) {
-                if (now >= expiresAt) {
-                    curLikes = likesTarget > 0 ? likesTarget : curLikes;
-                    curViews = viewsTarget > 0 ? viewsTarget : curViews;
-                    curComments = commentsTarget > 0 ? commentsTarget : curComments;
-                    remainingText = '<span style="color:#10b981; font-weight:800;">✓ Completed</span>';
-                } else {
-                    const elapsed = now - startedAt;
-                    const totalDuration = Math.max(1, expiresAt - startedAt);
-                    const progressRatio = Math.min(1, elapsed / totalDuration);
-
-                    curLikes = Math.max(curLikes, Math.floor(progressRatio * likesTarget));
-                    curViews = Math.max(curViews, Math.floor(progressRatio * viewsTarget));
-                    curComments = Math.max(curComments, Math.floor(progressRatio * commentsTarget));
-
-                    // বাকি সময় নিখুঁতভাবে সেকেন্ডসহ বের করা
-                    const totalSecs = Math.max(0, Math.floor((expiresAt - now) / 1000));
-                    const days = Math.floor(totalSecs / 86400);
-                    const hours = Math.floor((totalSecs % 86400) / 3600);
-                    const mins = Math.floor((totalSecs % 3600) / 60);
-                    const secs = totalSecs % 60;
-
-                    let tStr = '';
-                    if (days > 0) tStr += `${days}d `;
-                    tStr += `${String(hours).padStart(2, '0')}h : ${String(mins).padStart(2, '0')}m : ${String(secs).padStart(2, '0')}s`;
-                    remainingText = `<span style="color:#f59e0b; font-weight:800; font-family:monospace; font-size:10px;">⏳ ${tStr}</span>`;
-                }
-            } else if (p.boostStatus === 'completed') {
-                remainingText = '<span style="color:#10b981; font-weight:800;">✓ Completed</span>';
-            } else {
-                remainingText = '<span style="color:#94a3b8;">Inactive</span>';
-            }
-
-            const liveEarnedUSD = parseFloat((curLikes * ratePerLike).toFixed(4));
-            return { curLikes, curViews, curComments, liveEarnedUSD, remainingText };
+        function setTypingFilter(filter) {
+            currentTypingFilter = filter;
+            document.querySelectorAll('#typingReviewModal .tab-filter-btn').forEach(b => b.classList.remove('active'));
+            const map = { pending: 'typingTabPending', success: 'typingTabSuccess', rejected: 'typingTabRejected', all: 'typingTabAll' };
+            if (map[filter]) document.getElementById(map[filter]).classList.add('active');
+            renderTypingTable();
         }
 
-        // ================= ফায়ারবেস হাই-স্পিড অপ্টিমাইজড সিঙ্ক =================
+        // ================= 🌟 ফায়ারবেস হাই-স্পিড লাইভ সিঙ্ক (রিয়েলটাইম ব্যালেন্স ফিক্সড) =================
         function initAdminSync() {
 
-            // ১. গেটওয়ে ও রেট সিঙ্ক
+            // ১. গেটওয়ে ও রেট
             db.collection("settings").doc("gateways").onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
@@ -1229,7 +1383,7 @@
                 }
             });
 
-            // ২. ইউজার্স সিঙ্ক
+            // ২. ইউজার্স লাইভ সিঙ্ক (যেকোনো ভেরিফাই/টাস্ক কাটলেই তৎক্ষণাৎ আপডেট হবে)
             db.collection("users").onSnapshot(snap => {
                 let totalBal = 0;
                 window.usersBySixDigit = {};
@@ -1239,45 +1393,55 @@
                 const fragment = document.createDocumentFragment();
 
                 snap.forEach(doc => {
-                    const u = doc.data();
-                    const sixDigit = String(u.uid || '').trim();
-                    const userData = { docId: doc.id, ...u };
-                    window.allUsers.push(userData);
+                    try {
+                        const u = doc.data();
+                        const sixDigit = String(u.uid || '').trim();
+                        const userData = { docId: doc.id, ...u };
+                        window.allUsers.push(userData);
 
-                    if (sixDigit) window.usersBySixDigit[sixDigit] = userData;
-                    window.usersByDocId[doc.id] = u;
-                    const balUSD = Number(u.balanceUSD || 0);
-                    const balBDT = (balUSD * currentUsdBdtRate).toFixed(2);
-                    totalBal += balUSD;
+                        if (sixDigit) window.usersBySixDigit[sixDigit] = userData;
+                        window.usersByDocId[doc.id] = u;
 
-                    const userEmail = u.email || 'N/A';
-                    const userPass = u.password || u.pass || u.userPassword || 'N/A';
-                    const isBlocked = !!u.isBlocked;
+                        // লাইভ ব্যালেন্স
+                        const balUSD = extractUserBalanceUSD(u);
+                        const balBDT = (balUSD * currentUsdBdtRate).toFixed(2);
+                        totalBal += balUSD;
 
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${sixDigit || '000000'}</strong></td>
-                        <td>${u.name || 'User'}</td>
-                        <td><span style="color:#38bdf8; font-size:10px;">${userEmail}</span></td>
-                        <td><span style="font-family:monospace; color:#facc15; font-size:11px; background:rgba(0,0,0,0.4); padding:3px 7px; border-radius:5px; border:1px solid rgba(250, 204, 21, 0.2);">${userPass}</span></td>
-                        <td>
-                            <strong style="color:var(--accent);">$ ${balUSD.toFixed(2)}</strong>
-                            <div style="font-size:9.5px; color:#38bdf8;">≈ ৳${balBDT}</div>
-                        </td>
-                        <td><span class="status-badge ${isBlocked ? 'blocked' : 'active'}">${isBlocked ? 'Blocked' : 'Active'}</span></td>
-                        <td><span class="status-badge ${u.isVerified ? 'completed' : 'rejected'}">${u.isVerified ? 'Yes' : 'No'}</span></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn-act approve" onclick="openBalanceAdjustModal('${doc.id}', '${sixDigit}', '${u.name || 'User'}', ${balUSD}, 'add')" title="ব্যালেন্স যোগ করুন"><i class="fa-solid fa-plus"></i> Add</button>
-                                <button class="btn-act reject" onclick="openBalanceAdjustModal('${doc.id}', '${sixDigit}', '${u.name || 'User'}', ${balUSD}, 'deduct')" title="ব্যালেন্স কেটে নিন"><i class="fa-solid fa-minus"></i> Cut</button>
-                                <button class="btn-act ${isBlocked ? 'unblock' : 'block'}" onclick="toggleBlockUser('${doc.id}', ${isBlocked}, '${sixDigit}')" title="${isBlocked ? 'Unblock' : 'Block User'}">
-                                    <i class="fa-solid ${isBlocked ? 'fa-unlock' : 'fa-ban'}"></i> ${isBlocked ? 'Unblock' : 'Block'}
-                                </button>
-                                <button class="btn-act approve" onclick="toggleVerify('${doc.id}', ${u.isVerified})" title="ভেরিফিকেশন"><i class="fa-solid fa-shield"></i></button>
-                            </div>
-                        </td>
-                    `;
-                    fragment.appendChild(tr);
+                        const userEmail = u.email || 'N/A';
+                        const userPass = u.password || u.pass || u.userPassword || 'N/A';
+                        const isBlocked = !!u.isBlocked;
+
+                        const tr = document.createElement('tr');
+                        tr.setAttribute('data-docid', doc.id);
+                        tr.setAttribute('data-uid', sixDigit);
+
+                        tr.innerHTML = `
+                            <td><strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${sixDigit || '000000'}</strong></td>
+                            <td class="col-name"></td>
+                            <td><span style="color:#38bdf8; font-size:10px;">${userEmail}</span></td>
+                            <td><span style="font-family:monospace; color:#facc15; font-size:11px; background:rgba(0,0,0,0.4); padding:3px 7px; border-radius:5px; border:1px solid rgba(250, 204, 21, 0.2);">${userPass}</span></td>
+                            <td>
+                                <strong style="color:var(--accent); font-size:12px;">$ ${balUSD.toFixed(2)}</strong>
+                                <div style="font-size:9.5px; color:#38bdf8;">≈ ৳${balBDT}</div>
+                            </td>
+                            <td><span class="status-badge ${isBlocked ? 'blocked' : 'active'}">${isBlocked ? 'Blocked' : 'Active'}</span></td>
+                            <td><span class="status-badge ${u.isVerified ? 'completed' : 'rejected'}">${u.isVerified ? 'Yes' : 'No'}</span></td>
+                            <td>
+                                <div class="action-btns">
+                                    <button class="btn-act approve" onclick="openBalanceAdjustModalById('${doc.id}', 'add')" title="ব্যালেন্স যোগ করুন"><i class="fa-solid fa-plus"></i> Add</button>
+                                    <button class="btn-act reject" onclick="openBalanceAdjustModalById('${doc.id}', 'deduct')" title="ব্যালেন্স কেটে নিন"><i class="fa-solid fa-minus"></i> Cut</button>
+                                    <button class="btn-act ${isBlocked ? 'unblock' : 'block'}" onclick="toggleBlockUserById('${doc.id}')" title="${isBlocked ? 'Unblock' : 'Block User'}">
+                                        <i class="fa-solid ${isBlocked ? 'fa-unlock' : 'fa-ban'}"></i> ${isBlocked ? 'Unblock' : 'Block'}
+                                    </button>
+                                    <button class="btn-act approve" onclick="toggleVerifyById('${doc.id}')" title="ভেরিফিকেশন"><i class="fa-solid fa-shield"></i></button>
+                                </div>
+                            </td>
+                        `;
+                        tr.querySelector('.col-name').textContent = u.name || 'User';
+                        fragment.appendChild(tr);
+                    } catch (rowErr) {
+                        console.error("User row error:", rowErr);
+                    }
                 });
 
                 tbody.innerHTML = '';
@@ -1286,11 +1450,14 @@
                 document.getElementById('statTotalUsers').innerText = snap.size;
                 document.getElementById('statTotalBalance').innerText = `$ ${totalBal.toFixed(2)}`;
 
-                renderReferralManagement();
-                renderBoostTable();
-            });
+                if (document.getElementById('userSearchInput').value.trim()) {
+                    filterUsersTable();
+                }
 
-            // ৩. ডিপোজিট ও উইথড্রল সিঙ্ক
+                renderBoostTable();
+            }, err => console.error("Users live snapshot error:", err));
+
+            // ৩. ডিপোজিট ও উইথড্র
             db.collection("deposits").orderBy("createdAt", "desc").limit(60).onSnapshot(snap => {
                 window.allDeposits = [];
                 let pendingCount = 0, successCount = 0, rejectedCount = 0;
@@ -1335,7 +1502,38 @@
                 renderWithdrawalsTable();
             });
 
-            // ৪. বুস্ট রিকোয়েস্ট সিঙ্ক
+            // ৪. টাইপিং সাবমিশন সিঙ্ক
+            db.collection("task_history").orderBy("createdAt", "desc").limit(100).onSnapshot(snap => {
+                window.allTypingTasks = [];
+                let pendingCount = 0, successCount = 0, rejectedCount = 0;
+
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.taskType === 'typing_task' || data.category === 'typing') {
+                        const item = { id: doc.id, ...data };
+                        window.allTypingTasks.push(item);
+
+                        if (item.status === 'pending') pendingCount++;
+                        else if (item.status === 'success' || item.status === 'completed') successCount++;
+                        else if (item.status === 'rejected') rejectedCount++;
+                    }
+                });
+
+                document.getElementById('typingBadgePending').innerText = pendingCount;
+                document.getElementById('typingBadgeSuccess').innerText = successCount;
+                document.getElementById('typingBadgeRejected').innerText = rejectedCount;
+                document.getElementById('typingBadgeAll').innerText = window.allTypingTasks.length;
+
+                const pill = document.getElementById('modPendingTypingPill');
+                if (pill) {
+                    pill.innerText = pendingCount;
+                    pill.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+                }
+
+                renderTypingTable();
+            });
+
+            // ৫. বুস্ট রিকোয়েস্ট সিঙ্ক
             db.collection("boost_requests").orderBy("createdAt", "desc").limit(60).onSnapshot(snap => {
                 window.allBoostRequests = [];
                 let pendingCount = 0, completedCount = 0, rejectedCount = 0;
@@ -1360,16 +1558,7 @@
                 renderBoostTable();
             });
 
-            // ৫. লাইভ পোস্ট ম্যানেজার সিঙ্ক
-            db.collection("posts").orderBy("createdAt", "desc").limit(40).onSnapshot(snap => {
-                window.allPosts = [];
-                snap.forEach(doc => {
-                    window.allPosts.push({ id: doc.id, ...doc.data() });
-                });
-                renderLivePostsManagerTable();
-            });
-
-            // ৬. টাস্ক প্রুফ সিঙ্ক
+            // ৬. ভিডিও টাস্ক প্রুফ সিঙ্ক
             db.collection("task_submissions").orderBy("createdAt", "desc").limit(60).onSnapshot(snap => {
                 window.allTaskProofs = [];
                 let pendingCount = 0, completedCount = 0, rejectedCount = 0;
@@ -1395,7 +1584,15 @@
                 renderProofTable();
             });
 
-            // ৭. টাস্ক ও ব্যানার
+            // ৭. ব্যানার ও লাইভ পোস্ট
+            db.collection("posts").orderBy("createdAt", "desc").limit(40).onSnapshot(snap => {
+                window.allPosts = [];
+                snap.forEach(doc => {
+                    window.allPosts.push({ id: doc.id, ...doc.data() });
+                });
+                renderLivePostsManagerTable();
+            });
+
             db.collection("tasks").onSnapshot(snap => {
                 const tbody = document.getElementById('activeTasksTableBody');
                 const fragment = document.createDocumentFragment();
@@ -1442,7 +1639,6 @@
                 container.appendChild(fragment);
             });
 
-            // ৮. লাকি ড্র
             db.collection("settings").doc("lottery").onSnapshot(doc => {
                 if (doc.exists) {
                     const data = doc.data();
@@ -1487,50 +1683,51 @@
             });
         }
 
-        // 🌟 লাইভ পোস্ট ম্যানেজার টেবিল রেন্ডার (ফিক্সড - বাটন নষ্ট হবে না)
-        function renderLivePostsManagerTable() {
-            const tbody = document.getElementById('adminPostsManagerTableBody');
+        // ================= 🌟 টাইপিং টাস্ক টেবিল ও হ্যান্ডলার =================
+        function renderTypingTable() {
+            const tbody = document.getElementById('typingSubmissionsTableBody');
             if (!tbody) return;
+
+            const filtered = window.allTypingTasks.filter(item => {
+                if (currentTypingFilter === 'all') return true;
+                if (currentTypingFilter === 'success') return item.status === 'success' || item.status === 'completed';
+                return item.status === currentTypingFilter;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px;">কোনো টাইপিং টাস্ক পাওয়া যায়নি (${currentTypingFilter.toUpperCase()})</td></tr>`;
+                return;
+            }
+
             const fragment = document.createDocumentFragment();
-
-            window.allPosts.forEach(p => {
-                const dashUid = getDashboardUID(p.userId);
-                const uObj = window.usersBySixDigit[dashUid] || {};
-                const uName = uObj.name || p.userName || 'User';
-
-                const live = calculateRealTimePostProgress(p);
-                const ratePerLike = Number(p.earningPerLikeUSD) || 0;
-                const feeBDT = Number(p.boostFeeBDT) || 100;
-                const feeUSD = Number(p.boostFeeUSD) || parseFloat((feeBDT / currentUsdBdtRate).toFixed(2));
-                const isRefunded = !!p.boostFeeRefunded;
+            filtered.forEach(t => {
+                const dashUid = getDashboardUID(t.uid);
+                const bdtReward = Number(t.amountBDT || t.rewardBDT || 0);
+                const isPending = t.status === 'pending';
 
                 const tr = document.createElement('tr');
-                tr.id = `post-row-${p.id}`;
                 tr.innerHTML = `
+                    <td><strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong></td>
                     <td>
-                        <strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong>
-                        <div style="font-size:10px; color:#cbd5e1; font-weight:600; margin-top:2px;">${uName}</div>
+                        <strong style="color:#fff; font-size:11px;">${t.topic || 'General Topic'}</strong>
+                        <div style="font-size:9.5px; color:#38bdf8;"><i class="fa-solid fa-language"></i> ${t.language || 'English'}</div>
                     </td>
-                    <td>
-                        <strong style="color:#f59e0b; font-size:11.5px;">৳${feeBDT}</strong>
-                        <div style="font-size:9.5px; color:#94a3b8;">($${feeUSD.toFixed(2)})</div>
-                    </td>
-                    <td id="post-stats-${p.id}"><span style="color:#f59e0b;">👍 ${live.curLikes}</span> | <span style="color:#38bdf8;">👁️ ${live.curViews}</span> | <span style="color:#10b981;">💬 ${live.curComments}</span></td>
-                    <td id="post-time-${p.id}">${live.remainingText}</td>
-                    <td>
-                        <span class="status-badge ${p.boostStatus || 'none'}">${p.boostStatus || 'none'}</span>
-                        <div style="color:#34d399; font-weight:800; font-size:9.5px; margin-top:2px;">${ratePerLike > 0 ? '$'+ratePerLike.toFixed(4)+'/Like' : '-'}</div>
-                    </td>
-                    <td id="post-earn-${p.id}">
-                        <strong style="color:#10b981;">$${live.liveEarnedUSD.toFixed(3)}</strong>
-                        ${isRefunded ? '<div style="font-size:9px; color:#34d399; font-weight:700;">✓ Fee Refunded</div>' : ''}
-                    </td>
+                    <td><span style="color:#facc15; font-weight:700;">${t.wordCount || 0} / ${t.targetWords || 0}</span></td>
+                    <td><strong style="color:#34d399; font-size:12px;">৳${bdtReward}</strong></td>
+                    <td><span class="status-badge ${t.status || 'pending'}">${t.status || 'pending'}</span></td>
                     <td>
                         <div class="action-btns">
-                            <button type="button" class="btn-act payout" title="Pay and Refund Fee" onclick="openPayoutPrompt('${p.id}', '${dashUid}', ${live.curLikes}, ${live.curViews}, ${live.curComments}, ${feeBDT}, ${feeUSD}, ${live.liveEarnedUSD})">
-                                <i class="fa-solid fa-hand-holding-dollar"></i> Pay
+                            <button class="btn-act view-proof" onclick="openTypingTextModal('${t.id}')">
+                                <i class="fa-solid fa-eye"></i> View Text
                             </button>
-                            <button type="button" class="btn-act reject" title="Delete Post" onclick="deletePostByAdmin('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                            ${isPending ? `
+                                <button class="btn-act approve" onclick="approveTypingTask('${t.id}')" title="Approve & Pay">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                                <button class="btn-act reject" onclick="rejectTypingTask('${t.id}')" title="Reject & Refund">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            ` : ''}
                         </div>
                     </td>
                 `;
@@ -1541,33 +1738,446 @@
             tbody.appendChild(fragment);
         }
 
-        // 🌟 শুধু টাইমার আপডেট হবে, পুরো টেবিল ডিলিট হবে না (হ্যাং বন্ধ)
-        setInterval(() => {
-            if (!window.allPosts || window.allPosts.length === 0) return;
-            window.allPosts.forEach(p => {
-                const timeCell = document.getElementById(`post-time-${p.id}`);
-                const statsCell = document.getElementById(`post-stats-${p.id}`);
-                const earnCell = document.getElementById(`post-earn-${p.id}`);
-                
-                if (timeCell && p.boostStatus === 'active') {
-                    const live = calculateRealTimePostProgress(p);
-                    timeCell.innerHTML = live.remainingText;
-                    if (statsCell) statsCell.innerHTML = `<span style="color:#f59e0b;">👍 ${live.curLikes}</span> | <span style="color:#38bdf8;">👁️ ${live.curViews}</span> | <span style="color:#10b981;">💬 ${live.curComments}</span>`;
-                    if (earnCell) earnCell.innerHTML = `<strong style="color:#10b981;">$${live.liveEarnedUSD.toFixed(3)}</strong>`;
+        function openTypingTextModal(docId) {
+            const task = window.allTypingTasks.find(t => t.id === docId);
+            if (!task) return customAlert({ title: "ত্রুটি", message: "টাস্ক খুঁজে পাওয়া যায়নি!", type: "danger" });
+
+            const dashUid = getDashboardUID(task.uid);
+            document.getElementById('ttmUserUID').innerText = `#${dashUid}`;
+            document.getElementById('ttmLang').innerText = task.language || 'English';
+            document.getElementById('ttmTopic').innerText = task.topic || 'General Topic';
+            document.getElementById('ttmFullContent').innerText = task.submittedText || task.text || 'No text submitted';
+            document.getElementById('ttmWordCount').innerText = `${task.wordCount || 0} Words (Goal: ${task.targetWords || 0})`;
+            document.getElementById('ttmReward').innerText = `৳${task.amountBDT || task.rewardBDT || 0}`;
+
+            const actionBox = document.getElementById('ttmActionButtons');
+            if (task.status === 'pending') {
+                actionBox.innerHTML = `
+                    <button type="button" class="btn-act reject" style="flex:1; padding:9px; justify-content:center; font-size:11.5px;" onclick="rejectTypingTask('${task.id}'); closeTypingTextModal();">
+                        <i class="fa-solid fa-xmark"></i> Reject & Refund Fee
+                    </button>
+                    <button type="button" class="btn-act approve" style="flex:1; padding:9px; justify-content:center; font-size:11.5px;" onclick="approveTypingTask('${task.id}'); closeTypingTextModal();">
+                        <i class="fa-solid fa-check"></i> Approve & Credit ৳${task.amountBDT || task.rewardBDT}
+                    </button>
+                `;
+            } else {
+                actionBox.innerHTML = `
+                    <div style="width:100%; text-align:center; padding:6px; font-size:11px; color:#94a3b8;">
+                        Status: <strong style="color:#fff;" class="status-badge ${task.status}">${task.status}</strong>
+                    </div>
+                `;
+            }
+
+            document.getElementById('typingTextModal').classList.add('active');
+        }
+
+        function closeTypingTextModal() {
+            document.getElementById('typingTextModal').classList.remove('active');
+        }
+
+        // 🌟 টাইপিং টাস্ক অনুমোদন
+        async function approveTypingTask(docId) {
+            const task = window.allTypingTasks.find(t => t.id === docId);
+            if (!task) return customAlert({ title: "ত্রুটি", message: "টাস্ক খুঁজে পাওয়া যায়নি!", type: "danger" });
+
+            const dashUID = getDashboardUID(task.uid);
+            const bdtReward = Number(task.amountBDT || task.rewardBDT || 0);
+            const usdReward = Number(task.rewardUSD || (bdtReward / currentUsdBdtRate)) || parseFloat((bdtReward / currentUsdBdtRate).toFixed(4));
+
+            const confirmed = await customConfirm({
+                title: "টাইপিং কাজ অনুমোদন",
+                message: `UID #${dashUID}-এর টাইপিং কাজ অনুমোদন করে ৳${bdtReward} ($${usdReward.toFixed(2)}) অ্যাকাউন্টে যোগ করতে চান?`,
+                confirmText: "অনুমোদন করুন",
+                type: "success"
+            });
+            if (!confirmed) return;
+
+            showToast("প্রসেসিং...", "info");
+
+            try {
+                const userRef = await resolveUserDocRef(task.uid);
+                if (!userRef) throw new Error(`ইউজার #${dashUID} ডাটাবেজে পাওয়া যায়নি!`);
+
+                await userRef.update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(usdReward),
+                    todayEarnUSD: firebase.firestore.FieldValue.increment(usdReward),
+                    totalEarnUSD: firebase.firestore.FieldValue.increment(usdReward)
+                });
+
+                await db.collection("task_history").doc(docId).update({
+                    status: "success",
+                    amountUSD: usdReward,
+                    approvedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await sendUserSystemNotification(
+                    dashUID,
+                    "🎉 টাইপিং টাস্ক অনুমোদিত!",
+                    `অভিনন্দন! আপনার জমা দেওয়া টাইপিং কাজটি অনুমোদিত হয়েছে এবং আপনার অ্যাকাউন্টে ৳${bdtReward} ($${usdReward.toFixed(2)}) যোগ হয়েছে।`,
+                    "earnings",
+                    "history.html"
+                );
+
+                sendTelegramNotification(
+                    `⌨️ <b>টাইপিং টাস্ক অনুমোদিত!</b>\n\n` +
+                    `👤 <b>UID:</b> #${dashUID}\n` +
+                    `📝 <b>টপিক:</b> ${task.topic || '-'}\n` +
+                    `💵 <b>প্রফিট:</b> ৳${bdtReward} ($${usdReward.toFixed(2)})`
+                );
+
+                playBeepAlert();
+                showToast(`৳${bdtReward} যোগ হয়েছে #${dashUID}-এ!`, "success");
+            } catch (err) {
+                await customAlert({ title: "অনুমোদন ব্যর্থ", message: err.message, type: "danger" });
+            }
+        }
+
+        // 🌟 টাইপিং টাস্ক রিজেক্ট
+        async function rejectTypingTask(docId) {
+            const task = window.allTypingTasks.find(t => t.id === docId);
+            if (!task) return customAlert({ title: "ত্রুটি", message: "টাস্ক খুঁজে পাওয়া যায়নি!", type: "danger" });
+
+            const dashUID = getDashboardUID(task.uid);
+            
+            let pkgPriceBDT = 500;
+            const targetW = Number(task.targetWords) || 500;
+            if (targetW >= 5000) pkgPriceBDT = 2000;
+            else if (targetW >= 3000) pkgPriceBDT = 1500;
+            else if (targetW >= 2000) pkgPriceBDT = 1000;
+
+            const refundUSD = parseFloat((pkgPriceBDT / currentUsdBdtRate).toFixed(4));
+
+            const confirmed = await customConfirm({
+                title: "টাস্ক রিজেক্ট ও ফি রিফান্ড",
+                message: `UID #${dashUID}-এর টাইপিং কাজ রিজেক্ট করে প্যাকেজ ফি ৳${pkgPriceBDT} ($${refundUSD.toFixed(2)}) অ্যাকাউন্টে রিফান্ড ফেরত দিবেন?`,
+                confirmText: "রিজেক্ট ও রিফান্ড",
+                isDanger: true
+            });
+            if (!confirmed) return;
+
+            showToast("রিফান্ড হচ্ছে...", "info");
+
+            try {
+                const userRef = await resolveUserDocRef(task.uid);
+                if (userRef) {
+                    await userRef.update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(refundUSD)
+                    });
+                }
+
+                await db.collection("task_history").doc(docId).update({
+                    status: "rejected",
+                    rejectedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                await sendUserSystemNotification(
+                    dashUID,
+                    "❌ টাইপিং টাস্ক প্রত্যাখ্যাত ও রিফান্ড",
+                    `দুঃখিত! আপনার টাইপিং কাজটি নিয়ম না মানায় বাতিল করা হয়েছে এবং প্যাকেজ ফি ৳${pkgPriceBDT} ($${refundUSD.toFixed(2)}) মূল ব্যালেন্সে রিফান্ড করা হয়েছে।`,
+                    "earnings",
+                    "history.html"
+                );
+
+                sendTelegramNotification(
+                    `❌ <b>টাইপিং টাস্ক রিজেক্ট ও ফি রিফান্ড!</b>\n\n` +
+                    `👤 <b>UID:</b> #${dashUID}\n` +
+                    `🎁 <b>রিফান্ড:</b> ৳${pkgPriceBDT}`
+                );
+
+                playBeepAlert();
+                showToast(`টাস্ক রিজেক্ট ও ৳${pkgPriceBDT} রিফান্ড সম্পন্ন!`, "info");
+            } catch (err) {
+                await customAlert({ title: "রিজেক্ট ব্যর্থ", message: err.message, type: "danger" });
+            }
+        }
+
+        // ================= ডিপোজিট ও উইথড্রয়াল অ্যাকশন =================
+        function renderDepositsTable() {
+            const tbody = document.getElementById('depositsTableBody');
+            const filtered = window.allDeposits.filter(d => (currentDepFilter === 'all') ? true : d.status === currentDepFilter);
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px;">কোনো ডিপোজিট নেই (${currentDepFilter.toUpperCase()})</td></tr>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            filtered.forEach(d => {
+                const dashUid = getDashboardUID(d.uid);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
+                    <td><strong style="color:#38bdf8;">${(d.method || '').toUpperCase()}</strong></td>
+                    <td>৳ ${d.amountBDT || 0}</td>
+                    <td><span style="font-family:monospace; font-size:10px;">${d.trxId || '-'}</span></td>
+                    <td><span class="status-badge ${d.status}">${d.status}</span></td>
+                    <td>
+                        ${d.status === 'pending' ? `
+                            <div class="action-btns">
+                                <button class="btn-act approve" onclick="approveDeposit('${d.id}', '${d.uid}', ${d.amountBDT}, '${d.method}')"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn-act reject" onclick="rejectDeposit('${d.id}', '${d.uid}', ${d.amountBDT}, '${d.method}')"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        ` : '-'}
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+        }
+
+        function renderWithdrawalsTable() {
+            const tbody = document.getElementById('withdrawalsTableBody');
+            const filtered = window.allWithdrawals.filter(w => (currentWithFilter === 'all') ? true : w.status === currentWithFilter);
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px;">কোনো উইথড্র নেই (${currentWithFilter.toUpperCase()})</td></tr>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            filtered.forEach(w => {
+                const dashUid = getDashboardUID(w.uid);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
+                    <td><strong style="color:#38bdf8;">${(w.provider || '').toUpperCase()}</strong></td>
+                    <td><span style="font-family:monospace;">${w.accountNumber || '-'}</span></td>
+                    <td><strong style="color:var(--accent);">৳ ${w.receiveBDT || 0}</strong></td>
+                    <td><span class="status-badge ${w.status}">${w.status}</span></td>
+                    <td>
+                        ${w.status === 'pending' ? `
+                            <div class="action-btns">
+                                <button class="btn-act approve" onclick="approveWithdrawal('${w.id}', '${w.uid}', ${w.amountBDT}, '${w.provider}')"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn-act reject" onclick="rejectWithdrawal('${w.id}', '${w.uid}', ${w.amountUSD}, ${w.amountBDT}, '${w.provider}')"><i class="fa-solid fa-rotate-left"></i></button>
+                            </div>
+                        ` : '-'}
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+        }
+
+        async function approveDeposit(depId, rawUid, amountBDT, method) {
+            const dashUID = getDashboardUID(rawUid);
+            const confirmed = await customConfirm({
+                title: "ডিপোজিট অনুমোদন",
+                message: `UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট নিশ্চিত করবেন?`,
+                confirmText: "অনুমোদন",
+                type: "success"
+            });
+            if (!confirmed) return;
+
+            const usdToAdd = parseFloat((amountBDT / currentUsdBdtRate).toFixed(4));
+            
+            try {
+                const userRef = await resolveUserDocRef(rawUid);
+                if (userRef) {
+                    await userRef.update({ balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd) });
+                }
+                await db.collection("deposits").doc(depId).update({ status: "success" });
+
+                await sendUserSystemNotification(
+                    dashUID,
+                    "Deposit Confirmed",
+                    `Your deposit of ৳${amountBDT} ($${usdToAdd.toFixed(2)}) via ${(method || '').toUpperCase()} has been verified and added to your balance.`,
+                    "deposit",
+                    "history.html"
+                );
+
+                sendTelegramNotification(`✅ <b>ডিপোজিট অ্যাপ্রুভ!</b> UID: #${dashUID}, ৳${amountBDT}`);
+                playBeepAlert();
+                showToast(`৳${amountBDT} যোগ হয়েছে #${dashUID}-এ!`, "success");
+            } catch(e) {
+                await customAlert({ title: "ডিপোজিট এরর", message: e.message, type: "danger" });
+            }
+        }
+
+        async function rejectDeposit(depId, rawUid, amountBDT, method) {
+            const dashUID = getDashboardUID(rawUid);
+            const confirmed = await customConfirm({
+                title: "ডিপোজিট বাতিল",
+                message: `UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট রিকোয়েস্ট বাতিল করতে চান?`,
+                confirmText: "বাতিল করুন",
+                isDanger: true
+            });
+            if (!confirmed) return;
+
+            await db.collection("deposits").doc(depId).update({ status: "rejected" });
+
+            await sendUserSystemNotification(
+                dashUID,
+                "Deposit Failed",
+                `Deposit verification for ৳${amountBDT} (${method}) could not be validated. Please check Transaction ID.`,
+                "deposit",
+                "deposit.html"
+            );
+
+            showToast("ডিপোজিট রিজেক্ট হয়েছে।", "info");
+        }
+
+        async function approveWithdrawal(id, rawUid, amountBDT, provider) {
+            const dashUID = getDashboardUID(rawUid);
+            const confirmed = await customConfirm({
+                title: "উইথড্র সম্পন্ন নিশ্চিতকরণ",
+                message: `UID #${dashUID}-এর ৳${amountBDT} উইথড্র পরিশোধ নিশ্চিত করবেন?`,
+                confirmText: "হ্যাঁ, পরিশোধিত",
+                type: "success"
+            });
+            if (!confirmed) return;
+
+            await db.collection("withdrawals").doc(id).update({ status: "success" });
+
+            await sendUserSystemNotification(
+                dashUID,
+                "Withdrawal Processed",
+                `Your withdrawal of ৳${amountBDT} has been processed and sent to your ${(provider || '').toUpperCase()} account.`,
+                "withdrawal",
+                "history.html"
+            );
+
+            sendTelegramNotification(`✅ <b>উইথড্র পরিশোধিত!</b> UID: #${dashUID}, ৳${amountBDT}`);
+            playBeepAlert();
+            showToast("উইথড্রল সম্পন্ন হয়েছে!", "success");
+        }
+
+        async function rejectWithdrawal(id, rawUid, refundUSD, amountBDT, provider) {
+            const dashUID = getDashboardUID(rawUid);
+            const confirmed = await customConfirm({
+                title: "উইথড্র বাতিল ও রিফান্ড",
+                message: `UID #${dashUID}-এ $${refundUSD} (৳${amountBDT}) মূল ব্যালেন্সে রিফান্ড দিবেন?`,
+                confirmText: "রিফান্ড ফেরত দিন",
+                isDanger: true
+            });
+            if (!confirmed) return;
+            
+            try {
+                const userRef = await resolveUserDocRef(rawUid);
+                if (userRef) {
+                    await userRef.update({ balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0) });
+                }
+                await db.collection("withdrawals").doc(id).update({ status: "rejected" });
+
+                await sendUserSystemNotification(
+                    dashUID,
+                    "Withdrawal Cancelled & Refunded",
+                    `Your withdrawal request of ৳${amountBDT} could not be settled. Amount ($${Number(refundUSD).toFixed(2)}) has been refunded back to your wallet.`,
+                    "withdrawal",
+                    "history.html"
+                );
+
+                showToast("উইথড্র বাতিল ও রিফান্ড সম্পন্ন!", "info");
+            } catch(e) {
+                await customAlert({ title: "রিফান্ড এরর", message: e.message, type: "danger" });
+            }
+        }
+
+        // ================= ভিডিও টাস্ক প্রুফ অ্যাকশন =================
+        function renderProofTable() {
+            const tbody = document.getElementById('taskProofsTableBody');
+            const filtered = window.allTaskProofs.filter(p => (currentProofFilter === 'all') ? true : p.status === currentProofFilter);
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px;">কোনো টাস্ক প্রুফ নেই (${currentProofFilter.toUpperCase()})</td></tr>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            filtered.forEach(p => {
+                const dashUid = getDashboardUID(p.uid);
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${(p.platform || '').toUpperCase()}</strong></td>
+                    <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
+                    <td>${p.profileUrl ? `<a href="${p.profileUrl}" target="_blank" style="color:#38bdf8; text-decoration:underline; font-size:10px;">Check Link</a>` : '<span style="color:gray;">N/A</span>'}</td>
+                    <td><button class="btn-act view-proof" onclick="viewProofImages('${p.id}')"><i class="fa-solid fa-images"></i> View (${(p.proofs || []).length})</button></td>
+                    <td><span class="status-badge ${p.status}">${p.status}</span></td>
+                    <td>
+                        ${p.status === 'pending' ? `
+                            <div class="action-btns">
+                                <button class="btn-act approve" onclick="approveProof('${p.id}', '${p.uid}', ${p.rewardUSD || 0.20}, '${p.platform}')"><i class="fa-solid fa-check"></i></button>
+                                <button class="btn-act reject" onclick="rejectProof('${p.id}', '${p.uid}', '${p.platform}')"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                        ` : '-'}
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+        }
+
+        function viewProofImages(docId) {
+            db.collection("task_submissions").doc(docId).get().then(doc => {
+                if (doc.exists) {
+                    const images = doc.data().proofs || [];
+                    const container = document.getElementById('proofImagesContainer');
+                    container.innerHTML = images.map(img => `<div class="proof-box"><img src="${img}" onclick="window.open('${img}', '_blank')"></div>`).join('');
+                    document.getElementById('proofImagesModal').classList.add('active');
                 }
             });
-        }, 1000);
+        }
+        function closeProofImagesModal() { document.getElementById('proofImagesModal').classList.remove('active'); }
 
-        // ================= USD ($) ও BDT (৳) ব্যালেন্স অ্যাডজাস্টমেন্ট =================
+        async function approveProof(id, rawUid, rewardUSD, platform) {
+            const dashUID = getDashboardUID(rawUid);
+            const userRef = await resolveUserDocRef(rawUid);
+            if (userRef) {
+                await userRef.update({ 
+                    balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD),
+                    todayEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD),
+                    totalEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD)
+                });
+            }
+            await db.collection("task_submissions").doc(id).update({ status: "completed" });
+
+            await sendUserSystemNotification(
+                dashUID,
+                "Task Approved",
+                `Your ${platform.toUpperCase()} task was verified. Reward of $${Number(rewardUSD).toFixed(2)} has been credited to your balance.`,
+                "task",
+                "history.html"
+            );
+
+            playBeepAlert();
+            showToast("প্রুফ অ্যাপ্রুভ হয়েছে!", "success");
+        }
+
+        async function rejectProof(id, rawUid, platform) {
+            const dashUID = getDashboardUID(rawUid);
+            await db.collection("task_submissions").doc(id).update({ status: "rejected" });
+
+            await sendUserSystemNotification(
+                dashUID,
+                "Task Incomplete",
+                `Your submitted proof for ${platform.toUpperCase()} task did not match the instructions. Please follow rules.`,
+                "task",
+                "youtube-tasks.html"
+            );
+
+            showToast("প্রুফ রিজেক্ট করা হয়েছে।", "info");
+        }
+
+        // ================= 🌟 ইউজার ব্যালেন্স অ্যাডজাস্টমেন্ট (রিয়েলটাইম ও ক্র্যাশ-ফ্রি) =================
         let currentAdjustCurrency = 'USD';
 
-        function openBalanceAdjustModal(docId, uid, name, currentBalUSD, defaultAction = 'add') {
-            document.getElementById('adjustDocId').value = docId;
-            document.getElementById('adjustUserUID').value = uid;
-            document.getElementById('adjustCurrentUSD').value = currentBalUSD;
+        function openBalanceAdjustModalById(docId, defaultAction = 'add') {
+            const user = window.allUsers.find(x => x.docId === docId);
+            if (!user) return;
 
+            const sixDigit = String(user.uid || '000000').trim();
+            const currentBalUSD = extractUserBalanceUSD(user);
             const bdtVal = (currentBalUSD * currentUsdBdtRate).toFixed(2);
-            document.getElementById('adjustUserMeta').innerText = `#${uid} (${name})`;
+
+            document.getElementById('adjustDocId').value = docId;
+            document.getElementById('adjustUserUID').value = sixDigit;
+
+            document.getElementById('adjustUserMeta').innerText = `#${sixDigit} (${user.name || 'User'})`;
             document.getElementById('adjustCurrentBalText').innerText = `$${Number(currentBalUSD).toFixed(2)} (≈ ৳${bdtVal})`;
 
             setAdjustActionType(defaultAction);
@@ -1642,11 +2252,12 @@
             e.preventDefault();
             const docId = document.getElementById('adjustDocId').value;
             const uid = document.getElementById('adjustUserUID').value;
-            const curUSD = Number(document.getElementById('adjustCurrentUSD').value) || 0;
             const actionType = document.getElementById('adjustActionType').value;
             const rawAmount = parseFloat(document.getElementById('adjustAmountInput').value);
 
-            if (isNaN(rawAmount) || rawAmount <= 0) return alert("সঠিক অ্যামাউন্ট লিখুন!");
+            if (isNaN(rawAmount) || rawAmount <= 0) {
+                return customAlert({ title: "সঠিক অ্যামাউন্ট দিন", message: "অনুগ্রহ করে একটি বৈধ সংখ্যা প্রবেশ করান।", type: "warning" });
+            }
 
             let amountInUSD = 0;
             let amountInBDT = 0;
@@ -1663,12 +2274,17 @@
             btn.disabled = true;
 
             try {
+                const userRef = await resolveUserDocRef(uid || docId);
+                if (!userRef) throw new Error("ইউজার ডকুমেন্ট খুঁজে পাওয়া যায়নি!");
+
+                const freshDoc = await userRef.get();
+                const curBal = freshDoc.exists ? extractUserBalanceUSD(freshDoc.data()) : 0;
+
                 if (actionType === 'add') {
-                    await db.collection("users").doc(docId).update({
+                    await userRef.update({
                         balanceUSD: firebase.firestore.FieldValue.increment(amountInUSD)
                     });
                     
-                    // স্টেলথ নোটিফিকেশন ইউজারের ওয়ালেটে
                     await sendUserSystemNotification(
                         uid, 
                         "Balance Credited", 
@@ -1682,10 +2298,10 @@
                         `💵 <b>যোগ:</b> $${amountInUSD.toFixed(2)} (৳${amountInBDT})`
                     );
                     playBeepAlert();
-                    showToast(`সফল! #${uid}-এ $${amountInUSD.toFixed(2)} (৳${amountInBDT}) যোগ হয়েছে।`, "success");
+                    showToast(`সফল! #${uid}-এ $${amountInUSD.toFixed(2)} যোগ হয়েছে।`, "success");
                 } else {
-                    const finalDeduct = Math.min(curUSD, amountInUSD);
-                    await db.collection("users").doc(docId).update({
+                    const finalDeduct = Math.min(curBal, amountInUSD);
+                    await userRef.update({
                         balanceUSD: firebase.firestore.FieldValue.increment(-finalDeduct)
                     });
                     const finalDeductBDT = (finalDeduct * currentUsdBdtRate).toFixed(2);
@@ -1703,648 +2319,51 @@
                         `💵 <b>কর্তন:</b> $${finalDeduct.toFixed(2)} (৳${finalDeductBDT})`
                     );
                     playBeepAlert();
-                    showToast(`সফল! #${uid} থেকে $${finalDeduct.toFixed(2)} (৳${finalDeductBDT}) কাটা হয়েছে।`, "info");
+                    showToast(`সফল! #${uid} থেকে $${finalDeduct.toFixed(2)} কাটা হয়েছে।`, "info");
                 }
                 closeBalanceAdjustModal();
             } catch (err) {
-                alert("ব্যালেন্স আপডেট ত্রুটি: " + err.message);
+                await customAlert({ title: "ব্যালেন্স ত্রুটি", message: err.message, type: "danger" });
             } finally {
                 btn.disabled = false;
             }
         }
-// ================= ১০০% কার্যকর ব্যালেন্স যোগ ও রিফান্ড হেল্পার =================
-        async function addBalanceToUserRobust(userUID, usdToAdd, earnUsdToAdd = 0) {
-            const cleanUID = String(userUID).trim();
-            let targetDocRef = null;
-
-            if (window.usersBySixDigit[cleanUID] && window.usersBySixDigit[cleanUID].docId) {
-                targetDocRef = db.collection("users").doc(window.usersBySixDigit[cleanUID].docId);
-            }
-            if (!targetDocRef) {
-                const qStr = await db.collection("users").where("uid", "==", cleanUID).limit(1).get();
-                if (!qStr.empty) targetDocRef = qStr.docs[0].ref;
-            }
-            if (!targetDocRef && !isNaN(cleanUID)) {
-                const qNum = await db.collection("users").where("uid", "==", Number(cleanUID)).limit(1).get();
-                if (!qNum.empty) targetDocRef = qNum.docs[0].ref;
-            }
-            if (!targetDocRef) {
-                const docDirect = await db.collection("users").doc(cleanUID).get();
-                if (docDirect.exists) targetDocRef = docDirect.ref;
-            }
-
-            if (!targetDocRef) throw new Error(`ইউজার #${cleanUID} ডাটাবেজে পাওয়া যায়নি!`);
-
-            const updateData = { balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd) };
-            if (earnUsdToAdd > 0) updateData.totalEarnUSD = firebase.firestore.FieldValue.increment(earnUsdToAdd);
-            await targetDocRef.update(updateData);
-            return true;
-        }
-
-        // ================= পে (Pay) অপশনে লাইক ও ফি পে-আউট (ফিক্সড) =================
-        async function openPayoutPrompt(postId, userUID, likes, views, comments, boostFeeBDT, boostFeeUSD, earnedUSD) {
-            boostFeeBDT = Number(boostFeeBDT) || 100;
-            boostFeeUSD = Number(boostFeeUSD) || parseFloat((boostFeeBDT / currentUsdBdtRate).toFixed(4));
-            earnedUSD = Number(earnedUSD) || 0;
-            const earnedBDT = (earnedUSD * currentUsdBdtRate).toFixed(2);
-            
-            const totalCreditUSD = parseFloat((earnedUSD + boostFeeUSD).toFixed(3));
-            const totalCreditBDT = Math.round(earnedUSD * currentUsdBdtRate + boostFeeBDT);
-
-            const promptMsg = `📢 [পোস্ট পে-আউট ও বুস্ট ফি ফেরত]\n` +
-                              `-----------------------------------\n` +
-                              `👤 ইউজার UID: #${userUID}\n` +
-                              `👍 মোট লাইক: ${likes} | 👁️ ভিউ: ${views}\n` +
-                              `💵 লাইক ইনকাম: $${earnedUSD.toFixed(3)} (৳${earnedBDT})\n` +
-                              `🎁 বুস্ট ফি ফেরত: ৳${boostFeeBDT} ($${boostFeeUSD.toFixed(2)})\n` +
-                              `-----------------------------------\n` +
-                              `💰 প্রস্তাবিত মোট পে-আউট: $${totalCreditUSD} (৳${totalCreditBDT})\n\n` +
-                              `কত পে করবেন লিখুন:\n` +
-                              `• ডলারে পে করতে সরাসরি সংখ্যা দিন (যেমন: ${totalCreditUSD})\n` +
-                              `• টাকায় পে করতে সংখ্যা লিখে শেষে 'tk' দিন (যেমন: ${totalCreditBDT}tk)`;
-
-            const input = prompt(promptMsg, totalCreditUSD);
-            if (!input) return;
-
-            let finalCreditUSD = 0;
-            let finalCreditBDT = 0;
-
-            if (String(input).toLowerCase().includes('tk')) {
-                const bdtVal = parseFloat(input.toLowerCase().replace('tk', '').trim());
-                if (isNaN(bdtVal) || bdtVal <= 0) return alert("সঠিক টাকার সংখ্যা লিখুন!");
-                finalCreditBDT = bdtVal;
-                finalCreditUSD = parseFloat((bdtVal / currentUsdBdtRate).toFixed(4));
-            } else {
-                const usdVal = parseFloat(input);
-                if (isNaN(usdVal) || usdVal <= 0) return alert("সঠিক ডলার অ্যামাউন্ট লিখুন!");
-                finalCreditUSD = usdVal;
-                finalCreditBDT = Math.round(usdVal * currentUsdBdtRate);
-            }
-
-            try {
-                showToast("টাকা পাঠানো হচ্ছে...", "info");
-                // নিশ্চিতভাবে ব্যালেন্স অ্যাড
-                await addBalanceToUserRobust(userUID, finalCreditUSD, earnedUSD);
-
-                if (postId) {
-                    await db.collection("posts").doc(postId).set({
-                        payoutUSD: earnedUSD,
-                        payoutBDT: Number(earnedBDT),
-                        boostFeeRefunded: true,
-                        isPaidOut: true,
-                        boostStatus: "completed"
-                    }, { merge: true });
-                }
-
-                await sendUserSystemNotification(
-                    userUID,
-                    "Campaign Payout Settled",
-                    `Your campaign earnings of $${earnedUSD.toFixed(3)} and security fee refund of ৳${boostFeeBDT} ($${boostFeeUSD.toFixed(2)}) have been credited to your balance.`,
-                    "earnings",
-                    "history.html"
-                );
-
-                sendTelegramNotification(
-                    `💰 <b>বুস্ট ইনকাম ও ফি রিফান্ড সম্পন্ন!</b>\n\n` +
-                    `👤 <b>UID:</b> #${userUID}\n` +
-                    `💵 <b>লাইক ইনকাম:</b> $${earnedUSD.toFixed(3)}\n` +
-                    `🎁 <b>বুস্ট ফি ফেরত:</b> ৳${boostFeeBDT}\n` +
-                    `💳 <b>মোট যোগ:</b> $${finalCreditUSD.toFixed(2)} (৳${finalCreditBDT})`
-                );
-
-                playBeepAlert();
-                showToast(`সফল! #${userUID}-এ $${finalCreditUSD.toFixed(2)} যোগ হয়েছে।`, "success");
-            } catch (err) { alert("পেমেন্ট ত্রুটি: " + err.message); }
-        }
-        // ================= বুস্ট টেবিল ও অটো-ক্যালকুলেশন ফাংশন =================
-        function updateBoostLiveCalculation() {
-            const likes = parseInt(document.getElementById('bApproveLikesInput').value) || 0;
-            const rate = parseFloat(document.getElementById('bApproveEarningPerLikeInput').value) || 0;
-            const feeBDT = Number(document.getElementById('bApproveBoostFeeBDT').value) || 0;
-            const feeUSD = Number(document.getElementById('bApproveBoostFeeUSD').value) || 0;
-
-            const totalLikeUSD = parseFloat((likes * rate).toFixed(4));
-            const totalLikeBDT = parseFloat((totalLikeUSD * currentUsdBdtRate).toFixed(2));
-
-            const totalReturnUSD = parseFloat((totalLikeUSD + feeUSD).toFixed(3));
-            const totalReturnBDT = Math.round(totalLikeBDT + feeBDT);
-
-            const displayEl = document.getElementById('boostCalcPreviewText');
-            if (displayEl) {
-                displayEl.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
-                        <span style="color:#94a3b8;">👍 লাইক ইনকাম (${likes} × $${rate}):</span>
-                        <strong style="color:#10b981;">$${totalLikeUSD.toFixed(3)} (≈ ৳${totalLikeBDT})</strong>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
-                        <span style="color:#94a3b8;">🎁 মূল বুস্ট ফি রিফান্ড:</span>
-                        <strong style="color:#f59e0b;">৳${feeBDT} (≈ $${feeUSD.toFixed(2)})</strong>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--card-border); padding-top:4px; margin-top:4px;">
-                        <span style="color:#ffffff; font-weight:800;">💰 ইউজার মোট ফেরত পাবে:</span>
-                        <strong style="color:#38bdf8; font-size:11px;">$${totalReturnUSD} (≈ ৳${totalReturnBDT})</strong>
-                    </div>
-                `;
-            }
-        }
-
-        function renderBoostTable() {
-            const tbody = document.getElementById('boostTableBody');
-            const filtered = window.allBoostRequests.filter(b => (currentBoostFilter === 'all') ? true : b.status === currentBoostFilter);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">কোনো বুস্ট রিকোয়েস্ট পাওয়া যায়নি (${currentBoostFilter.toUpperCase()})</td></tr>`;
-                return;
-            }
-
-            const fragment = document.createDocumentFragment();
-            filtered.forEach(b => {
-                const dashUid = getDashboardUID(b.uid || b.userId);
-                const uObj = window.usersBySixDigit[dashUid] || {};
-                const uName = uObj.name || b.userName || 'User';
-
-                const amtBDT = Number(b.amountBDT) || parseInt(String(b.boostPackage || '').replace(/[^0-9]/g, '')) || 100;
-                const amtUSD = parseFloat((amtBDT / currentUsdBdtRate).toFixed(4));
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong>
-                        <div style="font-size:10px; color:#cbd5e1; font-weight:600; margin-top:2px;">${uName}</div>
-                    </td>
-                    <td><strong style="color:#f59e0b;">৳${amtBDT}</strong> <small style="color:#94a3b8;">($${amtUSD.toFixed(2)})</small></td>
-                    <td><div style="max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${b.content || 'Post'}</div></td>
-                    <td><span class="status-badge ${b.status}">${b.status}</span></td>
-                    <td>
-                        ${b.status === 'pending' ? `
-                            <div class="action-btns">
-                                <button class="btn-act approve" onclick="openBoostApprovalModal('${b.id}', '${b.postId}', '${dashUid}', '${b.boostPackage || amtBDT + ' Tk'}', ${amtBDT}, ${amtUSD})">
-                                    <i class="fa-solid fa-sliders"></i> Approve
-                                </button>
-                                <button class="btn-act reject" onclick="rejectBoostCampaign('${b.id}', '${b.postId}', '${dashUid}', ${amtUSD}, ${amtBDT})">
-                                    <i class="fa-solid fa-xmark"></i> Reject
-                                </button>
-                            </div>
-                        ` : '-'}
-                    </td>
-                `;
-                fragment.appendChild(tr);
-            });
-
-            tbody.innerHTML = '';
-            tbody.appendChild(fragment);
-        }
-
-        function openBoostApprovalModal(reqId, postId, userUID, boostPkg, feeBDT = 100, feeUSD = 0.83) {
-            document.getElementById('bApproveReqId').value = reqId;
-            document.getElementById('bApprovePostId').value = postId;
-            document.getElementById('bApproveUserUid').value = userUID;
-            document.getElementById('bApproveBoostPkg').value = boostPkg;
-            document.getElementById('bApproveBoostFeeBDT').value = feeBDT;
-            document.getElementById('bApproveBoostFeeUSD').value = feeUSD;
-            
-            document.getElementById('boostModalTargetUid').innerText = `Approve For: #${userUID} (প্যাকেজ ফি: ৳${feeBDT})`;
-
-            document.getElementById('bApproveDurationSelect').value = "24";
-            document.getElementById('customDurationBox').style.display = 'none';
-            document.getElementById('bApproveViewsInput').value = "500";
-            document.getElementById('bApproveLikesInput').value = "80";
-            document.getElementById('bApproveCommentsInput').value = "15";
-            document.getElementById('bApproveEarningPerLikeInput').value = "0.005";
-
-            // ওপেন হওয়ার সাথে সাথেই লাইভ হিসাব তৈরি
-            updateBoostLiveCalculation();
-
-            document.getElementById('boostApprovalModal').classList.add('active');
-        }
-
-        function closeBoostApprovalModal() {
-            document.getElementById('boostApprovalModal').classList.remove('active');
-        }
-
-        function toggleCustomDurationInput(val) {
-            document.getElementById('customDurationBox').style.display = (val === 'custom') ? 'block' : 'none';
-        }
-
-        async function handleConfirmBoostApproval(e) {
-            e.preventDefault();
-            const reqId = document.getElementById('bApproveReqId').value;
-            const postId = document.getElementById('bApprovePostId').value;
-            const userUID = document.getElementById('bApproveUserUid').value;
-            const boostPkg = document.getElementById('bApproveBoostPkg').value;
-            const feeBDT = Number(document.getElementById('bApproveBoostFeeBDT').value) || 100;
-            const feeUSD = Number(document.getElementById('bApproveBoostFeeUSD').value) || 0.83;
-
-            const durationSelect = document.getElementById('bApproveDurationSelect').value;
-            let durationHours = (durationSelect === 'custom') ? (parseFloat(document.getElementById('bApproveCustomHours').value) || 24) : (parseFloat(durationSelect) || 24);
-
-            const targetViews = parseInt(document.getElementById('bApproveViewsInput').value) || 500;
-            const targetLikes = parseInt(document.getElementById('bApproveLikesInput').value) || 80;
-            const targetComments = parseInt(document.getElementById('bApproveCommentsInput').value) || 15;
-            const earningPerLike = parseFloat(document.getElementById('bApproveEarningPerLikeInput').value) || 0.005;
-
-            const btn = document.getElementById('btnConfirmBoostStart');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Starting...`;
-
-            try {
-                const now = Date.now();
-                const boostDurationMs = durationHours * 60 * 60 * 1000;
-                const totalMinutes = durationHours * 60;
-                const daysNum = durationHours > 28 ? 2 : 1;
-
-                if (postId) {
-                    await db.collection("posts").doc(postId).set({
-                        userId: String(userUID),
-                        boostStatus: "active",
-                        boostPackage: boostPkg,
-                        boostDays: daysNum,
-                        boostFeeBDT: feeBDT,
-                        boostFeeUSD: feeUSD,
-                        boostStartedAt: now,
-                        boostExpiresAt: now + boostDurationMs,
-                        boostDurationMs: boostDurationMs,
-                        totalDurationMinutes: totalMinutes,
-                        viewsPerMinute: parseFloat((targetViews / totalMinutes).toFixed(4)),
-                        likesPerMinute: parseFloat((targetLikes / totalMinutes).toFixed(4)),
-                        commentsPerMinute: parseFloat((targetComments / totalMinutes).toFixed(4)),
-                        initialViewsTarget: targetViews,
-                        initialLikesTarget: targetLikes,
-                        initialCommentsTarget: targetComments,
-                        earningPerLikeUSD: earningPerLike,
-                        likesCount: firebase.firestore.FieldValue.increment(0),
-                        viewsCount: firebase.firestore.FieldValue.increment(0),
-                        boostFeeRefunded: false
-                    }, { merge: true });
-                }
-
-                await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
-                
-                // স্টেলথ নোটিফিকেশন ইউজারের ইনবক্সে
-                await sendUserSystemNotification(
-                    userUID, 
-                    "Campaign Started", 
-                    `Your boost campaign is started! Package: ${boostPkg}, Duration: ${daysNum} Day${daysNum > 1 ? 's' : ''}.`,
-                    "boost",
-                    "boost.html"
-                );
-
-                closeBoostApprovalModal();
-                playBeepAlert();
-                showToast(`বুস্ট সফলভাবে চালু হয়েছে! ($${earningPerLike}/Like)`, "success");
-            } catch (err) { alert("বুস্ট অনুমোদন ত্রুটি: " + err.message); }
-            finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-play"></i> Start Campaign`;
-            }
-        }
-
-        async function rejectBoostCampaign(reqId, postId, userUID, refundUSD, amountBDT) {
-            const refundAmountUSD = parseFloat(Number(refundUSD || 0).toFixed(4));
-            const refundAmountBDT = Number(amountBDT || Math.round(refundAmountUSD * currentUsdBdtRate));
-
-            if (!confirm(`UID #${userUID}-এর বুস্ট বাতিল করে ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) রিফান্ড দিতে চান?`)) return;
-
-            try {
-                showToast("রিফান্ড হচ্ছে...", "info");
-                // নিশ্চিতভাবে রিফান্ড ব্যালেন্সে পাঠানো
-                await addBalanceToUserRobust(userUID, refundAmountUSD);
-
-                await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
-                if (postId) await db.collection("posts").doc(postId).set({ boostStatus: "none" }, { merge: true }).catch(() => {});
-
-                await sendUserSystemNotification(
-                    userUID,
-                    "Campaign Notice",
-                    `Your boost request could not be launched. The fee of ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) has been returned to your wallet.`,
-                    "boost",
-                    "boost.html"
-                );
-
-                sendTelegramNotification(`❌ <b>বুস্ট রিজেক্ট ও রিফান্ড!</b>\n\n👤 UID: #${userUID}\n💵 ৳${refundAmountBDT}`);
-                playBeepAlert();
-                showToast(`বুস্ট বাতিল ও সম্পূর্ণ রিফান্ড সম্পন্ন!`, "info");
-            } catch (err) { alert("রিফান্ড এরর: " + err.message); }
-        }
-        function deletePostByAdmin(postId) {
-            if (!confirm("পোস্টটি স্থায়ীভাবে মুছে ফেলতে চান?")) return;
-            db.collection("posts").doc(postId).delete().then(() => showToast("পোস্টটি ডিলিট হয়েছে!"));
-        }
-
-        // ================= ডিপোজিট ও উইথড্রয়াল অ্যাকশন (স্টেলথ নোটিফিকেশনসহ) =================
-        function renderDepositsTable() {
-            const tbody = document.getElementById('depositsTableBody');
-            const filtered = window.allDeposits.filter(d => (currentDepFilter === 'all') ? true : d.status === currentDepFilter);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px;">কোনো ডিপোজিট নেই (${currentDepFilter.toUpperCase()})</td></tr>`;
-                return;
-            }
-
-            const fragment = document.createDocumentFragment();
-            filtered.forEach(d => {
-                const dashUid = getDashboardUID(d.uid);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
-                    <td><strong style="color:#38bdf8;">${(d.method || '').toUpperCase()}</strong></td>
-                    <td>৳ ${d.amountBDT || 0}</td>
-                    <td><span style="font-family:monospace; font-size:10px;">${d.trxId || '-'}</span></td>
-                    <td><span class="status-badge ${d.status}">${d.status}</span></td>
-                    <td>
-                        ${d.status === 'pending' ? `
-                            <div class="action-btns">
-                                <button class="btn-act approve" onclick="approveDeposit('${d.id}', '${d.uid}', ${d.amountBDT}, '${d.method}')"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn-act reject" onclick="rejectDeposit('${d.id}', '${d.uid}', ${d.amountBDT}, '${d.method}')"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                        ` : '-'}
-                    </td>
-                `;
-                fragment.appendChild(tr);
-            });
-
-            tbody.innerHTML = '';
-            tbody.appendChild(fragment);
-        }
-
-        function renderWithdrawalsTable() {
-            const tbody = document.getElementById('withdrawalsTableBody');
-            const filtered = window.allWithdrawals.filter(w => (currentWithFilter === 'all') ? true : w.status === currentWithFilter);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px;">কোনো উইথড্র নেই (${currentWithFilter.toUpperCase()})</td></tr>`;
-                return;
-            }
-
-            const fragment = document.createDocumentFragment();
-            filtered.forEach(w => {
-                const dashUid = getDashboardUID(w.uid);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
-                    <td><strong style="color:#38bdf8;">${(w.provider || '').toUpperCase()}</strong></td>
-                    <td><span style="font-family:monospace;">${w.accountNumber || '-'}</span></td>
-                    <td><strong style="color:var(--accent);">৳ ${w.receiveBDT || 0}</strong></td>
-                    <td><span class="status-badge ${w.status}">${w.status}</span></td>
-                    <td>
-                        ${w.status === 'pending' ? `
-                            <div class="action-btns">
-                                <button class="btn-act approve" onclick="approveWithdrawal('${w.id}', '${w.uid}', ${w.amountBDT}, '${w.provider}')"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn-act reject" onclick="rejectWithdrawal('${w.id}', '${w.uid}', ${w.amountUSD}, ${w.amountBDT}, '${w.provider}')"><i class="fa-solid fa-rotate-left"></i></button>
-                            </div>
-                        ` : '-'}
-                    </td>
-                `;
-                fragment.appendChild(tr);
-            });
-
-            tbody.innerHTML = '';
-            tbody.appendChild(fragment);
-        }
-
-        async function approveDeposit(depId, rawUid, amountBDT, method) {
-            const dashUID = getDashboardUID(rawUid);
-            if (!confirm(`UID #${dashUID}-এর ৳${amountBDT} ডিপোজিট নিশ্চিত করবেন?`)) return;
-            const usdToAdd = parseFloat((amountBDT / currentUsdBdtRate).toFixed(4));
-            
-            const snap = await db.collection("users").where("uid", "==", String(dashUID)).limit(1).get();
-            if (!snap.empty) {
-                await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(usdToAdd) });
-            }
-            await db.collection("deposits").doc(depId).update({ status: "success" });
-
-            // স্টেলথ ইউজার নোটিফিকেশন
-            await sendUserSystemNotification(
-                dashUID,
-                "Deposit Confirmed",
-                `Your deposit of ৳${amountBDT} ($${usdToAdd.toFixed(2)}) via ${(method || '').toUpperCase()} has been verified and added to your balance.`,
-                "deposit",
-                "history.html"
-            );
-
-            sendTelegramNotification(`✅ <b>ডিপোজিট অ্যাপ্রুভ!</b> UID: #${dashUID}, ৳${amountBDT}`);
-            playBeepAlert();
-            showToast(`৳${amountBDT} যোগ হয়েছে #${dashUID}-এ!`, "success");
-        }
-
-        async function rejectDeposit(depId, rawUid, amountBDT, method) {
-            const dashUID = getDashboardUID(rawUid);
-            if (!confirm("ডিপোজিট বাতিল করবেন?")) return;
-            await db.collection("deposits").doc(depId).update({ status: "rejected" });
-
-            // স্টেলথ ইউজার নোটিফিকেশন
-            await sendUserSystemNotification(
-                dashUID,
-                "Deposit Failed",
-                `Deposit verification for ৳${amountBDT} (${method}) could not be validated. Please check Transaction ID.`,
-                "deposit",
-                "deposit.html"
-            );
-
-            showToast("ডিপোজিট রিজেক্ট হয়েছে।", "info");
-        }
-
-        async function approveWithdrawal(id, rawUid, amountBDT, provider) {
-            const dashUID = getDashboardUID(rawUid);
-            if (!confirm("উইথড্র সম্পন্ন হয়েছে?")) return;
-            await db.collection("withdrawals").doc(id).update({ status: "success" });
-
-            // স্টেলথ ইউজার নোটিফিকেশন
-            await sendUserSystemNotification(
-                dashUID,
-                "Withdrawal Processed",
-                `Your withdrawal of ৳${amountBDT} has been processed and sent to your ${(provider || '').toUpperCase()} account.`,
-                "withdrawal",
-                "history.html"
-            );
-
-            sendTelegramNotification(`✅ <b>উইথড্র পরিশোধিত!</b> UID: #${dashUID}, ৳${amountBDT}`);
-            playBeepAlert();
-            showToast("উইথড্রল সম্পন্ন হয়েছে!", "success");
-        }
-
-        async function rejectWithdrawal(id, rawUid, refundUSD, amountBDT, provider) {
-            const dashUID = getDashboardUID(rawUid);
-            if (!confirm(`UID #${dashUID}-এ $${refundUSD} রিফান্ড দিবেন?`)) return;
-            
-            const snap = await db.collection("users").where("uid", "==", String(dashUID)).limit(1).get();
-            if (!snap.empty) {
-                await snap.docs[0].ref.update({ balanceUSD: firebase.firestore.FieldValue.increment(Number(refundUSD) || 0) });
-            }
-            await db.collection("withdrawals").doc(id).update({ status: "rejected" });
-
-            // স্টেলথ ইউজার নোটিফিকেশন
-            await sendUserSystemNotification(
-                dashUID,
-                "Withdrawal Cancelled & Refunded",
-                `Your withdrawal request of ৳${amountBDT} could not be settled. Amount ($${Number(refundUSD).toFixed(2)}) has been refunded back to your wallet.`,
-                "withdrawal",
-                "history.html"
-            );
-
-            showToast("উইথড্র বাতিল ও রিফান্ড সম্পন্ন!", "info");
-        }
-
-        // ================= টাস্ক প্রুফ অ্যাকশন =================
-        function renderProofTable() {
-            const tbody = document.getElementById('taskProofsTableBody');
-            const filtered = window.allTaskProofs.filter(p => (currentProofFilter === 'all') ? true : p.status === currentProofFilter);
-            
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#94a3b8; padding:15px;">কোনো টাস্ক প্রুফ নেই (${currentProofFilter.toUpperCase()})</td></tr>`;
-                return;
-            }
-
-            const fragment = document.createDocumentFragment();
-            filtered.forEach(p => {
-                const dashUid = getDashboardUID(p.uid);
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${(p.platform || '').toUpperCase()}</strong></td>
-                    <td><strong style="color:var(--primary); font-family:monospace;">#${dashUid}</strong></td>
-                    <td>${p.profileUrl ? `<a href="${p.profileUrl}" target="_blank" style="color:#38bdf8; text-decoration:underline; font-size:10px;">Check Link</a>` : '<span style="color:gray;">N/A</span>'}</td>
-                    <td><button class="btn-act view-proof" onclick="viewProofImages('${p.id}')"><i class="fa-solid fa-images"></i> View (${(p.proofs || []).length})</button></td>
-                    <td><span class="status-badge ${p.status}">${p.status}</span></td>
-                    <td>
-                        ${p.status === 'pending' ? `
-                            <div class="action-btns">
-                                <button class="btn-act approve" onclick="approveProof('${p.id}', '${p.uid}', ${p.rewardUSD || 0.20}, '${p.platform}')"><i class="fa-solid fa-check"></i></button>
-                                <button class="btn-act reject" onclick="rejectProof('${p.id}', '${p.uid}', '${p.platform}')"><i class="fa-solid fa-xmark"></i></button>
-                            </div>
-                        ` : '-'}
-                    </td>
-                `;
-                fragment.appendChild(tr);
-            });
-
-            tbody.innerHTML = '';
-            tbody.appendChild(fragment);
-        }
-
-        function viewProofImages(docId) {
-            db.collection("task_submissions").doc(docId).get().then(doc => {
-                if (doc.exists) {
-                    const images = doc.data().proofs || [];
-                    const container = document.getElementById('proofImagesContainer');
-                    container.innerHTML = images.map(img => `<div class="proof-box"><img src="${img}" onclick="window.open('${img}', '_blank')"></div>`).join('');
-                    document.getElementById('proofImagesModal').classList.add('active');
-                }
-            });
-        }
-        function closeProofImagesModal() { document.getElementById('proofImagesModal').classList.remove('active'); }
-
-        async function approveProof(id, rawUid, rewardUSD, platform) {
-            const dashUID = getDashboardUID(rawUid);
-            const snap = await db.collection("users").where("uid", "==", String(dashUID)).limit(1).get();
-            if (!snap.empty) {
-                await snap.docs[0].ref.update({ 
-                    balanceUSD: firebase.firestore.FieldValue.increment(rewardUSD),
-                    todayEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD),
-                    totalEarnUSD: firebase.firestore.FieldValue.increment(rewardUSD)
-                });
-            }
-            await db.collection("task_submissions").doc(id).update({ status: "completed" });
-
-            // স্টেলথ ইউজার নোটিফিকেশন
-            await sendUserSystemNotification(
-                dashUID,
-                "Task Approved",
-                `Your ${platform.toUpperCase()} task was verified. Reward of $${Number(rewardUSD).toFixed(2)} has been credited to your balance.`,
-                "task",
-                "history.html"
-            );
-
-            playBeepAlert();
-            showToast("প্রুফ অ্যাপ্রুভ হয়েছে!", "success");
-        }
-
-        async function rejectProof(id, rawUid, platform) {
-            const dashUID = getDashboardUID(rawUid);
-            await db.collection("task_submissions").doc(id).update({ status: "rejected" });
-
-            // স্টেলথ ইউজার নোটিফিকেশন
-            await sendUserSystemNotification(
-                dashUID,
-                "Task Incomplete",
-                `Your submitted proof for ${platform.toUpperCase()} task did not match the instructions. Please follow rules.`,
-                "task",
-                "youtube-tasks.html"
-            );
-
-            showToast("প্রুফ রিজেক্ট করা হয়েছে।", "info");
-        }
 
         // ================= ইউজার ব্লক / আনব্লক অ্যাকশন =================
-        async function toggleBlockUser(docId, curBlockedStatus, userUID) {
-            const actionText = curBlockedStatus ? "আনব্লক" : "ব্লক";
-            if (!confirm(`আপনি কি নিশ্চিতভাবে UID #${userUID}-কে ${actionText} করতে চান?`)) return;
+        async function toggleBlockUserById(docId) {
+            const user = window.allUsers.find(x => x.docId === docId);
+            if (!user) return;
 
-            const newStatus = !curBlockedStatus;
+            const isBlocked = !!user.isBlocked;
+            const userUID = String(user.uid || '000000');
+            const actionText = isBlocked ? "আনব্লক" : "ব্লক";
+
+            const confirmed = await customConfirm({
+                title: `ইউজার ${actionText}`,
+                message: `আপনি কি নিশ্চিতভাবে UID #${userUID}-কে ${actionText} করতে চান?`,
+                confirmText: `হ্যাঁ, ${actionText} করুন`,
+                isDanger: !isBlocked
+            });
+            if (!confirmed) return;
+
+            const newStatus = !isBlocked;
             await db.collection("users").doc(docId).update({ isBlocked: newStatus });
             sendTelegramNotification(`🚨 <b>ইউজার ${newStatus ? 'ব্লক' : 'আনব্লক'}!</b> UID: #${userUID}`);
             playBeepAlert();
             showToast(`UID #${userUID} ${newStatus ? 'ব্লক করা হয়েছে!' : 'আনব্লক করা হয়েছে!'}`, newStatus ? "info" : "success");
         }
 
-        function toggleVerify(docId, curStatus) {
-            db.collection("users").doc(docId).update({ isVerified: !curStatus }).then(() => showToast("ভেরিফিকেশন আপডেট!"));
+        async function toggleVerifyById(docId) {
+            const user = window.allUsers.find(x => x.docId === docId);
+            if (!user) return;
+            const newStatus = !user.isVerified;
+            await db.collection("users").doc(docId).update({ isVerified: newStatus });
+            showToast(`ভেরিফিকেশন: ${newStatus ? 'Verified' : 'Unverified'}`);
         }
 
         function filterUsersTable() {
             const q = document.getElementById('userSearchInput').value.toLowerCase().trim();
             document.querySelectorAll('#usersTableBody tr').forEach(r => {
-                r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
-            });
-        }
-
-        // ================= রেফারেল ম্যানেজমেন্ট =================
-        function renderReferralManagement() {
-            const tbody = document.getElementById('referralsTableBody');
-            if (!tbody) return;
-            let totalBonusBDT = 0;
-            const referredUsers = window.allUsers.filter(u => !!u.referredBy);
-            
-            if (referredUsers.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">কোনো রেফারেল রেকর্ড নেই</td></tr>`;
-                document.getElementById('statTotalRefersCount').innerText = '0';
-                document.getElementById('statTotalRefersMoney').innerText = '৳0';
-                return;
-            }
-
-            const fragment = document.createDocumentFragment();
-            referredUsers.forEach(u => {
-                const refCode = String(u.referredBy).trim();
-                const referrerObj = window.usersBySixDigit[refCode] || { name: 'Unknown', uid: refCode };
-                const isVerified = u.isVerified === true;
-                const bonus = isVerified ? 40 : 0;
-                totalBonusBDT += bonus;
-                let joinDateStr = 'Recent';
-                if (u.createdAt) {
-                    const dt = u.createdAt.toDate ? u.createdAt.toDate() : new Date(u.createdAt);
-                    joinDateStr = dt.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short', year: 'numeric' });
-                }
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong style="color:#facc15;">#${refCode}</strong><div style="font-size:10px; color:#cbd5e1;">${referrerObj.name || 'Referrer'}</div></td>
-                    <td><strong style="color:#38bdf8;">#${u.uid || '000000'}</strong><div style="font-size:10px; color:#cbd5e1;">${u.name || 'Member'}</div></td>
-                    <td><span style="font-size:10px; color:#94a3b8;">${joinDateStr}</span></td>
-                    <td><span class="status-badge ${isVerified ? 'completed' : 'pending'}">${isVerified ? 'Verified' : 'Unverified'}</span></td>
-                    <td><strong style="color:${isVerified ? '#34d399' : '#94a3b8'};">${isVerified ? '৳40' : '৳0'}</strong></td>
-                `;
-                fragment.appendChild(tr);
-            });
-
-            tbody.innerHTML = '';
-            tbody.appendChild(fragment);
-
-            document.getElementById('statTotalRefersCount').innerText = referredUsers.length;
-            document.getElementById('statTotalRefersMoney').innerText = `৳${totalBonusBDT}`;
-        }
-
-        function filterReferralsTable() {
-            const q = document.getElementById('referSearchInput').value.toLowerCase().trim();
-            document.querySelectorAll('#referralsTableBody tr').forEach(r => {
                 r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
             });
         }
@@ -2368,8 +2387,9 @@
             });
         }
 
-        function deleteTaskDoc(id) {
-            if (confirm("টাস্ক মুছবেন?")) db.collection("tasks").doc(id).delete();
+        async function deleteTaskDoc(id) {
+            const confirmed = await customConfirm({ title: "টাস্ক ডিলিট", message: "আপনি কি টাস্কটি মুছে ফেলতে চান?", isDanger: true });
+            if (confirmed) db.collection("tasks").doc(id).delete();
         }
 
         function handleSaveSettings(e) {
@@ -2400,11 +2420,13 @@
             };
         }
 
-        function handleAddBanner(e) {
+        async function handleAddBanner(e) {
             e.preventDefault();
             const urlInput = document.getElementById('bannerImgUrl').value.trim();
             const finalImage = selectedBannerBase64 || (urlInput.startsWith('http') ? urlInput : '');
-            if (!finalImage || finalImage === "Image Ready from Gallery") return alert("ছবি দিন!");
+            if (!finalImage || finalImage === "Image Ready from Gallery") {
+                return customAlert({ title: "ছবি প্রয়োজন", message: "অনুগ্রহ করে একটি ছবি নির্বাচন করুন।", type: "warning" });
+            }
 
             db.collection("banners").add({
                 image: finalImage,
@@ -2418,8 +2440,9 @@
             });
         }
 
-        function deleteBannerDoc(id) {
-            if (confirm("ব্যানার মুছবেন?")) db.collection("banners").doc(id).delete();
+        async function deleteBannerDoc(id) {
+            const confirmed = await customConfirm({ title: "ব্যানার ডিলিট", message: "ব্যানারটি মুছে ফেলতে চান?", isDanger: true });
+            if (confirmed) db.collection("banners").doc(id).delete();
         }
 
         function openSupportChatModal() {
@@ -2505,6 +2528,434 @@
             });
         }
 
+        // ================= 🌟 বুস্ট পে-আউট মডাল লজিক (PROMPT মুক্ত) =================
+        function openPayoutPrompt(postId, userUID, likes, views, comments, boostFeeBDT, boostFeeUSD, earnedUSD) {
+            boostFeeBDT = Number(boostFeeBDT) || 100;
+            boostFeeUSD = Number(boostFeeUSD) || parseFloat((boostFeeBDT / currentUsdBdtRate).toFixed(4));
+            earnedUSD = Number(earnedUSD) || 0;
+            const earnedBDT = (earnedUSD * currentUsdBdtRate).toFixed(2);
+            const totalCreditUSD = parseFloat((earnedUSD + boostFeeUSD).toFixed(3));
+
+            document.getElementById('payoutPostId').value = postId;
+            document.getElementById('payoutUserUid').value = userUID;
+            document.getElementById('payoutFeeBDT').value = boostFeeBDT;
+            document.getElementById('payoutEarnUSD').value = earnedUSD;
+
+            document.getElementById('payoutModalUid').innerText = `#${userUID}`;
+            document.getElementById('payoutModalStats').innerText = `${likes} Likes | ${views} Views`;
+            document.getElementById('payoutModalEarn').innerText = `$${earnedUSD.toFixed(3)} (≈ ৳${earnedBDT})`;
+            document.getElementById('payoutModalFee').innerText = `৳${boostFeeBDT} ($${boostFeeUSD.toFixed(2)})`;
+            document.getElementById('payoutFinalUsdInput').value = totalCreditUSD;
+
+            document.getElementById('boostPayoutModal').classList.add('active');
+        }
+
+        function closeBoostPayoutModal() {
+            document.getElementById('boostPayoutModal').classList.remove('active');
+        }
+
+        async function handleExecuteBoostPayout(e) {
+            e.preventDefault();
+            const postId = document.getElementById('payoutPostId').value;
+            const userUID = document.getElementById('payoutUserUid').value;
+            const boostFeeBDT = Number(document.getElementById('payoutFeeBDT').value) || 100;
+            const earnedUSD = Number(document.getElementById('payoutEarnUSD').value) || 0;
+            const finalUSD = parseFloat(document.getElementById('payoutFinalUsdInput').value);
+
+            if (isNaN(finalUSD) || finalUSD <= 0) {
+                return customAlert({ title: "ভুল অ্যামাউন্ট", message: "সঠিক ডলার অ্যামাউন্ট প্রবেশ করান।", type: "warning" });
+            }
+
+            const btn = document.getElementById('btnConfirmPayoutSubmit');
+            btn.disabled = true;
+
+            try {
+                showToast("টাকা পাঠানো হচ্ছে...", "info");
+                const userRef = await resolveUserDocRef(userUID);
+                if (!userRef) throw new Error(`ইউজার #${userUID} ডাটাবেজে পাওয়া যায়নি!`);
+
+                await userRef.update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(finalUSD),
+                    totalEarnUSD: firebase.firestore.FieldValue.increment(earnedUSD)
+                });
+
+                if (postId) {
+                    await db.collection("posts").doc(postId).set({
+                        payoutUSD: earnedUSD,
+                        boostFeeRefunded: true,
+                        isPaidOut: true,
+                        boostStatus: "completed"
+                    }, { merge: true });
+                }
+
+                await sendUserSystemNotification(
+                    userUID,
+                    "Campaign Payout Settled",
+                    `Your campaign earnings and security fee refund ($${finalUSD.toFixed(2)}) have been credited to your balance.`,
+                    "earnings",
+                    "history.html"
+                );
+
+                sendTelegramNotification(
+                    `💰 <b>বুস্ট ইনকাম ও ফি রিফান্ড সম্পন্ন!</b>\n\n` +
+                    `👤 <b>UID:</b> #${userUID}\n` +
+                    `💳 <b>মোট যোগ:</b> $${finalUSD.toFixed(2)}`
+                );
+
+                playBeepAlert();
+                closeBoostPayoutModal();
+                showToast(`সফল! #${userUID}-এ $${finalUSD.toFixed(2)} যোগ হয়েছে।`, "success");
+            } catch (err) {
+                await customAlert({ title: "পেমেন্ট ব্যর্থ", message: err.message, type: "danger" });
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // ================= বুস্ট টেবিল ও অটো-ক্যালকুলেশন ফাংশন =================
+        function updateBoostLiveCalculation() {
+            const likes = parseInt(document.getElementById('bApproveLikesInput').value) || 0;
+            const rate = parseFloat(document.getElementById('bApproveEarningPerLikeInput').value) || 0;
+            const feeBDT = Number(document.getElementById('bApproveBoostFeeBDT').value) || 0;
+            const feeUSD = Number(document.getElementById('bApproveBoostFeeUSD').value) || 0;
+
+            const totalLikeUSD = parseFloat((likes * rate).toFixed(4));
+            const totalLikeBDT = parseFloat((totalLikeUSD * currentUsdBdtRate).toFixed(2));
+            const totalReturnUSD = parseFloat((totalLikeUSD + feeUSD).toFixed(3));
+            const totalReturnBDT = Math.round(totalLikeBDT + feeBDT);
+
+            const displayEl = document.getElementById('boostCalcPreviewText');
+            if (displayEl) {
+                displayEl.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                        <span style="color:#94a3b8;">👍 লাইক ইনকাম (${likes} × $${rate}):</span>
+                        <strong style="color:#10b981;">$${totalLikeUSD.toFixed(3)} (≈ ৳${totalLikeBDT})</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+                        <span style="color:#94a3b8;">🎁 মূল বুস্ট ফি রিফান্ড:</span>
+                        <strong style="color:#f59e0b;">৳${feeBDT} (≈ $${feeUSD.toFixed(2)})</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--card-border); padding-top:4px; margin-top:4px;">
+                        <span style="color:#ffffff; font-weight:800;">💰 ইউজার মোট ফেরত পাবে:</span>
+                        <strong style="color:#38bdf8; font-size:11px;">$${totalReturnUSD} (≈ ৳${totalReturnBDT})</strong>
+                    </div>
+                `;
+            }
+        }
+
+        function renderBoostTable() {
+            const tbody = document.getElementById('boostTableBody');
+            const filtered = window.allBoostRequests.filter(b => (currentBoostFilter === 'all') ? true : b.status === currentBoostFilter);
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#94a3b8; padding:15px;">কোনো বুস্ট রিকোয়েস্ট পাওয়া যায়নি (${currentBoostFilter.toUpperCase()})</td></tr>`;
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            filtered.forEach(b => {
+                const dashUid = getDashboardUID(b.uid || b.userId);
+                const uObj = window.usersBySixDigit[dashUid] || {};
+                const uName = uObj.name || b.userName || 'User';
+
+                const amtBDT = Number(b.amountBDT) || parseInt(String(b.boostPackage || '').replace(/[^0-9]/g, '')) || 100;
+                const amtUSD = parseFloat((amtBDT / currentUsdBdtRate).toFixed(4));
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong>
+                        <div style="font-size:10px; color:#cbd5e1; font-weight:600; margin-top:2px;">${uName}</div>
+                    </td>
+                    <td><strong style="color:#f59e0b;">৳${amtBDT}</strong> <small style="color:#94a3b8;">($${amtUSD.toFixed(2)})</small></td>
+                    <td><div style="max-width:130px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${b.content || 'Post'}</div></td>
+                    <td><span class="status-badge ${b.status}">${b.status}</span></td>
+                    <td>
+                        ${b.status === 'pending' ? `
+                            <div class="action-btns">
+                                <button class="btn-act approve" onclick="openBoostApprovalModal('${b.id}', '${b.postId}', '${dashUid}', '${b.boostPackage || amtBDT + ' Tk'}', ${amtBDT}, ${amtUSD})">
+                                    <i class="fa-solid fa-sliders"></i> Approve
+                                </button>
+                                <button class="btn-act reject" onclick="rejectBoostCampaign('${b.id}', '${b.postId}', '${dashUid}', ${amtUSD}, ${amtBDT})">
+                                    <i class="fa-solid fa-xmark"></i> Reject
+                                </button>
+                            </div>
+                        ` : '-'}
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+        }
+
+        function openBoostApprovalModal(reqId, postId, userUID, boostPkg, feeBDT = 100, feeUSD = 0.83) {
+            document.getElementById('bApproveReqId').value = reqId;
+            document.getElementById('bApprovePostId').value = postId;
+            document.getElementById('bApproveUserUid').value = userUID;
+            document.getElementById('bApproveBoostPkg').value = boostPkg;
+            document.getElementById('bApproveBoostFeeBDT').value = feeBDT;
+            document.getElementById('bApproveBoostFeeUSD').value = feeUSD;
+            
+            document.getElementById('boostModalTargetUid').innerText = `Approve For: #${userUID} (প্যাকেজ ফি: ৳${feeBDT})`;
+            document.getElementById('bApproveDurationSelect').value = "24";
+            document.getElementById('customDurationBox').style.display = 'none';
+            document.getElementById('bApproveViewsInput').value = "500";
+            document.getElementById('bApproveLikesInput').value = "80";
+            document.getElementById('bApproveCommentsInput').value = "15";
+            document.getElementById('bApproveEarningPerLikeInput').value = "0.005";
+
+            updateBoostLiveCalculation();
+            document.getElementById('boostApprovalModal').classList.add('active');
+        }
+
+        function closeBoostApprovalModal() {
+            document.getElementById('boostApprovalModal').classList.remove('active');
+        }
+
+        function toggleCustomDurationInput(val) {
+            document.getElementById('customDurationBox').style.display = (val === 'custom') ? 'block' : 'none';
+        }
+
+        async function handleConfirmBoostApproval(e) {
+            e.preventDefault();
+            const reqId = document.getElementById('bApproveReqId').value;
+            const postId = document.getElementById('bApprovePostId').value;
+            const userUID = document.getElementById('bApproveUserUid').value;
+            const boostPkg = document.getElementById('bApproveBoostPkg').value;
+            const feeBDT = Number(document.getElementById('bApproveBoostFeeBDT').value) || 100;
+            const feeUSD = Number(document.getElementById('bApproveBoostFeeUSD').value) || 0.83;
+
+            const durationSelect = document.getElementById('bApproveDurationSelect').value;
+            let durationHours = (durationSelect === 'custom') ? (parseFloat(document.getElementById('bApproveCustomHours').value) || 24) : (parseFloat(durationSelect) || 24);
+
+            const targetViews = parseInt(document.getElementById('bApproveViewsInput').value) || 500;
+            const targetLikes = parseInt(document.getElementById('bApproveLikesInput').value) || 80;
+            const targetComments = parseInt(document.getElementById('bApproveCommentsInput').value) || 15;
+            const earningPerLike = parseFloat(document.getElementById('bApproveEarningPerLikeInput').value) || 0.005;
+
+            const btn = document.getElementById('btnConfirmBoostStart');
+            btn.disabled = true;
+
+            try {
+                const now = Date.now();
+                const boostDurationMs = durationHours * 60 * 60 * 1000;
+                const totalMinutes = durationHours * 60;
+                const daysNum = durationHours > 28 ? 2 : 1;
+
+                if (postId) {
+                    await db.collection("posts").doc(postId).set({
+                        userId: String(userUID),
+                        boostStatus: "active",
+                        boostPackage: boostPkg,
+                        boostDays: daysNum,
+                        boostFeeBDT: feeBDT,
+                        boostFeeUSD: feeUSD,
+                        boostStartedAt: now,
+                        boostExpiresAt: now + boostDurationMs,
+                        boostDurationMs: boostDurationMs,
+                        totalDurationMinutes: totalMinutes,
+                        viewsPerMinute: parseFloat((targetViews / totalMinutes).toFixed(4)),
+                        likesPerMinute: parseFloat((targetLikes / totalMinutes).toFixed(4)),
+                        commentsPerMinute: parseFloat((targetComments / totalMinutes).toFixed(4)),
+                        initialViewsTarget: targetViews,
+                        initialLikesTarget: targetLikes,
+                        initialCommentsTarget: targetComments,
+                        earningPerLikeUSD: earningPerLike,
+                        likesCount: firebase.firestore.FieldValue.increment(0),
+                        viewsCount: firebase.firestore.FieldValue.increment(0),
+                        boostFeeRefunded: false
+                    }, { merge: true });
+                }
+
+                await db.collection("boost_requests").doc(reqId).update({ status: "completed" });
+                
+                await sendUserSystemNotification(
+                    userUID, 
+                    "Campaign Started", 
+                    `Your boost campaign is started! Package: ${boostPkg}, Duration: ${daysNum} Day${daysNum > 1 ? 's' : ''}.`,
+                    "boost",
+                    "boost.html"
+                );
+
+                closeBoostApprovalModal();
+                playBeepAlert();
+                showToast(`বুস্ট সফলভাবে চালু হয়েছে! ($${earningPerLike}/Like)`, "success");
+            } catch (err) { 
+                await customAlert({ title: "বুস্ট ত্রুটি", message: err.message, type: "danger" }); 
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        async function rejectBoostCampaign(reqId, postId, userUID, refundUSD, amountBDT) {
+            const refundAmountUSD = parseFloat(Number(refundUSD || 0).toFixed(4));
+            const refundAmountBDT = Number(amountBDT || Math.round(refundAmountUSD * currentUsdBdtRate));
+
+            const confirmed = await customConfirm({
+                title: "বুস্ট বাতিল ও রিফান্ড",
+                message: `UID #${userUID}-এর বুস্ট বাতিল করে ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) রিফান্ড ফেরত দিতে চান?`,
+                confirmText: "রিফান্ড ফেরত দিন",
+                isDanger: true
+            });
+            if (!confirmed) return;
+
+            try {
+                showToast("রিফান্ড হচ্ছে...", "info");
+                const userRef = await resolveUserDocRef(userUID);
+                if (userRef) {
+                    await userRef.update({
+                        balanceUSD: firebase.firestore.FieldValue.increment(refundAmountUSD)
+                    });
+                }
+
+                await db.collection("boost_requests").doc(reqId).update({ status: "rejected" });
+                if (postId) await db.collection("posts").doc(postId).set({ boostStatus: "none" }, { merge: true }).catch(() => {});
+
+                await sendUserSystemNotification(
+                    userUID,
+                    "Campaign Notice",
+                    `Your boost request could not be launched. The fee of ৳${refundAmountBDT} ($${refundAmountUSD.toFixed(2)}) has been returned to your wallet.`,
+                    "boost",
+                    "boost.html"
+                );
+
+                sendTelegramNotification(`❌ <b>বুস্ট রিজেক্ট ও রিফান্ড!</b>\n\n👤 UID: #${userUID}\n💵 ৳${refundAmountBDT}`);
+                playBeepAlert();
+                showToast(`বুস্ট বাতিল ও সম্পূর্ণ রিফান্ড সম্পন্ন!`, "info");
+            } catch (err) { 
+                await customAlert({ title: "রিফান্ড এরর", message: err.message, type: "danger" }); 
+            }
+        }
+
+        async function deletePostByAdmin(postId) {
+            const confirmed = await customConfirm({ title: "পোস্ট ডিলিট", message: "পোস্টটি স্থায়ীভাবে মুছে ফেলতে চান?", isDanger: true });
+            if (confirmed) {
+                db.collection("posts").doc(postId).delete().then(() => showToast("পোস্টটি ডিলিট হয়েছে!"));
+            }
+        }
+
+        // ================= লাইভ পোস্ট ম্যানেজার টেবিল =================
+        function calculateRealTimePostProgress(p) {
+            const now = Date.now();
+            const startedAt = Number(p.boostStartedAt) || 0;
+            const expiresAt = Number(p.boostExpiresAt) || 0;
+            const likesTarget = Number(p.initialLikesTarget) || 0;
+            const viewsTarget = Number(p.initialViewsTarget) || 0;
+            const commentsTarget = Number(p.initialCommentsTarget) || 0;
+            const ratePerLike = Number(p.earningPerLikeUSD) || 0;
+
+            let curLikes = Number(p.likesCount) || 0;
+            let curViews = Number(p.viewsCount) || 0;
+            let curComments = (p.comments || []).length;
+            let remainingText = '';
+
+            if (p.boostStatus === 'active' && startedAt && expiresAt) {
+                if (now >= expiresAt) {
+                    curLikes = likesTarget > 0 ? likesTarget : curLikes;
+                    curViews = viewsTarget > 0 ? viewsTarget : curViews;
+                    curComments = commentsTarget > 0 ? commentsTarget : curComments;
+                    remainingText = '<span style="color:#10b981; font-weight:800;">✓ Completed</span>';
+                } else {
+                    const elapsed = now - startedAt;
+                    const totalDuration = Math.max(1, expiresAt - startedAt);
+                    const progressRatio = Math.min(1, elapsed / totalDuration);
+
+                    curLikes = Math.max(curLikes, Math.floor(progressRatio * likesTarget));
+                    curViews = Math.max(curViews, Math.floor(progressRatio * viewsTarget));
+                    curComments = Math.max(curComments, Math.floor(progressRatio * commentsTarget));
+
+                    const totalSecs = Math.max(0, Math.floor((expiresAt - now) / 1000));
+                    const days = Math.floor(totalSecs / 86400);
+                    const hours = Math.floor((totalSecs % 86400) / 3600);
+                    const mins = Math.floor((totalSecs % 3600) / 60);
+                    const secs = totalSecs % 60;
+
+                    let tStr = '';
+                    if (days > 0) tStr += `${days}d `;
+                    tStr += `${String(hours).padStart(2, '0')}h : ${String(mins).padStart(2, '0')}m : ${String(secs).padStart(2, '0')}s`;
+                    remainingText = `<span style="color:#f59e0b; font-weight:800; font-family:monospace; font-size:10px;">⏳ ${tStr}</span>`;
+                }
+            } else if (p.boostStatus === 'completed') {
+                remainingText = '<span style="color:#10b981; font-weight:800;">✓ Completed</span>';
+            } else {
+                remainingText = '<span style="color:#94a3b8;">Inactive</span>';
+            }
+
+            const liveEarnedUSD = parseFloat((curLikes * ratePerLike).toFixed(4));
+            return { curLikes, curViews, curComments, liveEarnedUSD, remainingText };
+        }
+
+        function renderLivePostsManagerTable() {
+            const tbody = document.getElementById('adminPostsManagerTableBody');
+            if (!tbody) return;
+            const fragment = document.createDocumentFragment();
+
+            window.allPosts.forEach(p => {
+                const dashUid = getDashboardUID(p.userId);
+                const uObj = window.usersBySixDigit[dashUid] || {};
+                const uName = uObj.name || p.userName || 'User';
+
+                const live = calculateRealTimePostProgress(p);
+                const ratePerLike = Number(p.earningPerLikeUSD) || 0;
+                const feeBDT = Number(p.boostFeeBDT) || 100;
+                const feeUSD = Number(p.boostFeeUSD) || parseFloat((feeBDT / currentUsdBdtRate).toFixed(2));
+                const isRefunded = !!p.boostFeeRefunded;
+
+                const tr = document.createElement('tr');
+                tr.id = `post-row-${p.id}`;
+                tr.innerHTML = `
+                    <td>
+                        <strong style="color:var(--primary); font-family:monospace; font-size:12px;">#${dashUid}</strong>
+                        <div style="font-size:10px; color:#cbd5e1; font-weight:600; margin-top:2px;">${uName}</div>
+                    </td>
+                    <td>
+                        <strong style="color:#f59e0b; font-size:11.5px;">৳${feeBDT}</strong>
+                        <div style="font-size:9.5px; color:#94a3b8;">($${feeUSD.toFixed(2)})</div>
+                    </td>
+                    <td id="post-stats-${p.id}"><span style="color:#f59e0b;">👍 ${live.curLikes}</span> | <span style="color:#38bdf8;">👁️ ${live.curViews}</span> | <span style="color:#10b981;">💬 ${live.curComments}</span></td>
+                    <td id="post-time-${p.id}">${live.remainingText}</td>
+                    <td>
+                        <span class="status-badge ${p.boostStatus || 'none'}">${p.boostStatus || 'none'}</span>
+                        <div style="color:#34d399; font-weight:800; font-size:9.5px; margin-top:2px;">${ratePerLike > 0 ? '$'+ratePerLike.toFixed(4)+'/Like' : '-'}</div>
+                    </td>
+                    <td id="post-earn-${p.id}">
+                        <strong style="color:#10b981;">$${live.liveEarnedUSD.toFixed(3)}</strong>
+                        ${isRefunded ? '<div style="font-size:9px; color:#34d399; font-weight:700;">✓ Fee Refunded</div>' : ''}
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            <button type="button" class="btn-act payout" title="Pay and Refund Fee" onclick="openPayoutPrompt('${p.id}', '${dashUid}', ${live.curLikes}, ${live.curViews}, ${live.curComments}, ${feeBDT}, ${feeUSD}, ${live.liveEarnedUSD})">
+                                <i class="fa-solid fa-hand-holding-dollar"></i> Pay
+                            </button>
+                            <button type="button" class="btn-act reject" title="Delete Post" onclick="deletePostByAdmin('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            tbody.innerHTML = '';
+            tbody.appendChild(fragment);
+        }
+
+        setInterval(() => {
+            if (!window.allPosts || window.allPosts.length === 0) return;
+            window.allPosts.forEach(p => {
+                const timeCell = document.getElementById(`post-time-${p.id}`);
+                const statsCell = document.getElementById(`post-stats-${p.id}`);
+                const earnCell = document.getElementById(`post-earn-${p.id}`);
+                
+                if (timeCell && p.boostStatus === 'active') {
+                    const live = calculateRealTimePostProgress(p);
+                    timeCell.innerHTML = live.remainingText;
+                    if (statsCell) statsCell.innerHTML = `<span style="color:#f59e0b;">👍 ${live.curLikes}</span> | <span style="color:#38bdf8;">👁️ ${live.curViews}</span> | <span style="color:#10b981;">💬 ${live.curComments}</span>`;
+                    if (earnCell) earnCell.innerHTML = `<strong style="color:#10b981;">$${live.liveEarnedUSD.toFixed(3)}</strong>`;
+                }
+            });
+        }, 1000);
+
         // ================= লাকি ড্র =================
         function toggleLotterySales(isOpen) {
             db.collection("settings").doc("lottery").set({ ticketSalesOpen: isOpen }, { merge: true })
@@ -2535,7 +2986,7 @@
             };
         }
 
-        function handleUploadPrizeBanner(e) {
+        async function handleUploadPrizeBanner(e) {
             e.preventDefault();
             const rank = parseInt(document.getElementById('prizeRankSelect').value);
             const title = document.getElementById('prizeTitleInput').value.trim();
@@ -2543,7 +2994,9 @@
             const urlInput = document.getElementById('prizeImgUrlInput').value.trim();
             const finalImage = selectedPrizeImgBase64 || (urlInput.startsWith('http') ? urlInput : '');
 
-            if (!finalImage || finalImage === "Image Ready from Gallery") return alert("ছবি দিন!");
+            if (!finalImage || finalImage === "Image Ready from Gallery") {
+                return customAlert({ title: "ছবি দিন", message: "অনুগ্রহ করে প্রাইজ ব্যানার ছবি নির্বাচন করুন।", type: "warning" });
+            }
 
             const newPrize = { rank: rank, title: title, valueText: valueText, image: finalImage };
             let updatedPrizes = Array.isArray(currentLoadedPrizes) ? [...currentLoadedPrizes] : [];
@@ -2584,8 +3037,9 @@
             container.appendChild(fragment);
         }
 
-        function deletePrizeRank(rank) {
-            if (!confirm(`Prize #${rank} মুছে ফেলতে চান?`)) return;
+        async function deletePrizeRank(rank) {
+            const confirmed = await customConfirm({ title: "প্রাইজ ডিলিট", message: `Prize #${rank} মুছে ফেলতে চান?`, isDanger: true });
+            if (!confirmed) return;
             const updated = currentLoadedPrizes.filter(p => p.rank !== rank);
             db.collection("settings").doc("lottery").set({ prizes: updated }, { merge: true });
         }
