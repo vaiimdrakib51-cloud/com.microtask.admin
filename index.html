@@ -359,7 +359,7 @@
                     <div class="mod-icon-wrap" style="background:linear-gradient(135deg, #8b5cf6, #6d28d9);"><i class="fa-solid fa-users"></i></div>
                     <i class="fa-solid fa-chevron-right mod-arrow"></i>
                 </div>
-                <div class="mod-meta"><h4>Users Manager</h4><p>USD/BDT Balance, Block User</p></div>
+                <div class="mod-meta"><h4>Users Manager</h4><p>Live USD/BDT Balance, Block User</p></div>
             </div>
 
             <div class="module-card" onclick="openModuleModal('tasksModal')">
@@ -933,7 +933,7 @@
         </div>
     </div>
 
-    <!-- 🌟 আধুনিক পে-আউট মডাল (PROMPT বাদ দিয়ে) -->
+    <!-- 🌟 আধুনিক পে-আউট মডাল -->
     <div id="boostPayoutModal">
         <div class="boost-approval-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -967,7 +967,7 @@
         </div>
     </div>
 
-    <!-- 🌟 সার্বজনীন প্রিমিয়াম ডায়ালগ মডাল (ALERT & CONFIRM বাদ দিয়ে) -->
+    <!-- 🌟 সার্বজনীন ডায়ালগ মডাল -->
     <div id="customDialogModal">
         <div class="custom-dialog-card">
             <div class="custom-dialog-icon info" id="dialogIconBox">
@@ -982,7 +982,7 @@
         </div>
     </div>
 
-    <!-- 🌟 কাস্টম বুস্ট অনুমোদন মডাল -->
+    <!-- 🌟 বুস্ট অনুমোদন মডাল -->
     <div id="boostApprovalModal">
         <div class="boost-approval-card">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -1102,7 +1102,7 @@
         window.usersBySixDigit = {};
         window.usersByDocId = {};
 
-        // 🌟 নির্ভুল ব্যালেন্স এক্সট্রাক্ট ফাংশন (যে ফিল্ডেই ব্যালেন্স থাকুক না কেন ১০০% সঠিক বের করবে)
+        // 🌟 নির্ভুল ব্যালেন্স এক্সট্রাক্ট ফাংশন
         function extractUserBalanceUSD(u) {
             if (!u) return 0;
             if (u.balanceUSD !== undefined && u.balanceUSD !== null && !isNaN(Number(u.balanceUSD))) {
@@ -1145,7 +1145,65 @@
             return null;
         }
 
-        // ================= 🌟 আধুনিক ডায়ালগ ও কনফার্মেশন সিস্টেম (NO BROWSER POPUPS) =================
+        // ================= 🌟 রেফারারকে সরাসরি ৫% কমিশন ক্রেডিট ফাংশন =================
+        async function creditReferrerCommissionDirectly(workerUID, netProfitBDT, sourceTitle) {
+            if (!workerUID || netProfitBDT <= 0) return;
+
+            try {
+                const workerRef = await resolveUserDocRef(workerUID);
+                if (!workerRef) return;
+
+                const workerSnap = await workerRef.get();
+                if (!workerSnap.exists) return;
+
+                const workerData = workerSnap.data();
+                const refUID = workerData.referredBy ? String(workerData.referredBy).trim() : null;
+                if (!refUID || refUID === "000000") return;
+
+                const commBDT = parseFloat((netProfitBDT * 0.05).toFixed(2));
+                if (commBDT < 0.1) return;
+                const commUSD = parseFloat((commBDT / currentUsdBdtRate).toFixed(4));
+
+                const referrerRef = await resolveUserDocRef(refUID);
+                if (!referrerRef) return;
+
+                const todayStr = (new Date()).toISOString().split('T')[0];
+
+                await referrerRef.update({
+                    balanceUSD: firebase.firestore.FieldValue.increment(commUSD),
+                    totalEarnUSD: firebase.firestore.FieldValue.increment(commUSD),
+                    todayEarnUSD: firebase.firestore.FieldValue.increment(commUSD),
+                    lastEarnDate: todayStr
+                });
+
+                const refSnap = await referrerRef.get();
+                const refAuthUid = refSnap.id;
+
+                await db.collection("task_history").add({
+                    uid: refAuthUid,
+                    amountUSD: commUSD,
+                    amountBDT: commBDT,
+                    taskType: "referral_commission",
+                    title: `5% Commission (${sourceTitle})`,
+                    date: todayStr,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                const maskedWorker = (workerData.name || 'Member').slice(0, 2) + "****";
+                await sendUserSystemNotification(
+                    refUID,
+                    "🎉 ৫% রেফারেল কমিশন জমা হয়েছে!",
+                    `আপনার রেফারেল সদস্য (${maskedWorker}) ${sourceTitle} থেকে খাঁটি লাভ করায় আপনি ৫% কমিশন হিসেবে ৳${commBDT} ($${commUSD.toFixed(3)}) পেয়েছেন!`,
+                    "earnings",
+                    "history.html"
+                );
+
+            } catch (e) {
+                console.error("Direct referral commission error:", e);
+            }
+        }
+
+        // ================= 🌟 ডায়ালগ ও অ্যালার্ট সিস্টেম =================
         function customAlert({ title = "বিজ্ঞপ্তি", message = "", type = "info", btnText = "ঠিক আছে" }) {
             return new Promise((resolve) => {
                 const modal = document.getElementById('customDialogModal');
@@ -1366,7 +1424,7 @@
             renderTypingTable();
         }
 
-        // ================= 🌟 ফায়ারবেস হাই-স্পিড লাইভ সিঙ্ক (রিয়েলটাইম ব্যালেন্স ফিক্সড) =================
+        // ================= 🌟 ফায়ারবেস লাইভ সিঙ্ক =================
         function initAdminSync() {
 
             // ১. গেটওয়ে ও রেট
@@ -1383,7 +1441,7 @@
                 }
             });
 
-            // ২. ইউজার্স লাইভ সিঙ্ক (যেকোনো ভেরিফাই/টাস্ক কাটলেই তৎক্ষণাৎ আপডেট হবে)
+            // ২. ইউজার্স লাইভ সিঙ্ক
             db.collection("users").onSnapshot(snap => {
                 let totalBal = 0;
                 window.usersBySixDigit = {};
@@ -1402,7 +1460,6 @@
                         if (sixDigit) window.usersBySixDigit[sixDigit] = userData;
                         window.usersByDocId[doc.id] = u;
 
-                        // লাইভ ব্যালেন্স
                         const balUSD = extractUserBalanceUSD(u);
                         const balBDT = (balUSD * currentUsdBdtRate).toFixed(2);
                         totalBal += balUSD;
@@ -1775,7 +1832,7 @@
             document.getElementById('typingTextModal').classList.remove('active');
         }
 
-        // 🌟 টাইপিং টাস্ক অনুমোদন
+        // 🌟 টাইপিং টাস্ক অনুমোদন (খাঁটি লাভের ৫% রেফারেল কমিশন সহ)
         async function approveTypingTask(docId) {
             const task = window.allTypingTasks.find(t => t.id === docId);
             if (!task) return customAlert({ title: "ত্রুটি", message: "টাস্ক খুঁজে পাওয়া যায়নি!", type: "danger" });
@@ -1784,9 +1841,18 @@
             const bdtReward = Number(task.amountBDT || task.rewardBDT || 0);
             const usdReward = Number(task.rewardUSD || (bdtReward / currentUsdBdtRate)) || parseFloat((bdtReward / currentUsdBdtRate).toFixed(4));
 
+            // খাঁটি লাভ হিসাব: প্যাকেজ ফি বাদ দিয়ে লাভটুকু বের করা
+            let pkgPriceBDT = 500;
+            const targetW = Number(task.targetWords) || 500;
+            if (targetW >= 5000) pkgPriceBDT = 2000;
+            else if (targetW >= 3000) pkgPriceBDT = 1500;
+            else if (targetW >= 2000) pkgPriceBDT = 1000;
+
+            const pureProfitBDT = Math.max(0, bdtReward - pkgPriceBDT);
+
             const confirmed = await customConfirm({
                 title: "টাইপিং কাজ অনুমোদন",
-                message: `UID #${dashUID}-এর টাইপিং কাজ অনুমোদন করে ৳${bdtReward} ($${usdReward.toFixed(2)}) অ্যাকাউন্টে যোগ করতে চান?`,
+                message: `UID #${dashUID}-এর টাইপিং কাজ অনুমোদন করে ৳${bdtReward} ($${usdReward.toFixed(2)}) অ্যাকাউন্টে যোগ করতে চান? (খাঁটি লাভ: ৳${pureProfitBDT})`,
                 confirmText: "অনুমোদন করুন",
                 type: "success"
             });
@@ -1810,6 +1876,9 @@
                     approvedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
+                // 🌟 রেফারারকে সরাসরি খাঁটি লাভের ৫% কমিশন প্রদান
+                creditReferrerCommissionDirectly(task.uid, pureProfitBDT, "টাইপিং কাজ");
+
                 await sendUserSystemNotification(
                     dashUID,
                     "🎉 টাইপিং টাস্ক অনুমোদিত!",
@@ -1832,7 +1901,7 @@
             }
         }
 
-        // 🌟 টাইপিং টাস্ক রিজেক্ট
+        // 🌟 টাইপিং টাস্ক রিজেক্ট ও ফি রিফান্ড
         async function rejectTypingTask(docId) {
             const task = window.allTypingTasks.find(t => t.id === docId);
             if (!task) return customAlert({ title: "ত্রুটি", message: "টাস্ক খুঁজে পাওয়া যায়নি!", type: "danger" });
@@ -2076,7 +2145,7 @@
             }
         }
 
-        // ================= ভিডিও টাস্ক প্রুফ অ্যাকশন =================
+        // ================= ভিডিও টাস্ক প্রুফ অ্যাকশন (৫% রেফারেল কমিশন সহ) =================
         function renderProofTable() {
             const tbody = document.getElementById('taskProofsTableBody');
             const filtered = window.allTaskProofs.filter(p => (currentProofFilter === 'all') ? true : p.status === currentProofFilter);
@@ -2136,6 +2205,10 @@
             }
             await db.collection("task_submissions").doc(id).update({ status: "completed" });
 
+            // 🌟 ভিডিও টাস্কের জন্য রেফারারকে ৫% কমিশন প্রদান
+            const rewardBDT = Number((rewardUSD * currentUsdBdtRate).toFixed(2));
+            creditReferrerCommissionDirectly(rawUid, rewardBDT, "ভিডিও টাস্ক");
+
             await sendUserSystemNotification(
                 dashUID,
                 "Task Approved",
@@ -2163,7 +2236,7 @@
             showToast("প্রুফ রিজেক্ট করা হয়েছে।", "info");
         }
 
-        // ================= 🌟 ইউজার ব্যালেন্স অ্যাডজাস্টমেন্ট (রিয়েলটাইম ও ক্র্যাশ-ফ্রি) =================
+        // ================= 🌟 ইউজার ব্যালেন্স অ্যাডজাস্টমেন্ট =================
         let currentAdjustCurrency = 'USD';
 
         function openBalanceAdjustModalById(docId, defaultAction = 'add') {
@@ -2528,7 +2601,7 @@
             });
         }
 
-        // ================= 🌟 বুস্ট পে-আউট মডাল লজিক (PROMPT মুক্ত) =================
+        // ================= 🌟 বুস্ট পে-আউট মডাল লজিক (৫% রেফারেল কমিশন সহ) =================
         function openPayoutPrompt(postId, userUID, likes, views, comments, boostFeeBDT, boostFeeUSD, earnedUSD) {
             boostFeeBDT = Number(boostFeeBDT) || 100;
             boostFeeUSD = Number(boostFeeUSD) || parseFloat((boostFeeBDT / currentUsdBdtRate).toFixed(4));
@@ -2587,6 +2660,10 @@
                         boostStatus: "completed"
                     }, { merge: true });
                 }
+
+                // 🌟 বুস্টের লাইক ইনকাম থেকে রেফারারকে ৫% কমিশন প্রদান
+                const likeIncomeBDT = Number((earnedUSD * currentUsdBdtRate).toFixed(2));
+                creditReferrerCommissionDirectly(userUID, likeIncomeBDT, "পোস্ট বুস্ট");
 
                 await sendUserSystemNotification(
                     userUID,
